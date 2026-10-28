@@ -1,0 +1,35 @@
+{
+  "name": "clouse-tools",
+  "version": "1.0.0",
+  "description": "Multi-page, zero-backend website with 67 fully functional tools that run 100% in the browser.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node _server.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ViictorN/clouse-tools.git"
+  },
+  "keywords": [
+    "tools",
+    "online-tools",
+    "calculator",
+    "unit-converter",
+    "developer-tools",
+    "text-tools",
+    "privacy-first",
+    "client-side"
+  ],
+  "author": "Victor Gomes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ViictorN/clouse-tools/issues"
+  },
+  "homepage": "https://github.com/ViictorN/clouse-tools#readme",
+  "devDependencies": {
+    "vite": "^8.3.5"
+  }
+}

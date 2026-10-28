@@ -1629,4 +1629,8 @@
     },
     has: function (slug) { return !!E[slug]; }
   };
+
+  if (typeof window.renderToolPage === "function" && document.body && document.body.getAttribute("data-page") === "tool") {
+    window.renderToolPage();
+  }
 })();

@@ -3,6 +3,9 @@
    Chrome rendering, search (⌘K), Lenis + GSAP motion system,
    cursor, magnetic elements, spotlight cards, page renderers.
    ============================================================ */
+import './icons.js';
+import './data.js';
+
 (function () {
   "use strict";
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -12,9 +15,41 @@
   var PAGE = document.body.getAttribute("data-page") || "";
   var QS = new URLSearchParams(location.search);
 
+  var ICON_DATA = window.ICON_DATA || {};
+  var CATEGORIES = window.CATEGORIES || [];
+  var TOOLS = window.TOOLS || [];
+  var CAT_BY_ID = window.CAT_BY_ID || {};
+  var TOOL_BY_SLUG = window.TOOL_BY_SLUG || {};
+  var toolsByCategory = function (c) { return (window.toolsByCategory || function () { return []; })(c); };
+  var popularTools = function (n) { return (window.popularTools || function () { return []; })(n); };
+  var searchTools = function (q, l) { return (window.searchTools || function () { return []; })(q, l); };
+  var fmtInt = function (n) { return (window.fmtInt || function (x) { return x; })(n); };
+
+  function hydrateIcons(root) {
+    var nodes = (root || document).querySelectorAll("[data-icon]");
+    var data = window.ICON_DATA || ICON_DATA;
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var name = el.getAttribute("data-icon");
+      if (name && data[name]) {
+        el.innerHTML = data[name];
+      }
+    }
+  }
+  window.hydrateIcons = hydrateIcons;
+
+  function syncData() {
+    if (window.ICON_DATA) ICON_DATA = window.ICON_DATA;
+    if (window.CATEGORIES) CATEGORIES = window.CATEGORIES;
+    if (window.TOOLS) TOOLS = window.TOOLS;
+    if (window.CAT_BY_ID) CAT_BY_ID = window.CAT_BY_ID;
+    if (window.TOOL_BY_SLUG) TOOL_BY_SLUG = window.TOOL_BY_SLUG;
+  }
+
   window.CT = {};
   CT.icon = function (name, cls) {
-    return '<span class="icn ' + (cls || "") + '">' + (ICON_DATA[name] || ICON_DATA.abc || "") + "</span>";
+    var data = window.ICON_DATA || ICON_DATA;
+    return '<span class="icn ' + (cls || "") + '">' + (data[name] || data.abc || "") + "</span>";
   };
 CT.esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return String.fromCharCode(38) + "#" + c.charCodeAt(0) + ";"; }); };
 
@@ -339,6 +374,8 @@ CT.esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, fu
       '<p class="lead">' + CT.esc(t.desc) + "</p>";
     if (window.ToolEngine && ToolEngine.render(t.slug, card)) {
       /* rendered */
+    } else if (!window.ToolEngine) {
+      /* ToolEngine is still initializing, will trigger via window.renderToolPage */
     } else {
       card.innerHTML = '<div class="error-note">' + CT.icon("alert-triangle") + "This tool could not be loaded. Refresh the page.</div>";
     }
@@ -352,6 +389,7 @@ CT.esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, fu
     $("#related-slot").innerHTML = rel.map(toolCard).join("");
     revealBatch($("#related-slot"));
   }
+  window.renderToolPage = renderToolPage;
 
   function renderSearchPage() {
     var q = QS.get("q") || "";
@@ -550,6 +588,7 @@ CT.esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, fu
 
   /* ---------------- boot ---------------- */
   function boot() {
+    syncData();
     var steps = [
       ["renderChrome", function () { renderChrome(); }],
       ["initMenu", function () { initMenu(); }],
