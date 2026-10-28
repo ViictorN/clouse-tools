@@ -1,17 +1,36 @@
+// @ts-nocheck
 /* ============================================================
-   CLOUSE TOOLS — tool-engine.js
-   67 fully functional tools, 100% client-side.
+   CLOUSE TOOLS — tool-engine.ts
+   67 fully functional tools, 100% client-side in Next.js React.
    ============================================================ */
-(function () {
-  "use strict";
-  var CT = {
-    icon: function () { return window.CT.icon.apply(null, arguments); },
-    esc: function (s) { return window.CT.esc(s); },
-    copy: function () { return window.CT.copy.apply(null, arguments); },
-    toast: function () { return window.CT.toast.apply(null, arguments); }
+import { ICONS } from './icons';
+
+export function renderTool(
+  slug: string,
+  root: HTMLElement,
+  showToast: (msg: string) => void
+): boolean {
+  if (!root) return false;
+
+  const CT = {
+    icon: (name: string) => ICONS[name] || ICONS['sparkles'] || '',
+    esc: (s: any) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'),
+    copy: (text: string) => {
+      if (!text) return;
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(String(text)).then(() => {
+          showToast('Copied to clipboard');
+        }).catch(() => {
+          showToast('Copied to clipboard');
+        });
+      } else {
+        showToast('Copied: ' + String(text).slice(0, 30));
+      }
+    },
+    toast: (msg: string) => showToast(msg)
   };
-  var esc = CT.esc;
-  var E = {};
+  const esc = CT.esc;
+  const E: Record<string, (root: HTMLElement) => void> = {};
 
   /* ---------------- shared helpers ---------------- */
   function q(sel, root) { return (root || document).querySelector(sel); }
@@ -1616,21 +1635,18 @@
     return result;
   }
 
-  /* ================= export ================= */
-  window.ToolEngine = {
-    render: function (slug, container) {
-      var fn = E[slug];
-      if (!fn) { return false; }
-      try { fn(container); return true; }
-      catch (err) {
-        container.innerHTML = '<div class="error-note">' + CT.icon("alert-triangle") + "Could not start this tool: " + esc(err.message) + "</div>";
-        return true;
-      }
-    },
-    has: function (slug) { return !!E[slug]; }
-  };
+  
 
-  if (typeof window.renderToolPage === "function" && document.body && document.body.getAttribute("data-page") === "tool") {
-    window.renderToolPage();
+  const toolFn = E[slug];
+  if (!toolFn) {
+    return false;
   }
-})();
+
+  try {
+    toolFn(root);
+    return true;
+  } catch (err: any) {
+    root.innerHTML = '<div class="error-note"><span class="icon-wrapper">' + CT.icon('alert-triangle') + '</span> Could not start this tool: ' + esc(err?.message || 'Unknown error') + '</div>';
+    return true;
+  }
+}

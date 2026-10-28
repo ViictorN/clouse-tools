@@ -1,0 +1,409 @@
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  desc: string;
+  blurb: string;
+}
+
+export interface Tool {
+  slug: string;
+  name: string;
+  cat: string;
+  icon: string;
+  desc: string;
+  about: string;
+  kw: string;
+  popular?: boolean;
+}
+
+export const CATEGORIES: Category[] = [
+  {
+    id: "math",
+    name: "Math Tools",
+    icon: "calculator",
+    desc: "Calculators and math utilities for everyday use.",
+    blurb: "Percentages, averages, ratios and quick calculators for daily math. Accurate results, instantly."
+  },
+  {
+    id: "text",
+    name: "Text Tools",
+    icon: "letter-case",
+    desc: "Analyze and transform text instantly.",
+    blurb: "Count, convert, clean, sort and compare text with zero friction — everything stays in your browser."
+  },
+  {
+    id: "date",
+    name: "Date & Time Tools",
+    icon: "clock",
+    desc: "Work with time and timestamps.",
+    blurb: "Date differences, ages, countdowns, stopwatches and converters for every schedule task."
+  },
+  {
+    id: "converters",
+    name: "Unit Converters",
+    icon: "ruler-2",
+    desc: "Convert units and more.",
+    blurb: "Length, weight, temperature, data, speed — one precise conversion engine for every unit."
+  },
+  {
+    id: "developer",
+    name: "Developer Tools",
+    icon: "code",
+    desc: "Encode, format and validate.",
+    blurb: "Base64, JSON, regex, hashes, JWT and everyday helpers built for developers who ship."
+  },
+  {
+    id: "design",
+    name: "Design Tools",
+    icon: "palette",
+    desc: "Work with images and color.",
+    blurb: "Resize images, build gradients, extract palettes and generate QR codes — no uploads, no servers."
+  }
+];
+
+const T = (
+  slug: string,
+  name: string,
+  cat: string,
+  icon: string,
+  desc: string,
+  about: string,
+  kw: string = "",
+  popular: boolean = false
+): Tool => ({ slug, name, cat, icon, desc, about, kw, popular });
+
+export const TOOLS: Tool[] = [
+  /* ---------------- MATH ---------------- */
+  T("percentage-calculator", "Percentage Calculator", "math", "percent",
+    "What is X% of Y — and every percentage question in between.",
+    "Answer the three classic percentage questions in one place: what is X% of a value, what percentage one number is of another, and the percentage change between two values.",
+    "percent percentage % of what is change increase decrease", true),
+  T("percentage-change", "Percentage Change", "math", "trending-up",
+    "Find the exact increase or decrease between two values.",
+    "Enter an original and a new value to get the percentage change, the absolute difference and whether it grew or fell.",
+    "percent change increase decrease growth difference"),
+  T("average-calculator", "Average Calculator", "math", "chart-bar",
+    "Mean, median, mode, range and standard deviation.",
+    "Paste any list of numbers and get the full statistical breakdown: mean, median, mode, range, variance, standard deviation, sum and count.",
+    "average mean median mode statistics stddev variance"),
+  T("random-number-generator", "Random Number Generator", "math", "dice-5",
+    "Cryptographically random integers in any range.",
+    "Generate one or many random integers using the browser's secure random source. Options for unique values and sorting.",
+    "random number dice lottery pick generator raffle"),
+  T("number-base-converter", "Number Base Converter", "math", "binary",
+    "Binary, octal, decimal, hexadecimal — and any base.",
+    "Convert any number between base 2 and base 36. Live results for binary, octal, decimal and hex at the same time.",
+    "binary hex decimal octal base convert radix"),
+  T("ratio-calculator", "Ratio Calculator", "math", "divide",
+    "Simplify ratios and solve missing proportions.",
+    "Reduce any ratio to its simplest form and solve proportions of the type a:b = c:? with live results.",
+    "ratio proportion simplify scale"),
+  T("lcm-gcd-calculator", "LCM & GCD Calculator", "math", "multiplication",
+    "Least common multiple and greatest common divisor.",
+    "Find the LCM and GCD of any list of integers with a step-by-step prime factorization of each number.",
+    "lcm gcd least common multiple greatest divisor factors"),
+  T("rounding-calculator", "Rounding Calculator", "math", "decimal",
+    "Round numbers to any decimal place.",
+    "Round, floor or ceil any number to up to 12 decimal places, with a live preview of the result.",
+    "round rounding decimals floor ceil"),
+  T("prime-number-checker", "Prime Number Checker", "math", "hexagon",
+    "Check primes, list divisors and factorize.",
+    "Instantly check whether a number is prime, list all of its divisors and show its prime factorization.",
+    "prime divisors factors prime-check"),
+  T("square-root-calculator", "Square Root Calculator", "math", "math-function",
+    "Square and cube roots with custom precision.",
+    "Compute square roots, cube roots or Nth roots of any positive number with up to 12 decimal places of precision.",
+    "square root sqrt cube root radical"),
+  T("discount-calculator", "Discount Calculator", "math", "tag",
+    "Final price after any discount.",
+    "Enter a price and a discount to get the amount saved and the final price. Stack multiple discounts to see the compound result.",
+    "discount sale off price savings coupon"),
+  T("tip-calculator", "Tip Calculator", "math", "coin",
+    "Split the bill and tip fairly.",
+    "Calculate the tip amount, the total per person and round everything up or down for a clean bill split.",
+    "tip gratuity bill split restaurant"),
+  T("bmi-calculator", "BMI Calculator", "math", "heartbeat",
+    "Body mass index with healthy range.",
+    "Compute your BMI in metric or imperial units, see the WHO category and the healthy weight range for your height.",
+    "bmi body mass index weight health"),
+  T("loan-calculator", "Loan Calculator", "math", "building-bank",
+    "Monthly payments, interest and totals.",
+    "Estimate the monthly payment of any loan with the standard amortization formula, plus total interest and total cost.",
+    "loan mortgage payment interest amortization"),
+
+  /* ---------------- TEXT ---------------- */
+  T("word-counter", "Word Counter", "text", "file-text",
+    "Words, characters, sentences and reading time — live.",
+    "A live counter that updates as you type: words, characters (with and without spaces), sentences, paragraphs, reading time and speaking time.",
+    "word count character counter letter typing", true),
+  T("case-converter", "Case Converter", "text", "letter-case",
+    "UPPER, lower, Title, camel, snake and more.",
+    "Convert text between ten letter cases: upper, lower, Title, Sentence, camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE and aLtErNaTiNg.",
+    "uppercase lowercase capitalize title camel snake kebab case"),
+  T("text-reverser", "Text Reverser", "text", "arrows-left-right",
+    "Reverse characters, words or lines.",
+    "Flip a text backwards by characters, reverse the order of the words or invert the sequence of the lines.",
+    "reverse flip mirror backwards text"),
+  T("slug-generator", "Slug Generator", "text", "link",
+    "SEO-friendly URL slugs instantly.",
+    "Turn any title into a clean, accent-free, lowercase URL slug — the same normalization used by modern CMS platforms.",
+    "slug url seo permalink hyphen"),
+  T("lorem-ipsum-generator", "Lorem Ipsum Generator", "text", "article",
+    "Placeholder text for your designs.",
+    "Generate classic lorem ipsum paragraphs, sentences or words in the exact amount your mockup needs.",
+    "lorem ipsum placeholder dummy text filler"),
+  T("duplicate-line-remover", "Duplicate & Blank Line Remover", "text", "eraser",
+    "Clean lists in one click.",
+    "Remove duplicate lines, strip empty lines and trim whitespace from any list — with an optional case-insensitive match.",
+    "duplicate dedupe unique lines clean list"),
+  T("text-sorter", "Text Sorter", "text", "sort-ascending-2",
+    "Sort lines A–Z, by length, or shuffle.",
+    "Alphabetical, reverse, length, numeric or shuffled ordering for any list of lines, with live statistics of the result.",
+    "sort alphabetize order lines shuffle"),
+  T("find-and-replace", "Find & Replace", "text", "replace",
+    "Bulk replace with literal or regex mode.",
+    "Replace text across an entire document in one pass, with plain-text or regular-expression matching and a match preview.",
+    "find replace search substitute regex"),
+  T("readability-analyzer", "Readability Analyzer", "text", "abc",
+    "Reading ease, grade level and top keywords.",
+    "Score your text with the Flesch reading-ease formula, estimate its school grade, reading time and surface the most frequent keywords.",
+    "readability flesch score grade keywords analyze"),
+  T("text-diff-checker", "Text Diff Checker", "text", "transform",
+    "Compare two texts line by line.",
+    "Paste two versions of a text and see every addition, deletion and unchanged line highlighted side by side.",
+    "diff compare difference changes merge"),
+  T("accent-remover", "Accent Remover", "text", "letter-spacing",
+    "Strip accents and diacritics.",
+    "Convert accented characters to their plain ASCII equivalents — perfect for emails, code and search indexes.",
+    "accents diacritics remove strip normalize"),
+
+  /* ---------------- DATE & TIME ---------------- */
+  T("date-difference", "Date Difference", "date", "hourglass",
+    "Days, weeks, months and years between dates.",
+    "Pick two dates and get the exact difference in days, weeks, weekdays, months and years — including a detailed breakdown.",
+    "date difference days between calculate duration", true),
+  T("age-calculator", "Age Calculator", "date", "cake",
+    "Exact age down to the day.",
+    "Enter a birthdate to get a precise age in years, months and days, plus the next birthday countdown and day of the week.",
+    "age birthday born years old calculate"),
+  T("add-subtract-days", "Add / Subtract Days", "date", "calendar-plus",
+    "Get the date after adding or removing days.",
+    "Add or subtract days, weeks, months or years from any date and see the resulting day of the week instantly.",
+    "add days date plus minus subtract weeks"),
+  T("week-number-calculator", "Week Number Calculator", "date", "calendar-stats",
+    "ISO week number for any date.",
+    "Find the ISO 8601 week number, the week's Monday and Sunday, the quarter and the day of the year for any date.",
+    "week number iso calendar weeknum"),
+  T("countdown-timer", "Countdown Timer", "date", "alarm",
+    "Count down to any moment.",
+    "Set a target date and time and watch a live countdown in days, hours, minutes and seconds — accurate to the second.",
+    "countdown timer deadline event days until"),
+  T("stopwatch", "Online Stopwatch", "date", "stopwatch",
+    "Precise elapsed time with laps.",
+    "A browser stopwatch accurate to the hundredth of a second, with lap recording, pause and instant reset.",
+    "stopwatch timer elapsed laps chrono"),
+  T("timestamp-converter", "Timestamp Converter", "date", "history",
+    "Unix timestamps ↔ human dates.",
+    "Convert Unix seconds or milliseconds to a readable local and UTC date — and back — with instant copy.",
+    "unix timestamp epoch seconds convert date"),
+  T("timezone-converter", "Time Zone Converter", "date", "timezone",
+    "Compare times around the world.",
+    "Convert any time between cities and time zones with real daylight-saving awareness, using your browser's own IANA database.",
+    "timezone time zone convert cities world utc"),
+  T("days-until", "Days Until / Days Since", "date", "calendar-event",
+    "How long until — or since — any date.",
+    "Enter any date to see how many days remain until it, or how many days have passed since, plus the next occurrence.",
+    "days until since countdown remaining elapsed"),
+  T("current-time", "What Time Is It Now", "date", "world",
+    "Your precise local time and UTC offset.",
+    "A live, millisecond-accurate clock with your timezone name, UTC offset and the date in ISO format.",
+    "time now clock today current local"),
+
+  /* ---------------- CONVERTERS ---------------- */
+  T("unit-converter", "All-in-One Unit Converter", "converters", "globe",
+    "Every unit family in one converter.",
+    "Length, weight, temperature, area, volume, speed, data, time and energy — a single converter for all 9 families, powered by one accurate engine.",
+    "unit convert converter all master everything", true),
+  T("length-converter", "Length Converter", "converters", "ruler",
+    "Meters, kilometers, miles, feet and more.",
+    "Convert between 12 length units from millimeters to nautical miles with instant, precise results.",
+    "length distance meters miles feet inches km"),
+  T("weight-converter", "Weight Converter", "converters", "weight",
+    "Kilograms, pounds, ounces and stones.",
+    "Convert mass and weight between kilograms, grams, pounds, ounces, stones and tons — metric and imperial.",
+    "weight mass kg pounds lb ounces grams"),
+  T("temperature-converter", "Temperature Converter", "converters", "thermometer",
+    "Celsius, Fahrenheit and Kelvin.",
+    "Convert temperatures between the three major scales with the exact formulas shown alongside the result.",
+    "temperature celsius fahrenheit kelvin degrees"),
+  T("area-converter", "Area Converter", "converters", "map-2",
+    "Square meters, acres, hectares and more.",
+    "Convert area between square meters, square kilometers, square feet, acres, hectares and more.",
+    "area square meters acres hectares"),
+  T("volume-converter", "Volume Converter", "converters", "droplet",
+    "Liters, gallons, cups and more.",
+    "Convert volume between liters, milliliters, US gallons, quarts, pints, cups and cubic units.",
+    "volume liters gallons cups ml"),
+  T("speed-converter", "Speed Converter", "converters", "gauge",
+    "km/h, mph, m/s and knots.",
+    "Convert speed between kilometers per hour, miles per hour, meters per second, feet per second and knots.",
+    "speed kmh mph knots velocity"),
+  T("data-storage-converter", "Data Storage Converter", "converters", "database",
+    "Bits to terabytes, base 1024.",
+    "Convert digital storage from bits up to terabytes using the binary (1024) scale used by operating systems.",
+    "data storage bytes kb mb gb tb bits"),
+  T("time-units-converter", "Time Units Converter", "converters", "clock",
+    "Milliseconds to centuries.",
+    "Convert time units from milliseconds to centuries, including weeks, fortnights and business days.",
+    "time units ms seconds minutes hours days"),
+  T("energy-converter", "Energy Converter", "converters", "bolt",
+    "Joules, calories, kWh and BTU.",
+    "Convert energy between joules, calories, kilocalories, watt-hours, kilowatt-hours and BTU.",
+    "energy joules calories kwh btu"),
+  T("angle-converter", "Angle Converter", "converters", "rotate",
+    "Degrees, radians, gradians and turns.",
+    "Convert angles between degrees, radians, gradians, turns and arcminutes — handy for math, game dev and CAD.",
+    "angle degrees radians gradian turn"),
+
+  /* ---------------- DEVELOPER ---------------- */
+  T("base64-encoder", "Base64 Encode / Decode", "developer", "binary",
+    "Unicode-safe Base64, both directions.",
+    "Encode or decode Base64 with full Unicode support, line-break handling and URL-safe alphabet output.",
+    "base64 encode decode b64 atob btoa", true),
+  T("json-formatter", "JSON Formatter", "developer", "braces",
+    "Beautify, validate and minify JSON.",
+    "Paste any JSON to format it with configurable indentation, validate with precise error positions, and minify for production.",
+    "json format beautify validate minify pretty", true),
+  T("url-encoder", "URL Encoder / Decoder", "developer", "external-link",
+    "encodeURIComponent in both directions.",
+    "Encode text for safe use in URLs and query strings, or decode percent-encoded text back to readable form.",
+    "url encode decode uri percent escape"),
+  T("html-entity-encoder", "HTML Entity Encoder", "developer", "eye",
+    "Escape or unescape HTML safely.",
+    "Convert special characters to HTML entities and back — preventing XSS when rendering user content.",
+    "html entities escape unescape xss amp"),
+  T("regex-tester", "Regex Tester", "developer", "regex",
+    "Live matches, groups and flags.",
+    "Test regular expressions against any sample text with live match highlighting, capture groups and instant error feedback.",
+    "regex regular expression test pattern match"),
+  T("hash-generator", "SHA-256 Hash Generator", "developer", "hash",
+    "Hash any text with SHA-256.",
+    "Generate SHA-256 digests of any text, computed entirely in your browser with a pure JavaScript implementation.",
+    "hash sha256 sha-256 digest checksum"),
+  T("uuid-generator", "UUID Generator", "developer", "fingerprint",
+    "RFC 4122 v4 UUIDs in bulk.",
+    "Generate one or many random UUIDs, with uppercase and no-hyphen variants and instant copy.",
+    "uuid guid unique id identifier v4"),
+  T("password-generator", "Password Generator", "developer", "key",
+    "Strong passwords with entropy meter.",
+    "Create cryptographically secure passwords with custom length, character sets and a live entropy estimate in bits.",
+    "password secure random generator strong", true),
+  T("markdown-previewer", "Markdown Previewer", "developer", "brand-markdown",
+    "Write Markdown, see rendered HTML.",
+    "A lightweight Markdown editor with instant preview: headings, emphasis, code, lists, quotes and links.",
+    "markdown md preview editor readme"),
+  T("css-minifier", "CSS Minifier", "developer", "terminal-2",
+    "Shrink stylesheets in your browser.",
+    "Remove comments and collapse whitespace in CSS — with a live size comparison before and after.",
+    "css minify compress styles stylesheet"),
+  T("jwt-decoder", "JWT Decoder", "developer", "shield-check",
+    "Decode JWT headers and payloads.",
+    "Paste a JSON Web Token to inspect its header and payload as formatted JSON — decoding only, never sending it anywhere.",
+    "jwt token decode json web"),
+  T("csv-to-json", "CSV to JSON Converter", "developer", "database",
+    "Turn spreadsheet rows into JSON.",
+    "Convert CSV data into a JSON array of objects, with quoted-field support, custom delimiters and a header toggle.",
+    "csv json convert spreadsheet table"),
+
+  /* ---------------- DESIGN ---------------- */
+  T("image-resizer", "Image Resizer", "design", "photo",
+    "Resize any image right in your browser.",
+    "Upload an image, set a new width or height with aspect-ratio lock, pick the format and download — nothing ever leaves your device.",
+    "image resize resizer scale dimensions pixels", true),
+  T("image-compressor", "Image Compressor", "design", "arrows-minimize",
+    "Shrink image files without leaving the browser.",
+    "Compress JPG, PNG or WebP images with a quality slider, live size comparison and instant download.",
+    "image compress compression optimize jpg png quality"),
+  T("color-converter", "Color Converter", "design", "palette",
+    "HEX, RGB, HSL and HWB — all at once.",
+    "Paste a color in any format and get every other format plus a live swatch and one-click copy.",
+    "color hex rgb hsl convert picker"),
+  T("gradient-generator", "CSS Gradient Generator", "design", "color-filter",
+    "Design gradients, copy the CSS.",
+    "Build linear or radial gradients with multiple stops and a live angle dial, then copy production-ready CSS.",
+    "gradient css linear radial background generator"),
+  T("shadow-generator", "CSS Shadow Generator", "design", "sun-high",
+    "Craft the perfect box shadow.",
+    "Tune offset, blur, spread, color and inset for a box shadow with live preview and copyable CSS.",
+    "shadow box-shadow css generator blur"),
+  T("qr-code-generator", "QR Code Generator", "design", "qrcode",
+    "Turn any text or URL into a QR code.",
+    "Generate crisp QR codes for links, Wi-Fi or plain text with adjustable size and instant PNG download.",
+    "qr code generator qrcode link url"),
+  T("favicon-generator", "Favicon Generator", "design", "star",
+    "App icons from a letter or an image.",
+    "Generate crisp favicons at 16, 32, 48 and 180 px from a letter, an emoji or an uploaded image — pure canvas, no upload.",
+    "favicon icon ico apple-touch generator"),
+  T("color-palette-extractor", "Color Palette Extractor", "design", "droplet",
+    "Pull a palette from any image.",
+    "Extract the six dominant colors from any photo with a k-means algorithm running entirely on canvas — with HEX copy.",
+    "palette colors extract image dominant swatch"),
+  T("aspect-ratio-calculator", "Aspect Ratio Calculator", "design", "ruler",
+    "Perfect dimensions for any ratio.",
+    "Simplify any aspect ratio, find missing dimensions that preserve it, and get common ratios like 16:9 and 4:3.",
+    "aspect ratio 16:9 dimensions width height")
+];
+
+export const CAT_BY_ID: Record<string, Category> = {};
+CATEGORIES.forEach(c => { CAT_BY_ID[c.id] = c; });
+
+export const TOOL_BY_SLUG: Record<string, Tool> = {};
+TOOLS.forEach(t => { TOOL_BY_SLUG[t.slug] = t; });
+
+export function getTool(slug: string): Tool | undefined {
+  return TOOL_BY_SLUG[slug];
+}
+
+export function getCategory(id: string): Category | undefined {
+  return CAT_BY_ID[id];
+}
+
+export function toolsByCategory(catId: string): Tool[] {
+  return TOOLS.filter(t => t.cat === catId);
+}
+
+export function popularTools(limit: number = 8): Tool[] {
+  return TOOLS.filter(t => t.popular).slice(0, limit);
+}
+
+export function searchTools(query: string, limit: number = 12): Tool[] {
+  const q = (query || "").trim().toLowerCase();
+  if (!q) return [];
+  const terms = q.split(/\s+/).filter(Boolean);
+  const scored: { t: Tool; s: number }[] = [];
+
+  TOOLS.forEach(t => {
+    const name = t.name.toLowerCase();
+    const cat = CAT_BY_ID[t.cat]?.name.toLowerCase() || "";
+    const hay = `${name} ${t.desc.toLowerCase()} ${t.kw} ${cat}`;
+    let score = 0;
+
+    terms.forEach(term => {
+      if (name.startsWith(term)) score += 12;
+      else if (name.includes(term)) score += 6;
+      if (hay.includes(term)) score += 3;
+      if (t.kw.includes(term)) score += 2;
+    });
+
+    if (score > 0 && t.popular) score += 0.5;
+    if (score > 0) scored.push({ t, s: score });
+  });
+
+  scored.sort((a, b) => b.s - a.s);
+  return scored.slice(0, limit).map(x => x.t);
+}
+
+export function fmtInt(n: number): string {
+  return n.toLocaleString("en-US");
+}

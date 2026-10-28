@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build & Validate
+    name: Build & Validate Next.js
     runs-on: ubuntu-latest
 
     steps:
@@ -24,12 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build site
+      - name: Build Next.js site
         run: npm run build
-
-      - name: Verify build artifacts
-        run: |
-          test -f dist/index.html || exit 1
-          test -f dist/tools.html || exit 1
-          test -f dist/tool.html || exit 1
-          echo "Build verification successful!"
