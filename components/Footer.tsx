@@ -45,6 +45,7 @@ export function Footer() {
             <h5>Product & Legal</h5>
             <ul>
               <li><Link href="/about">About Clouse</Link></li>
+              <li><Link href="/contact">Contact &amp; Support</Link></li>
               <li><Link href="/components">Design System</Link></li>
               <li><Link href="/privacy">Privacy Policy</Link></li>
               <li><Link href="/terms">Terms of Service</Link></li>
@@ -64,15 +65,36 @@ export function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Clouse Tools. Built with Next.js, React 19 and Apple-inspired craft.</p>
+          <p>
+            © {new Date().getFullYear()} Clouse Tools. Handcrafted by{' '}
+            <a
+              href="https://github.com/ViictorN"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontWeight: 600, textDecoration: 'underline' }}
+            >
+              Victor Gomes
+            </a>
+            . 100% Client-Side &amp; Open Source.
+          </p>
           <div className="footer-social">
             <a
               href="https://github.com/ViictorN/clouse-tools"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub Repository"
+              title="GitHub Repository"
             >
               <Icon name="code" size={18} />
+            </a>
+            <a
+              href="https://wa.me/5511999999999"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Direct Support on WhatsApp"
+              title="Direct Support on WhatsApp"
+            >
+              <Icon name="world" size={18} />
             </a>
           </div>
         </div>

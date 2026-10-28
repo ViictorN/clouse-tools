@@ -5,6 +5,8 @@ import { ToolCard } from '@/components/ToolCard';
 import { CategoryCard } from '@/components/CategoryCard';
 import { Icon } from '@/lib/icons';
 import { HeroSearch } from '@/components/HeroSearch';
+import { UseCasesSection } from '@/components/UseCasesSection';
+import { FAQSection } from '@/components/FAQSection';
 
 export default function HomePage() {
   const popular = popularTools();
@@ -192,6 +194,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ---------- REAL-WORLD WORKFLOWS ---------- */}
+      <UseCasesSection />
+
       {/* ---------- CATEGORIES SECTION ---------- */}
       <section className="section">
         <div className="container">
@@ -215,6 +220,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ---------- FAQ SECTION ---------- */}
+      <FAQSection />
 
       {/* ---------- CTA SECTION ---------- */}
       <section className="cta-section">

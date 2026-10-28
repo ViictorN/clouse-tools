@@ -46,6 +46,9 @@ export function Header({ onOpenSearch }: HeaderProps) {
               <Link href="/about" className={pathname === '/about' ? 'active' : ''}>
                 About
               </Link>
+              <Link href="/contact" className={pathname === '/contact' ? 'active' : ''}>
+                Contact
+              </Link>
               <Link href="/components" className={pathname === '/components' ? 'active' : ''}>
                 Design System
               </Link>
@@ -100,9 +103,13 @@ export function Header({ onOpenSearch }: HeaderProps) {
           <span>About Clouse</span>
           <small>04</small>
         </Link>
+        <Link href="/contact" className="m-link">
+          <span>Contact &amp; Support</span>
+          <small>05</small>
+        </Link>
         <Link href="/components" className="m-link">
           <span>Design System</span>
-          <small>05</small>
+          <small>06</small>
         </Link>
         <div className="m-foot">
           <button

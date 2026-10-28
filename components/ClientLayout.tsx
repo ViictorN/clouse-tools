@@ -4,6 +4,7 @@ import { ToastProvider } from './ToastContext';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CommandPalette } from './CommandPalette';
+import { MobileActionDock } from './MobileActionDock';
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -31,6 +32,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       <Footer />
+      <MobileActionDock />
       <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </ToastProvider>
   );
