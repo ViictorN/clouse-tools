@@ -105,7 +105,7 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
           <h3 style={{ marginTop: 16 }}>
             {locale === 'pt-br' ? 'Nenhuma ferramenta encontrada' : 'No tools matched your search'}
           </h3>
-          <p style={{ color: 'var(--text-sub)', marginTop: 8 }}>
+          <p style={{ color: 'var(--ink-2)', marginTop: 8 }}>
             {locale === 'pt-br'
               ? 'Tente buscar com outros termos ou selecione outra categoria.'
               : 'Try adjusting your search terms or browse all categories.'}

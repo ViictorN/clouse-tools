@@ -80,7 +80,7 @@ export default function LocalizedContactPage() {
               <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '12px' }}>
                 {isPt ? 'Mensagem Recebida!' : 'Thank you for reaching out!'}
               </h2>
-              <p style={{ color: 'var(--text-sub)', maxWidth: '520px', margin: '0 auto 28px', lineHeight: 1.6 }}>
+              <p style={{ color: 'var(--ink-2)', maxWidth: '520px', margin: '0 auto 28px', lineHeight: 1.6 }}>
                 {isPt
                   ? 'Agradecemos o seu contato. O Clouse Tools é um projeto aberto e evolui diretamente com as contribuições e sugestões da comunidade.'
                   : 'We have received your note. Because Clouse Tools is an open community-driven project, user feedback directly shapes our roadmap.'}
@@ -230,7 +230,7 @@ export default function LocalizedContactPage() {
                   background: 'var(--surface)',
                   padding: '24px 30px',
                   borderRadius: 'var(--r-lg)',
-                  border: '1px solid var(--border)',
+                  border: '1px solid var(--line)',
                   flexWrap: 'wrap',
                   gap: '16px',
                 }}
@@ -239,7 +239,7 @@ export default function LocalizedContactPage() {
                   <h3 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>
                     {isPt ? 'Prefere o GitHub?' : 'Prefer GitHub?'}
                   </h3>
-                  <p style={{ margin: '4px 0 0', color: 'var(--text-sub)', fontSize: '0.9rem' }}>
+                  <p style={{ margin: '4px 0 0', color: 'var(--ink-2)', fontSize: '0.9rem' }}>
                     {isPt
                       ? 'Abra uma issue ou pull request diretamente no repositório oficial.'
                       : 'Open an issue or submit a pull request directly in our repository.'}

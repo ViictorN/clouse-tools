@@ -19,7 +19,7 @@ export default function RootPage() {
         alignItems: 'center',
         justifyContent: 'center',
         background: 'var(--bg, #0b0b0e)',
-        color: 'var(--text-sub, #86868b)',
+        color: 'var(--ink-2, #86868b)',
         fontFamily: 'var(--font-inter, sans-serif)',
       }}
     >
@@ -30,7 +30,7 @@ export default function RootPage() {
             height: 44,
             borderRadius: '50%',
             border: '2px solid rgba(255, 255, 255, 0.1)',
-            borderTopColor: 'var(--primary, #6366f1)',
+            borderTopColor: 'var(--blue, #0071e3)',
             animation: 'spin 0.8s linear infinite',
             margin: '0 auto 16px',
           }}

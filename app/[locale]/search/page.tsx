@@ -117,7 +117,7 @@ function SearchContent() {
                     ? `Nenhuma ferramenta encontrada para "${query}"`
                     : `No tools found matching "${query}"`}
                 </b>
-                <p style={{ marginTop: 8, color: 'var(--text-sub)' }}>
+                <p style={{ marginTop: 8, color: 'var(--ink-2)' }}>
                   {isPt
                     ? 'Tente termos mais amplos como "converter", "matemática" ou "código".'
                     : 'Try searching for a broader term like "convert", "math", or "code".'}

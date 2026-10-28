@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Tool } from '@/lib/data';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
-import { getLocalizedTool } from '@/lib/translations';
+import { getLocalizedTool, getLocalizedCategoryById } from '@/lib/translations';
 
 export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Locale }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
@@ -15,6 +15,8 @@ export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Lo
   const locale: Locale =
     propLocale || (pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en');
   const localizedTool = getLocalizedTool(tool, locale);
+  const category = getLocalizedCategoryById(tool.cat, locale);
+  const categoryName = category?.name || tool.cat;
 
   useEffect(() => {
     try {
@@ -119,7 +121,7 @@ export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Lo
       </div>
       <p>{localizedTool.desc}</p>
       <div className="t-foot">
-        <span className="t-cat">{tool.cat}</span>
+        <span className="t-cat">{categoryName}</span>
         <span className="t-go" aria-hidden="true">
           <Icon name="arrow-right" size={16} />
         </span>

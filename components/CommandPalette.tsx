@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Tool } from '@/lib/data';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
-import { getLocalizedTools } from '@/lib/translations';
+import { getLocalizedTools, getLocalizedCategoryById } from '@/lib/translations';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -145,28 +145,32 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
         <div className="search-results">
           {results.length > 0 ? (
-            results.map((tool, index) => (
-              <Link
-                key={tool.slug}
-                href={`/${locale}/tool/${tool.slug}`}
-                className={`sr-item ${index === selectedIndex ? 'active' : ''}`}
-                onClick={() => handleItemClick(tool.slug)}
-                onMouseEnter={() => setSelectedIndex(index)}
-              >
-                <div className="sr-icn">
-                  <Icon name={tool.icon} size={18} />
-                </div>
-                <div className="sr-text">
-                  <div className="sr-title">{tool.name}</div>
-                  <div className="sr-desc">{tool.desc}</div>
-                </div>
-                <span className="sr-cat">{tool.cat}</span>
-              </Link>
-            ))
+            results.map((tool, index) => {
+              const catObj = getLocalizedCategoryById(tool.cat, locale);
+              const catName = catObj?.name || tool.cat;
+              return (
+                <Link
+                  key={tool.slug}
+                  href={`/${locale}/tool/${tool.slug}`}
+                  className={`sr-item ${index === selectedIndex ? 'active' : ''}`}
+                  onClick={() => handleItemClick(tool.slug)}
+                  onMouseEnter={() => setSelectedIndex(index)}
+                >
+                  <div className="sr-icn">
+                    <Icon name={tool.icon} size={18} />
+                  </div>
+                  <div className="sr-text">
+                    <div className="sr-title">{tool.name}</div>
+                    <div className="sr-desc">{tool.desc}</div>
+                  </div>
+                  <span className="sr-cat">{catName}</span>
+                </Link>
+              );
+            })
           ) : (
             <div className="empty-state" style={{ padding: '36px 20px', textAlign: 'center' }}>
               <Icon name="search" size={32} />
-              <p style={{ marginTop: 12, color: 'var(--text-sub)' }}>
+              <p style={{ marginTop: 12, color: 'var(--ink-2)' }}>
                 {locale === 'pt-br' ? 'Nenhuma ferramenta encontrada.' : 'No tools found.'}
               </p>
             </div>

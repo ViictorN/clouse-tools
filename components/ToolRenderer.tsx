@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { renderTool } from '@/lib/tool-engine';
 import { useToast } from '@/components/ToastContext';
 import { Icon } from '@/lib/icons';
@@ -10,6 +10,7 @@ interface ToolRendererProps {
 
 export function ToolRenderer({ slug }: ToolRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hasError, setHasError] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -24,23 +25,25 @@ export function ToolRenderer({ slug }: ToolRendererProps) {
 
   useEffect(() => {
     if (containerRef.current) {
-      // Clear container and mount tool
+      setHasError(false);
       containerRef.current.innerHTML = '';
       const ok = renderTool(slug, containerRef.current, showToast);
       if (!ok) {
-        containerRef.current.innerHTML = `
-          <div class="error-note">
-            <span class="icon-wrapper">${Icon({ name: 'alert-triangle', size: 18 })}</span>
-            <span>This tool could not be loaded. Please refresh the page.</span>
-          </div>
-        `;
+        setHasError(true);
       }
     }
   }, [slug, showToast]);
 
   return (
     <div className="tool-card">
-      <div ref={containerRef} id="tool-container" />
+      {hasError ? (
+        <div className="error-note" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Icon name="alert-triangle" size={20} />
+          <span>This tool could not be loaded. Please refresh the page.</span>
+        </div>
+      ) : (
+        <div ref={containerRef} id="tool-container" />
+      )}
     </div>
   );
 }

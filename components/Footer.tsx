@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedCategories, getLocalizedPopularTools, t } from '@/lib/translations';
+import { LanguageSelector } from './LanguageSelector';
 
 export function Footer() {
   const pathname = usePathname();
@@ -104,23 +105,27 @@ export function Footer() {
             </a>
             . {t('footer.allRights', locale)}
           </p>
-          <div className="footer-social">
-            <a
-              href="https://github.com/ViictorN/clouse-tools"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub Repository"
-              title="GitHub Repository"
-            >
-              <Icon name="code" size={18} />
-            </a>
-            <a
-              href={`/${locale}/components`}
-              aria-label="Design System"
-              title="Design System"
-            >
-              <Icon name="palette" size={18} />
-            </a>
+
+          <div className="footer-actions">
+            <LanguageSelector currentLocale={locale} />
+            <div className="footer-social">
+              <a
+                href="https://github.com/ViictorN/clouse-tools"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Repository"
+                title="GitHub Repository"
+              >
+                <Icon name="code" size={18} />
+              </a>
+              <a
+                href={`/${locale}/components`}
+                aria-label="Design System"
+                title="Design System"
+              >
+                <Icon name="palette" size={18} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
