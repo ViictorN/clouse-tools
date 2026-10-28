@@ -57,6 +57,13 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         } else if (e.key === 'Enter') {
           e.preventDefault();
           if (results[selectedIndex]) {
+            try {
+              const recent: string[] = JSON.parse(localStorage.getItem('clouse-recent') || '[]');
+              const filtered = recent.filter((s) => s !== results[selectedIndex].slug);
+              const updated = [results[selectedIndex].slug, ...filtered].slice(0, 6);
+              localStorage.setItem('clouse-recent', JSON.stringify(updated));
+              window.dispatchEvent(new CustomEvent('clouse-recent-updated', { detail: updated }));
+            } catch {}
             router.push(`/tool/${results[selectedIndex].slug}`);
             onClose();
           }
@@ -67,6 +74,17 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, results, selectedIndex, router, onClose]);
+
+  const handleItemClick = (slug: string) => {
+    try {
+      const recent: string[] = JSON.parse(localStorage.getItem('clouse-recent') || '[]');
+      const filtered = recent.filter((s) => s !== slug);
+      const updated = [slug, ...filtered].slice(0, 6);
+      localStorage.setItem('clouse-recent', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('clouse-recent-updated', { detail: updated }));
+    } catch {}
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -100,7 +118,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                 key={tool.slug}
                 href={`/tool/${tool.slug}`}
                 className={`sr-item ${index === selectedIndex ? 'active' : ''}`}
-                onClick={onClose}
+                onClick={() => handleItemClick(tool.slug)}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
                 <div className="tile-icn soft">

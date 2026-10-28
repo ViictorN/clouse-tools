@@ -5,6 +5,7 @@ import { ToolCard } from '@/components/ToolCard';
 import { CategoryCard } from '@/components/CategoryCard';
 import { Icon } from '@/lib/icons';
 import { HeroSearch } from '@/components/HeroSearch';
+import { HomePersonalization } from '@/components/HomePersonalization';
 import { UseCasesSection } from '@/components/UseCasesSection';
 import { FAQSection } from '@/components/FAQSection';
 
@@ -31,6 +32,7 @@ export default function HomePage() {
           </p>
 
           <HeroSearch />
+          <HomePersonalization />
 
           <div className="hero-chips">
             <Link href="/tool/percentage-calculator" className="chip">

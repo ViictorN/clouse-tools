@@ -13,6 +13,16 @@ export function ToolRenderer({ slug }: ToolRendererProps) {
   const { showToast } = useToast();
 
   useEffect(() => {
+    try {
+      const recent: string[] = JSON.parse(localStorage.getItem('clouse-recent') || '[]');
+      const filtered = recent.filter((s) => s !== slug);
+      const updated = [slug, ...filtered].slice(0, 6);
+      localStorage.setItem('clouse-recent', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('clouse-recent-updated', { detail: updated }));
+    } catch {}
+  }, [slug]);
+
+  useEffect(() => {
     if (containerRef.current) {
       // Clear container and mount tool
       containerRef.current.innerHTML = '';

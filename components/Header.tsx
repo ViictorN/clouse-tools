@@ -11,6 +11,7 @@ interface HeaderProps {
 export function Header({ onOpenSearch }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const pathname = usePathname();
 
   useEffect(() => {
@@ -21,6 +22,43 @@ export function Header({ onOpenSearch }: HeaderProps) {
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    try {
+      const current = document.documentElement.getAttribute('data-theme') as 'light' | 'dark';
+      if (current) {
+        setTheme(current);
+      } else {
+        const stored = localStorage.getItem('clouse-theme') as 'light' | 'dark' | null;
+        if (stored) {
+          setTheme(stored);
+          document.documentElement.setAttribute('data-theme', stored);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          setTheme('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      }
+    } catch {}
+
+    const handleThemeEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail === 'dark' || customEvent.detail === 'light') {
+        setTheme(customEvent.detail);
+      }
+    };
+    window.addEventListener('clouse-theme-change', handleThemeEvent);
+    return () => window.removeEventListener('clouse-theme-change', handleThemeEvent);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    document.documentElement.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('clouse-theme', next);
+    } catch {}
+    window.dispatchEvent(new CustomEvent('clouse-theme-change', { detail: next }));
+  };
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -55,6 +93,16 @@ export function Header({ onOpenSearch }: HeaderProps) {
             </nav>
 
             <div className="nav-cta">
+              <button
+                type="button"
+                className="theme-toggle-btn"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={19} />
+              </button>
+
               <button
                 type="button"
                 className="nav-search-btn"
@@ -112,6 +160,15 @@ export function Header({ onOpenSearch }: HeaderProps) {
           <small>06</small>
         </Link>
         <div className="m-foot">
+          <button
+            type="button"
+            className="btn btn-ghost full-width"
+            onClick={toggleTheme}
+            style={{ marginBottom: '8px' }}
+          >
+            <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={16} />
+            <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+          </button>
           <button
             type="button"
             className="btn btn-blue full-width"
