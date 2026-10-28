@@ -115,8 +115,6 @@ export function Header({ onOpenSearch }: HeaderProps) {
             </nav>
 
             <div className="nav-cta">
-              <LanguageSelector currentLocale={locale} />
-
               <button
                 type="button"
                 className="theme-toggle-btn"

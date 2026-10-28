@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
-import { Locale, switchLocalePath, setClientLocale } from '@/lib/i18n';
+import { Locale } from '@/lib/i18n';
 
 export function MobileActionDock() {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -58,17 +58,8 @@ export function MobileActionDock() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const toggleLanguage = () => {
-    const target: Locale = locale === 'pt-br' ? 'en' : 'pt-br';
-    setClientLocale(target);
-    const targetPath = switchLocalePath(pathname, target);
-    window.location.href = targetPath;
-  };
-
   const searchLabel = locale === 'pt-br' ? 'Buscar...' : 'Search...';
   const toolsLabel = locale === 'pt-br' ? 'Ferramentas' : 'Tools';
-  const langLabel = locale === 'pt-br' ? 'PT' : 'EN';
-  const langTitle = locale === 'pt-br' ? 'Mudar para Inglês (EN)' : 'Switch to Portuguese (PT-BR)';
 
   return (
     <div className="mobile-dock" aria-label="Mobile quick actions">
@@ -88,16 +79,6 @@ export function MobileActionDock() {
         <span>{toolsLabel}</span>
       </Link>
 
-      <button
-        type="button"
-        className="mobile-dock-btn icon-only"
-        onClick={toggleLanguage}
-        aria-label={langTitle}
-        title={langTitle}
-        style={{ fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.04em' }}
-      >
-        <span>{langLabel}</span>
-      </button>
 
       <button
         type="button"
