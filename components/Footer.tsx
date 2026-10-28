@@ -1,54 +1,81 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
-import { CATEGORIES } from '@/lib/data';
+import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
+import { Locale } from '@/lib/i18n';
+import { getLocalizedCategories, getLocalizedPopularTools, t } from '@/lib/translations';
 
 export function Footer() {
+  const pathname = usePathname();
+  const locale: Locale =
+    pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
+
+  const categories = getLocalizedCategories(locale);
+  const popular = getLocalizedPopularTools(locale, 6);
+
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link href="/" className="nav-logo" aria-label="Clouse Tools Home">
+            <Link href={`/${locale}`} className="nav-logo" aria-label="Clouse Tools Home">
               <span className="logo-mark">C</span>
               <span>Clouse Tools</span>
             </Link>
-            <p>
-              67 free, private, client-side tools designed with the utmost craft. Zero tracking, zero ads, zero accounts required.
-            </p>
+            <p>{t('footer.brand', locale)}</p>
           </div>
 
           <div>
-            <h5>Categories</h5>
+            <h5>{t('footer.cats', locale)}</h5>
             <ul>
-              {CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <li key={cat.id}>
-                  <Link href={`/category/${cat.id}`}>{cat.name}</Link>
+                  <Link href={`/${locale}/category/${cat.id}`}>{cat.name}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h5>Popular Tools</h5>
+            <h5>{t('footer.quick', locale)}</h5>
             <ul>
-              <li><Link href="/tool/percentage-calculator">Percentage Calculator</Link></li>
-              <li><Link href="/tool/json-formatter">JSON Formatter</Link></li>
-              <li><Link href="/tool/word-counter">Word Counter</Link></li>
-              <li><Link href="/tool/date-difference">Date Difference</Link></li>
-              <li><Link href="/tool/unit-converter">Unit Converter</Link></li>
-              <li><Link href="/tool/qr-code-generator">QR Code Generator</Link></li>
+              {popular.map((tool) => (
+                <li key={tool.slug}>
+                  <Link href={`/${locale}/tool/${tool.slug}`}>{tool.name}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h5>Product & Legal</h5>
+            <h5>{t('footer.legal', locale)}</h5>
             <ul>
-              <li><Link href="/about">About Clouse</Link></li>
-              <li><Link href="/contact">Contact &amp; Support</Link></li>
-              <li><Link href="/components">Design System</Link></li>
-              <li><Link href="/privacy">Privacy Policy</Link></li>
-              <li><Link href="/terms">Terms of Service</Link></li>
+              <li>
+                <Link href={`/${locale}/about`}>
+                  {locale === 'pt-br' ? 'Sobre o Clouse' : 'About Clouse'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/contact`}>
+                  {locale === 'pt-br' ? 'Contato & Suporte' : 'Contact & Support'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/components`}>
+                  {locale === 'pt-br' ? 'Design System' : 'Design System'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/privacy`}>
+                  {locale === 'pt-br' ? 'Política de Privacidade' : 'Privacy Policy'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/terms`}>
+                  {locale === 'pt-br' ? 'Termos de Uso' : 'Terms of Service'}
+                </Link>
+              </li>
               <li>
                 <a
                   href="https://github.com/ViictorN/clouse-tools"
@@ -75,7 +102,7 @@ export function Footer() {
             >
               Victor Gomes
             </a>
-            . 100% Client-Side &amp; Open Source.
+            . {t('footer.allRights', locale)}
           </p>
           <div className="footer-social">
             <a
@@ -88,13 +115,11 @@ export function Footer() {
               <Icon name="code" size={18} />
             </a>
             <a
-              href="https://wa.me/5511999999999"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Direct Support on WhatsApp"
-              title="Direct Support on WhatsApp"
+              href={`/${locale}/components`}
+              aria-label="Design System"
+              title="Design System"
             >
-              <Icon name="world" size={18} />
+              <Icon name="palette" size={18} />
             </a>
           </div>
         </div>

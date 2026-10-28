@@ -1,77 +1,134 @@
 import type { MetadataRoute } from 'next';
 import { TOOLS, CATEGORIES } from '@/lib/data';
+import { LOCALES } from '@/lib/i18n';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://clouse.app';
   const now = new Date();
 
-  // Core static pages
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}`,
+  const entries: MetadataRoute.Sitemap = [];
+
+  // Root redirect entry
+  entries.push({
+    url: `${baseUrl}`,
+    lastModified: now,
+    changeFrequency: 'daily',
+    priority: 1.0,
+  });
+
+  // Localized static pages for both en and pt-br
+  for (const locale of LOCALES) {
+    const isEn = locale === 'en';
+    const altLocale = isEn ? 'pt-br' : 'en';
+
+    // Home
+    entries.push({
+      url: `${baseUrl}/${locale}`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/tools`,
+      alternates: {
+        languages: {
+          'pt-BR': `${baseUrl}/pt-br`,
+          'en-US': `${baseUrl}/en`,
+        },
+      },
+    });
+
+    // Tools directory
+    entries.push({
+      url: `${baseUrl}/${locale}/tools`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/search`,
+      alternates: {
+        languages: {
+          'pt-BR': `${baseUrl}/pt-br/tools`,
+          'en-US': `${baseUrl}/en/tools`,
+        },
+      },
+    });
+
+    // Search
+    entries.push({
+      url: `${baseUrl}/${locale}/search`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about`,
+    });
+
+    // About
+    entries.push({
+      url: `${baseUrl}/${locale}/about`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
+    });
+
+    // Contact
+    entries.push({
+      url: `${baseUrl}/${locale}/contact`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/components`,
+    });
+
+    // Components
+    entries.push({
+      url: `${baseUrl}/${locale}/components`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/privacy`,
+    });
+
+    // Privacy
+    entries.push({
+      url: `${baseUrl}/${locale}/privacy`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/terms`,
+    });
+
+    // Terms
+    entries.push({
+      url: `${baseUrl}/${locale}/terms`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.5,
-    },
-  ];
+    });
 
-  // Category pages
-  const categoryPages: MetadataRoute.Sitemap = CATEGORIES.map((cat) => ({
-    url: `${baseUrl}/category/${cat.id}`,
-    lastModified: now,
-    changeFrequency: 'weekly',
-    priority: 0.85,
-  }));
+    // Categories
+    for (const cat of CATEGORIES) {
+      entries.push({
+        url: `${baseUrl}/${locale}/category/${cat.id}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: 0.85,
+        alternates: {
+          languages: {
+            'pt-BR': `${baseUrl}/pt-br/category/${cat.id}`,
+            'en-US': `${baseUrl}/en/category/${cat.id}`,
+          },
+        },
+      });
+    }
 
-  // Tool pages (all 67 tools)
-  const toolPages: MetadataRoute.Sitemap = TOOLS.map((tool) => ({
-    url: `${baseUrl}/tool/${tool.slug}`,
-    lastModified: now,
-    changeFrequency: 'weekly',
-    priority: tool.popular ? 0.9 : 0.8,
-  }));
+    // All 67 Tools
+    for (const tool of TOOLS) {
+      entries.push({
+        url: `${baseUrl}/${locale}/tool/${tool.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: tool.popular ? 0.9 : 0.8,
+        alternates: {
+          languages: {
+            'pt-BR': `${baseUrl}/pt-br/tool/${tool.slug}`,
+            'en-US': `${baseUrl}/en/tool/${tool.slug}`,
+          },
+        },
+      });
+    }
+  }
 
-  return [...staticPages, ...categoryPages, ...toolPages];
+  return entries;
 }

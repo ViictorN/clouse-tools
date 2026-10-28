@@ -1,9 +1,11 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { searchTools, Tool } from '@/lib/data';
+import { useRouter, usePathname } from 'next/navigation';
+import { Tool } from '@/lib/data';
 import { Icon } from '@/lib/icons';
+import { Locale } from '@/lib/i18n';
+import { getLocalizedTools } from '@/lib/translations';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -16,21 +18,41 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+
+  const locale: Locale =
+    pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
+
+  const localizedTools = getLocalizedTools(locale);
+
+  const searchInList = (q: string): Tool[] => {
+    const term = q.trim().toLowerCase();
+    if (!term) return localizedTools.slice(0, 8);
+    return localizedTools
+      .filter(
+        (t) =>
+          t.name.toLowerCase().includes(term) ||
+          t.desc.toLowerCase().includes(term) ||
+          t.kw.toLowerCase().includes(term) ||
+          t.cat.toLowerCase().includes(term)
+      )
+      .slice(0, 10);
+  };
 
   useEffect(() => {
     if (isOpen) {
       setQuery('');
-      setResults(searchTools('').slice(0, 8));
+      setResults(searchInList('').slice(0, 8));
       setSelectedIndex(0);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [isOpen]);
+  }, [isOpen, locale]);
 
   useEffect(() => {
-    const list = searchTools(query).slice(0, 10);
+    const list = searchInList(query);
     setResults(list);
     setSelectedIndex(0);
-  }, [query]);
+  }, [query, locale]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,10 +60,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         e.preventDefault();
         if (isOpen) onClose();
         else {
-          // Trigger open via custom event or parent
           window.dispatchEvent(new CustomEvent('toggle-command-palette'));
         }
-      } else if (e.key === '/' && !isOpen && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+      } else if (
+        e.key === '/' &&
+        !isOpen &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
         e.preventDefault();
         window.dispatchEvent(new CustomEvent('open-command-palette'));
       } else if (isOpen) {
@@ -64,7 +90,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
               localStorage.setItem('clouse-recent', JSON.stringify(updated));
               window.dispatchEvent(new CustomEvent('clouse-recent-updated', { detail: updated }));
             } catch {}
-            router.push(`/tool/${results[selectedIndex].slug}`);
+            router.push(`/${locale}/tool/${results[selectedIndex].slug}`);
             onClose();
           }
         }
@@ -73,7 +99,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, results, selectedIndex, router, onClose]);
+  }, [isOpen, results, selectedIndex, router, onClose, locale]);
 
   const handleItemClick = (slug: string) => {
     try {
@@ -87,6 +113,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   };
 
   if (!isOpen) return null;
+
+  const placeholder =
+    locale === 'pt-br'
+      ? 'Buscar 67 ferramentas... (ex: json, idade, porcentagem)'
+      : 'Search all 67 tools... (e.g. json, age, percentage)';
 
   return (
     <div
@@ -104,9 +135,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             ref={inputRef}
             type="text"
             className="search-input"
-            placeholder="Search all 67 tools... (e.g. json, age, percentage)"
+            placeholder={placeholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            aria-label={placeholder}
           />
           <span className="search-hint">ESC</span>
         </div>
@@ -116,27 +148,41 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             results.map((tool, index) => (
               <Link
                 key={tool.slug}
-                href={`/tool/${tool.slug}`}
+                href={`/${locale}/tool/${tool.slug}`}
                 className={`sr-item ${index === selectedIndex ? 'active' : ''}`}
                 onClick={() => handleItemClick(tool.slug)}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
-                <div className="tile-icn soft">
-                  <Icon name={tool.icon} size={20} />
+                <div className="sr-icn">
+                  <Icon name={tool.icon} size={18} />
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div className="sr-name">{tool.name}</div>
-                  <div className="sr-cat">{tool.cat.toUpperCase()} • {tool.desc}</div>
+                <div className="sr-text">
+                  <div className="sr-title">{tool.name}</div>
+                  <div className="sr-desc">{tool.desc}</div>
                 </div>
-                <Icon name="arrow-right" size={16} style={{ color: 'var(--ink-3)' }} />
+                <span className="sr-cat">{tool.cat}</span>
               </Link>
             ))
           ) : (
-            <div className="sr-empty">
-              <b>No tools found</b>
-              <span>Try searching for percentage, json, age, image, or uuid</span>
+            <div className="empty-state" style={{ padding: '36px 20px', textAlign: 'center' }}>
+              <Icon name="search" size={32} />
+              <p style={{ marginTop: 12, color: 'var(--text-sub)' }}>
+                {locale === 'pt-br' ? 'Nenhuma ferramenta encontrada.' : 'No tools found.'}
+              </p>
             </div>
           )}
+        </div>
+
+        <div className="search-footer">
+          <div className="sf-hint">
+            <kbd>↑</kbd> <kbd>↓</kbd> <span>{locale === 'pt-br' ? 'Navegar' : 'Navigate'}</span>
+          </div>
+          <div className="sf-hint">
+            <kbd>↵</kbd> <span>{locale === 'pt-br' ? 'Selecionar' : 'Select'}</span>
+          </div>
+          <div className="sf-hint">
+            <kbd>ESC</kbd> <span>{locale === 'pt-br' ? 'Fechar' : 'Close'}</span>
+          </div>
         </div>
       </div>
     </div>

@@ -1,12 +1,20 @@
 'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Tool } from '@/lib/data';
 import { Icon } from '@/lib/icons';
+import { Locale } from '@/lib/i18n';
+import { getLocalizedTool } from '@/lib/translations';
 
-export function ToolCard({ tool }: { tool: Tool }) {
+export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Locale }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const [isFav, setIsFav] = useState(false);
+  const pathname = usePathname();
+
+  const locale: Locale =
+    propLocale || (pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en');
+  const localizedTool = getLocalizedTool(tool, locale);
 
   useEffect(() => {
     try {
@@ -63,21 +71,42 @@ export function ToolCard({ tool }: { tool: Tool }) {
     } catch {}
   };
 
+  const ariaLabel =
+    locale === 'pt-br'
+      ? `Abrir ${localizedTool.name}`
+      : `Open ${localizedTool.name}`;
+
   return (
     <Link
       ref={cardRef}
-      href={`/tool/${tool.slug}`}
+      href={`/${locale}/tool/${tool.slug}`}
       className={`t-card ${tool.popular ? 'popular' : ''}`}
       onMouseMove={handleMouseMove}
       onClick={handleCardClick}
-      aria-label={`Open ${tool.name}`}
+      aria-label={ariaLabel}
     >
       <button
         type="button"
         className={`fav-btn ${isFav ? 'active' : ''}`}
         onClick={toggleFavorite}
-        aria-label={isFav ? `Remove ${tool.name} from pinned favorites` : `Pin ${tool.name} to favorites`}
-        title={isFav ? 'Remove from favorites' : 'Pin to favorites'}
+        aria-label={
+          isFav
+            ? locale === 'pt-br'
+              ? `Remover ${localizedTool.name} dos favoritos`
+              : `Remove ${localizedTool.name} from pinned favorites`
+            : locale === 'pt-br'
+              ? `Fixar ${localizedTool.name} nos favoritos`
+              : `Pin ${localizedTool.name} to favorites`
+        }
+        title={
+          isFav
+            ? locale === 'pt-br'
+              ? 'Remover dos favoritos'
+              : 'Remove from favorites'
+            : locale === 'pt-br'
+              ? 'Fixar nos favoritos'
+              : 'Pin to favorites'
+        }
       >
         <Icon name={isFav ? 'star-filled' : 'star'} size={15} />
       </button>
@@ -86,9 +115,9 @@ export function ToolCard({ tool }: { tool: Tool }) {
         <Icon name={tool.icon} size={26} />
       </div>
       <div>
-        <h3>{tool.name}</h3>
+        <h3>{localizedTool.name}</h3>
       </div>
-      <p>{tool.desc}</p>
+      <p>{localizedTool.desc}</p>
       <div className="t-foot">
         <span className="t-cat">{tool.cat}</span>
         <span className="t-go" aria-hidden="true">

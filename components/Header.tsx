@@ -4,6 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 
+import { LanguageSelector } from './LanguageSelector';
+import { Locale } from '@/lib/i18n';
+import { t } from '@/lib/translations';
+
 interface HeaderProps {
   onOpenSearch: () => void;
 }
@@ -13,6 +17,9 @@ export function Header({ onOpenSearch }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const pathname = usePathname();
+
+  const locale: Locale = pathname.startsWith('/pt-br') || pathname.startsWith('/pt') ? 'pt-br' : 'en';
+  const prefix = locale === 'pt-br' ? '/pt-br' : '/en';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,30 +76,47 @@ export function Header({ onOpenSearch }: HeaderProps) {
       <header className={`nav ${scrolled ? 'scrolled' : ''}`}>
         <div className="container" style={{ width: '100%' }}>
           <div className="nav-inner">
-            <Link href="/" className="nav-logo" aria-label="Clouse Tools Home">
+            <Link href={prefix} className="nav-logo" aria-label="Clouse Tools Home">
               <span className="logo-mark">C</span>
               <span>Clouse Tools</span>
             </Link>
 
             <nav className="nav-links" aria-label="Main Navigation">
-              <Link href="/tools" className={pathname === '/tools' ? 'active' : ''}>
-                All Tools
+              <Link
+                href={`${prefix}/tools`}
+                className={pathname.endsWith('/tools') ? 'active' : ''}
+              >
+                {t('nav.allTools', locale)}
               </Link>
-              <Link href="/category/math" className={pathname.startsWith('/category') ? 'active' : ''}>
-                Categories
+              <Link
+                href={`${prefix}/category/math`}
+                className={pathname.includes('/category') ? 'active' : ''}
+              >
+                {t('nav.categories', locale)}
               </Link>
-              <Link href="/about" className={pathname === '/about' ? 'active' : ''}>
-                About
+              <Link
+                href={`${prefix}/about`}
+                className={pathname.endsWith('/about') ? 'active' : ''}
+              >
+                {t('nav.about', locale)}
               </Link>
-              <Link href="/contact" className={pathname === '/contact' ? 'active' : ''}>
-                Contact
+              <Link
+                href={`${prefix}/contact`}
+                className={pathname.endsWith('/contact') ? 'active' : ''}
+              >
+                {t('nav.contact', locale)}
               </Link>
-              <Link href="/components" className={pathname === '/components' ? 'active' : ''}>
-                Design System
+              <Link
+                href={`${prefix}/components`}
+                className={pathname.endsWith('/components') ? 'active' : ''}
+              >
+                {t('nav.designSystem', locale)}
               </Link>
             </nav>
 
             <div className="nav-cta">
+              <LanguageSelector currentLocale={locale} />
+
               <button
                 type="button"
                 className="theme-toggle-btn"
@@ -107,15 +131,15 @@ export function Header({ onOpenSearch }: HeaderProps) {
                 type="button"
                 className="nav-search-btn"
                 onClick={onOpenSearch}
-                aria-label="Search tools (Press Ctrl+K or /)"
-                title="Search tools (Ctrl+K or /)"
+                aria-label={t('nav.searchPlaceholder', locale)}
+                title={t('nav.searchPlaceholder', locale)}
               >
                 <Icon name="search" size={20} />
                 <kbd>⌘K</kbd>
               </button>
 
-              <Link href="/tools" className="btn btn-primary btn-sm">
-                <span>Explore 67 Tools</span>
+              <Link href={`${prefix}/tools`} className="btn btn-primary btn-sm">
+                <span>{t('nav.exploreTools', locale)}</span>
                 <Icon name="arrow-up-right" size={14} />
               </Link>
 
@@ -135,31 +159,36 @@ export function Header({ onOpenSearch }: HeaderProps) {
 
       {/* Mobile Drawer Menu */}
       <div className={`m-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        <Link href="/" className="m-link">
+        <Link href={prefix} className="m-link">
           <span>Home</span>
           <small>01</small>
         </Link>
-        <Link href="/tools" className="m-link">
-          <span>All 67 Tools</span>
+        <Link href={`${prefix}/tools`} className="m-link">
+          <span>{t('nav.allTools', locale)}</span>
           <small>02</small>
         </Link>
-        <Link href="/category/math" className="m-link">
-          <span>Categories</span>
+        <Link href={`${prefix}/category/math`} className="m-link">
+          <span>{t('nav.categories', locale)}</span>
           <small>03</small>
         </Link>
-        <Link href="/about" className="m-link">
-          <span>About Clouse</span>
+        <Link href={`${prefix}/about`} className="m-link">
+          <span>{t('nav.about', locale)}</span>
           <small>04</small>
         </Link>
-        <Link href="/contact" className="m-link">
-          <span>Contact &amp; Support</span>
+        <Link href={`${prefix}/contact`} className="m-link">
+          <span>{t('nav.contact', locale)}</span>
           <small>05</small>
         </Link>
-        <Link href="/components" className="m-link">
-          <span>Design System</span>
+        <Link href={`${prefix}/components`} className="m-link">
+          <span>{t('nav.designSystem', locale)}</span>
           <small>06</small>
         </Link>
+
         <div className="m-foot">
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', width: '100%' }}>
+            <LanguageSelector currentLocale={locale} />
+          </div>
+
           <button
             type="button"
             className="btn btn-ghost full-width"
@@ -178,7 +207,7 @@ export function Header({ onOpenSearch }: HeaderProps) {
             }}
           >
             <Icon name="search" size={16} />
-            <span>Search 67 Tools (Ctrl+K)</span>
+            <span>{t('nav.searchButton', locale)}</span>
           </button>
         </div>
       </div>

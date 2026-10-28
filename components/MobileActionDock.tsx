@@ -1,11 +1,17 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
+import { Locale, switchLocalePath, setClientLocale } from '@/lib/i18n';
 
 export function MobileActionDock() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const pathname = usePathname();
+
+  const locale: Locale =
+    pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
 
   useEffect(() => {
     const checkScroll = () => {
@@ -52,22 +58,46 @@ export function MobileActionDock() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const toggleLanguage = () => {
+    const target: Locale = locale === 'pt-br' ? 'en' : 'pt-br';
+    setClientLocale(target);
+    const targetPath = switchLocalePath(pathname, target);
+    window.location.href = targetPath;
+  };
+
+  const searchLabel = locale === 'pt-br' ? 'Buscar...' : 'Search...';
+  const toolsLabel = locale === 'pt-br' ? 'Ferramentas' : 'Tools';
+  const langLabel = locale === 'pt-br' ? 'PT' : 'EN';
+  const langTitle = locale === 'pt-br' ? 'Mudar para Inglês (EN)' : 'Switch to Portuguese (PT-BR)';
+
   return (
     <div className="mobile-dock" aria-label="Mobile quick actions">
       <button
         type="button"
         className="mobile-dock-btn search-trigger"
         onClick={openSearch}
+        aria-label={searchLabel}
       >
         <Icon name="search" size={17} />
-        <span>Search...</span>
+        <span>{searchLabel}</span>
         <kbd>⌘K</kbd>
       </button>
 
-      <Link href="/tools" className="mobile-dock-btn pill-btn" aria-label="Directory">
+      <Link href={`/${locale}/tools`} className="mobile-dock-btn pill-btn" aria-label={toolsLabel}>
         <Icon name="dice-5" size={17} />
-        <span>Tools</span>
+        <span>{toolsLabel}</span>
       </Link>
+
+      <button
+        type="button"
+        className="mobile-dock-btn icon-only"
+        onClick={toggleLanguage}
+        aria-label={langTitle}
+        title={langTitle}
+        style={{ fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.04em' }}
+      >
+        <span>{langLabel}</span>
+      </button>
 
       <button
         type="button"

@@ -1,12 +1,20 @@
 'use client';
 import React, { useRef } from 'react';
 import Link from 'next/link';
-import { Category, toolsByCategory } from '@/lib/data';
+import { usePathname } from 'next/navigation';
+import { Category } from '@/lib/data';
 import { Icon } from '@/lib/icons';
+import { Locale } from '@/lib/i18n';
+import { getLocalizedCategory, getLocalizedToolsByCategory } from '@/lib/translations';
 
-export function CategoryCard({ category }: { category: Category }) {
+export function CategoryCard({ category, locale: propLocale }: { category: Category; locale?: Locale }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
-  const tools = toolsByCategory(category.id);
+  const pathname = usePathname();
+
+  const locale: Locale =
+    propLocale || (pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en');
+  const localizedCat = getLocalizedCategory(category, locale);
+  const tools = getLocalizedToolsByCategory(category.id, locale);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!cardRef.current) return;
@@ -17,25 +25,28 @@ export function CategoryCard({ category }: { category: Category }) {
     cardRef.current.style.setProperty('--mouse-y', `${y}px`);
   };
 
+  const badgeText = locale === 'pt-br' ? `${tools.length} FERRAMENTAS` : `${tools.length} TOOLS`;
+  const ariaLabel = locale === 'pt-br' ? `Explorar categoria ${localizedCat.name}` : `Browse ${localizedCat.name}`;
+
   return (
     <Link
       ref={cardRef}
-      href={`/category/${category.id}`}
+      href={`/${locale}/category/${category.id}`}
       className="cat-card"
       onMouseMove={handleMouseMove}
-      aria-label={`Browse ${category.name}`}
+      aria-label={ariaLabel}
     >
       <div className="cat-head">
         <div className="tile-icn">
           <Icon name={category.icon} size={26} />
         </div>
-        <span className="cat-count">{tools.length} TOOLS</span>
+        <span className="cat-count">{badgeText}</span>
       </div>
 
       <div>
-        <h3>{category.name}</h3>
+        <h3>{localizedCat.name}</h3>
       </div>
-      <p>{category.desc}</p>
+      <p>{localizedCat.desc}</p>
 
       <div className="cat-tags">
         {tools.slice(0, 3).map((tool) => (

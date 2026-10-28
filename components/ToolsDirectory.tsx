@@ -1,15 +1,24 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { TOOLS, CATEGORIES, Tool } from '@/lib/data';
+import { usePathname } from 'next/navigation';
 import { ToolCard } from '@/components/ToolCard';
 import { Icon } from '@/lib/icons';
+import { Locale } from '@/lib/i18n';
+import { getLocalizedCategories, getLocalizedTools } from '@/lib/translations';
 
-export function ToolsDirectory() {
-  const [selectedCat, setSelectedCat] = useState('all');
+export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: string }) {
+  const [selectedCat, setSelectedCat] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
+  const pathname = usePathname();
+
+  const locale: Locale =
+    pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
+
+  const categories = useMemo(() => getLocalizedCategories(locale), [locale]);
+  const allTools = useMemo(() => getLocalizedTools(locale), [locale]);
 
   const filteredTools = useMemo(() => {
-    let list = TOOLS;
+    let list = allTools;
 
     if (selectedCat !== 'all') {
       list = list.filter((t) => t.cat === selectedCat);
@@ -27,24 +36,34 @@ export function ToolsDirectory() {
     }
 
     return list;
-  }, [selectedCat, searchQuery]);
+  }, [allTools, selectedCat, searchQuery]);
+
+  const allLabel = locale === 'pt-br' ? `Todas (${allTools.length})` : `All (${allTools.length})`;
+  const placeholder =
+    locale === 'pt-br'
+      ? 'Filtrar ferramentas por nome, tag ou categoria...'
+      : 'Filter tools by name, tag or category...';
 
   return (
     <>
-      <div className="filter-bar">
+      <div className="filter-bar" role="tablist" aria-label="Tool category filters">
         <button
           type="button"
           className={`fchip ${selectedCat === 'all' ? 'active' : ''}`}
           onClick={() => setSelectedCat('all')}
+          role="tab"
+          aria-selected={selectedCat === 'all'}
         >
-          All (67)
+          {allLabel}
         </button>
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <button
             key={cat.id}
             type="button"
             className={`fchip ${selectedCat === cat.id ? 'active' : ''}`}
             onClick={() => setSelectedCat(cat.id)}
+            role="tab"
+            aria-selected={selectedCat === cat.id}
           >
             {cat.name}
           </button>
@@ -56,38 +75,54 @@ export function ToolsDirectory() {
           <Icon name="search" size={20} />
           <input
             type="text"
-            placeholder="Filter list..."
+            placeholder={placeholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            aria-label="Filter tools list"
+            aria-label={placeholder}
           />
           {searchQuery && (
             <button
               type="button"
+              className="btn btn-sm btn-subtle"
               onClick={() => setSearchQuery('')}
-              style={{ padding: '4px 8px', color: 'var(--ink-3)' }}
-              aria-label="Clear filter"
+              style={{ padding: '4px 10px', fontSize: '0.8rem' }}
             >
-              <Icon name="x" size={16} />
+              {locale === 'pt-br' ? 'Limpar' : 'Clear'}
             </button>
           )}
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', marginBottom: 24 }} className="result-count">
-        Showing {filteredTools.length} of {TOOLS.length} tools
-      </div>
-
-      <div className="tools-grid">
-        {filteredTools.length > 0 ? (
-          filteredTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)
-        ) : (
-          <div className="sr-empty" style={{ gridColumn: '1 / -1' }}>
-            <b>No tools match your criteria</b>
-            <span>Try adjusting your category filter or search terms.</span>
-          </div>
-        )}
-      </div>
+      {filteredTools.length > 0 ? (
+        <div className="tools-grid">
+          {filteredTools.map((tool) => (
+            <ToolCard key={tool.slug} tool={tool} locale={locale} />
+          ))}
+        </div>
+      ) : (
+        <div className="empty-state" style={{ padding: '60px 20px', textAlign: 'center' }}>
+          <Icon name="search" size={42} />
+          <h3 style={{ marginTop: 16 }}>
+            {locale === 'pt-br' ? 'Nenhuma ferramenta encontrada' : 'No tools matched your search'}
+          </h3>
+          <p style={{ color: 'var(--text-sub)', marginTop: 8 }}>
+            {locale === 'pt-br'
+              ? 'Tente buscar com outros termos ou selecione outra categoria.'
+              : 'Try adjusting your search terms or browse all categories.'}
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            style={{ marginTop: 18 }}
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedCat('all');
+            }}
+          >
+            {locale === 'pt-br' ? 'Ver Todas as 67 Ferramentas' : 'Reset Filters'}
+          </button>
+        </div>
+      )}
     </>
   );
 }
