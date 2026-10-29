@@ -32,3 +32,8 @@ Thumbs.db
 .idea/
 .vscode/
 *.db
+
+.layoza/
+
+AGENTS.md
+tsconfig.tsbuildinfo

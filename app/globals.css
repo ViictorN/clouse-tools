@@ -1508,7 +1508,128 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* ---------- 27. DISPLAY TYPE & TEXTURE TOKENS ---------- */
+:root {
+  --display: var(--font-display, 'Inter Tight', 'Inter', -apple-system, sans-serif);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grid-line: rgba(11, 11, 14, 0.05);
+  --grid-line-strong: rgba(11, 11, 14, 0.08);
+  --grain-opacity: 0.045;
+}
+[data-theme="dark"] {
+  --grid-line: rgba(255, 255, 255, 0.055);
+  --grid-line-strong: rgba(255, 255, 255, 0.09);
+  --grain-opacity: 0.035;
+}
+
+/* Display family: headings switch from Inter body voice to the tighter display cut. */
+.h-display, .h-d2, .h-d3,
+.hero h1, .page-hero h1, .tool-hero h1, .cta-box h2, .feature-band h2, .band-dark h2,
+.stat b, .t-card h3, .cat-card h3, .case-card h3, .b-card h3, .band-feature h4,
+.faq-question span, .m-menu a.m-link, .shelf-title, .sr-title, .r-main, .demo-block h3 {
+  font-family: var(--display);
+}
+
+/* Film grain: one fixed layer, never interactive, subtle in both themes. */
+.grain-layer {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image: var(--grain); opacity: var(--grain-opacity);
+}
+
+/* Calibration grid: technical drawing paper, masked so it fades at the edges. */
+.calib-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 96px 96px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 25%, transparent 78%);
+}
+.calib-grid.full {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* ---------- 28. REVEAL ENGINE (JS arms, CSS performs, reduced-motion lands instantly) ---------- */
+[data-reveal="ready"] .reveal { opacity: 0; transform: translateY(18px); }
+[data-reveal="ready"] .reveal.is-in {
+  opacity: 1; transform: none; will-change: opacity, transform;
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  transition-delay: var(--reveal-d, 0s);
+}
+[data-reveal="ready"] .reveal-fade { opacity: 0; }
+[data-reveal="ready"] .reveal-fade.is-in {
+  opacity: 1;
+  transition: opacity 0.8s var(--ease-out);
+  transition-delay: var(--reveal-d, 0s);
+}
+[data-reveal="ready"] .reveal-scale { opacity: 0; transform: scale(0.96); }
+[data-reveal="ready"] .reveal-scale.is-in {
+  opacity: 1; transform: none;
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-spring);
+  transition-delay: var(--reveal-d, 0s);
+}
+
+/* Hero line-mask: each line rises from its own clipped box (armed by JS too). */
+[data-reveal="ready"] .line-mask > span { animation: lineUp 0.95s var(--ease-out) var(--d, 0s) both; }
+.line-mask { display: block; overflow: clip; }
+.line-mask > span { display: block; will-change: transform; }
+@keyframes lineUp {
+  from { transform: translateY(112%); }
+  to { transform: none; }
+}
+
+/* ---------- 29. SCROLLBAR, SELECTION & SMOOTH SCROLL BASE ---------- */
+html { scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+@media (pointer: fine) {
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-2); border-radius: var(--pill);
+    border: 2px solid var(--bg); background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink-3); background-clip: padding-box; }
+}
+::selection { background: rgba(0, 113, 227, 0.18); }
+[data-theme="dark"] ::selection { background: rgba(41, 151, 255, 0.28); }
+
+/* Lenis base: handed off by SmoothScroll only when active and motion is allowed. */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+/* ---------- 30. MICRO-INTERACTIONS ---------- */
+/* Favorite burst: an expanding ring on pin/unpin. */
+.fav-btn .burst {
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  border: 2px solid #f5a623; opacity: 0;
+}
+.fav-btn.pop .burst { animation: favBurst 0.55s var(--ease-out); }
+@keyframes favBurst {
+  from { transform: scale(0.55); opacity: 0.9; }
+  to { transform: scale(1.9); opacity: 0; }
+}
+
+/* Pressable surfaces: subtle depress for all interactive pills. */
+.btn:active, .chip:active, .fchip:active, .shelf-item:active, .recent-chip:active, .t-card:active {
+  transform: scale(0.97);
+}
+.t-card:active { transform: scale(0.985); }
+
+/* Theme crossfade via View Transitions (guarded in JS). */
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: 0.3s; animation-timing-function: var(--ease);
+}
+
+/* Step caret for the command line (blinks at 1Hz, freezes under reduced motion). */
+.caret {
+  display: inline-block; width: 0.62ch; height: 1.05em; vertical-align: -0.14em;
+  background: var(--blue); border-radius: 2px; margin-left: 2px;
+  animation: caretBlink 1.06s steps(2, jump-none) infinite;
+}
+@keyframes caretBlink { 50% { opacity: 0; } }
+
 /* ---------- 26. PRINT ---------- */
 @media print {
-  .nav, .footer, .search-overlay, .m-menu, .toast-zone, .marquee-wrap, .mobile-dock { display: none !important; }
+  .nav, .footer, .search-overlay, .m-menu, .toast-zone, .marquee-wrap, .mobile-dock, .grain-layer, .calib-grid { display: none !important; }
 }

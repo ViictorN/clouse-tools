@@ -10,6 +10,7 @@ import { getLocalizedTool, getLocalizedCategoryById } from '@/lib/translations';
 export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Locale }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const [isFav, setIsFav] = useState(false);
+  const [pop, setPop] = useState(false);
   const pathname = usePathname();
 
   const locale: Locale =
@@ -60,6 +61,8 @@ export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Lo
       localStorage.setItem('clouse-favorites', JSON.stringify(updated));
       setIsFav(updated.includes(tool.slug));
       window.dispatchEvent(new CustomEvent('clouse-favorites-updated', { detail: updated }));
+      setPop(true);
+      window.setTimeout(() => setPop(false), 600);
     } catch {}
   };
 
@@ -89,7 +92,7 @@ export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Lo
     >
       <button
         type="button"
-        className={`fav-btn ${isFav ? 'active' : ''}`}
+        className={`fav-btn ${isFav ? 'active' : ''} ${pop ? 'pop' : ''}`}
         onClick={toggleFavorite}
         aria-label={
           isFav
@@ -111,6 +114,7 @@ export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Lo
         }
       >
         <Icon name={isFav ? 'star-filled' : 'star'} size={15} />
+        <span className="burst" aria-hidden="true" />
       </button>
 
       <div className="tile-icn soft">

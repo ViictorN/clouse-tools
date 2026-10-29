@@ -5,6 +5,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { CommandPalette } from './CommandPalette';
 import { MobileActionDock } from './MobileActionDock';
+import { SmoothScroll } from './SmoothScroll';
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -24,16 +25,19 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <ToastProvider>
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
-      <Header onOpenSearch={() => setSearchOpen(true)} />
-      <main id="main-content" tabIndex={-1}>
-        {children}
-      </main>
-      <Footer />
-      <MobileActionDock />
-      <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SmoothScroll>
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+        <Header onOpenSearch={() => setSearchOpen(true)} />
+        <main id="main-content" tabIndex={-1}>
+          {children}
+        </main>
+        <Footer />
+        <MobileActionDock />
+        <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      </SmoothScroll>
+      <div className="grain-layer" aria-hidden="true" />
     </ToastProvider>
   );
 }

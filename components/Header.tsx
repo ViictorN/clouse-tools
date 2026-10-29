@@ -59,12 +59,20 @@ export function Header({ onOpenSearch }: HeaderProps) {
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    document.documentElement.setAttribute('data-theme', next);
-    try {
-      localStorage.setItem('clouse-theme', next);
-    } catch {}
-    window.dispatchEvent(new CustomEvent('clouse-theme-change', { detail: next }));
+    const apply = () => {
+      setTheme(next);
+      document.documentElement.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('clouse-theme', next);
+      } catch {}
+      window.dispatchEvent(new CustomEvent('clouse-theme-change', { detail: next }));
+    };
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !document.startViewTransition) {
+      apply();
+      return;
+    }
+    document.startViewTransition(apply);
   };
 
   useEffect(() => {
