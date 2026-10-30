@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CATEGORIES, getCategory, toolsByCategory } from '@/lib/data';
 import { ToolCard } from '@/components/ToolCard';
+import { CalibGrid } from '@/components/CalibGrid';
 import { Icon } from '@/lib/icons';
 
 interface CategoryPageProps {
@@ -50,6 +51,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -82,9 +84,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
 
           <h2 className="sr-only">Tools in {category.name}</h2>
-          <div className="tools-grid">
+          <div className="tools-grid" data-reveal-group>
             {tools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} className="reveal-fade" />
             ))}
           </div>
         </div>
@@ -101,12 +103,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             <h2 className="h-d3 mt-12">Other Categories</h2>
           </div>
 
-          <div className="cat-grid">
+          <div className="cat-grid" data-reveal-group>
             {otherCategories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/category/${cat.id}`}
-                className="cat-card"
+                className="cat-card reveal-fade"
               >
                 <div className="cat-head">
                   <div className="tile-icn soft">

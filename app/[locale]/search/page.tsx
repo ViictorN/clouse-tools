@@ -3,6 +3,9 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ToolCard } from '@/components/ToolCard';
+import { EmptyState } from '@/components/EmptyState';
+import { CalibGrid } from '@/components/CalibGrid';
+import { Reveal } from '@/components/Reveal';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedTools } from '@/lib/translations';
@@ -44,6 +47,8 @@ function SearchContent() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href={`/${locale}`}>{isPt ? 'Início' : 'Home'}</Link>
@@ -64,8 +69,10 @@ function SearchContent() {
           </p>
 
           <div style={{ maxWidth: 620, margin: '28px auto 0' }}>
-            <div className="hero-search" style={{ margin: 0 }}>
-              <Icon name="search" size={22} />
+            <div className="hero-search no-go" style={{ margin: 0 }}>
+              <span className="hs-icon" aria-hidden="true">
+                <Icon name="search" size={20} />
+              </span>
               <input
                 type="search"
                 placeholder={placeholder}
@@ -77,11 +84,11 @@ function SearchContent() {
               {query && (
                 <button
                   type="button"
+                  className="hs-clear"
                   onClick={() => setQuery('')}
-                  style={{ padding: '6px 10px', color: 'var(--ink-3)', background: 'transparent', border: 'none', cursor: 'pointer' }}
                   aria-label={isPt ? 'Limpar busca' : 'Clear query'}
                 >
-                  <Icon name="x" size={18} />
+                  <Icon name="x" size={16} />
                 </button>
               )}
             </div>
@@ -91,8 +98,8 @@ function SearchContent() {
 
       <section className="section section-pt-0">
         <div className="container">
-          <div className="section-head-row">
-            <div className="result-count">
+          <Reveal className="section-head-row">
+            <h2 className="result-count">
               {query
                 ? isPt
                   ? `${results.length} resultado(s) para "${query}"`
@@ -100,31 +107,35 @@ function SearchContent() {
                 : isPt
                   ? `Exibindo todas as ${results.length} ferramentas`
                   : `Showing all ${results.length} tools`}
-            </div>
+            </h2>
             <Link href={`/${locale}/tools`} className="link-arrow">
               <span>{isPt ? 'Ver diretório completo' : 'Directory view'}</span>
               <Icon name="arrow-right" size={15} />
             </Link>
-          </div>
+          </Reveal>
 
-          <div className="tools-grid">
-            {results.length > 0 ? (
-              results.map((tool) => <ToolCard key={tool.slug} tool={tool} locale={locale} />)
-            ) : (
-              <div className="sr-empty" style={{ gridColumn: '1 / -1', padding: '60px 20px', textAlign: 'center' }}>
-                <b>
-                  {isPt
-                    ? `Nenhuma ferramenta encontrada para "${query}"`
-                    : `No tools found matching "${query}"`}
-                </b>
-                <p style={{ marginTop: 8, color: 'var(--ink-2)' }}>
-                  {isPt
-                    ? 'Tente termos mais amplos como "converter", "matemática" ou "código".'
-                    : 'Try searching for a broader term like "convert", "math", or "code".'}
-                </p>
-              </div>
-            )}
-          </div>
+          {results.length > 0 ? (
+            <div className="tools-grid" data-reveal-group>
+              {results.map((tool) => (
+                <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal-fade" />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title={
+                isPt
+                  ? `Nenhuma ferramenta encontrada para "${query}"`
+                  : `No tools found matching "${query}"`
+              }
+              hint={
+                isPt
+                  ? 'Tente termos mais amplos como "converter", "matemática" ou "código".'
+                  : 'Try searching for a broader term like "convert", "math", or "code".'
+              }
+              actionLabel={isPt ? 'Limpar busca' : 'Reset search'}
+              onAction={() => setQuery('')}
+            />
+          )}
         </div>
       </section>
     </>

@@ -7,6 +7,7 @@ import { Locale } from '@/lib/i18n';
 
 export function MobileActionDock() {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [dockVisible, setDockVisible] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const pathname = usePathname();
 
@@ -14,10 +15,26 @@ export function MobileActionDock() {
     pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
 
   useEffect(() => {
+    let lastY = window.scrollY;
     const checkScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      const y = window.scrollY;
+      const doc = document.documentElement;
+      const atBottom = y + window.innerHeight >= doc.scrollHeight - 4;
+      const atTop = y < 24;
+      setShowScrollTop(y > 400);
+      if (atTop) {
+        setDockVisible(false);
+      } else if (atBottom) {
+        setDockVisible(true);
+      } else if (y > lastY + 8) {
+        setDockVisible(false);
+      } else if (y < lastY - 8) {
+        setDockVisible(true);
+      }
+      lastY = y;
     };
     window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
 
     try {
       const current = document.documentElement.getAttribute('data-theme') as 'light' | 'dark';
@@ -38,6 +55,12 @@ export function MobileActionDock() {
       window.removeEventListener('scroll', checkScroll);
       window.removeEventListener('clouse-theme-change', handleThemeEvent);
     };
+  }, []);
+
+  useEffect(() => {
+    const onLangChange = () => setDockVisible(false);
+    window.addEventListener('clouse-locale-change', onLangChange);
+    return () => window.removeEventListener('clouse-locale-change', onLangChange);
   }, []);
 
   const toggleTheme = () => {
@@ -62,7 +85,7 @@ export function MobileActionDock() {
   const toolsLabel = locale === 'pt-br' ? 'Ferramentas' : 'Tools';
 
   return (
-    <div className="mobile-dock" aria-label="Mobile quick actions">
+    <div className={`mobile-dock${dockVisible ? ' visible' : ''}`} aria-label="Mobile quick actions">
       <button
         type="button"
         className="mobile-dock-btn search-trigger"

@@ -55,7 +55,7 @@ export function renderTool(
       return '<option value="' + esc(v) + '"' + (String(v) === String(val) ? " selected" : "") + ">" + esc(n) + "</option>";
     }).join("") + "</select>";
   }
-  function areaHtml(id, ph) { return '<textarea class="t-area" id="' + id + '" placeholder="' + esc(ph || "Paste your text here…") + '"></textarea>'; }
+  function areaHtml(id, ph) { return '<textarea class="t-area" id="' + id + '" aria-label="' + esc(ph || "Paste your text here") + '" placeholder="' + esc(ph || "Paste your text here…") + '"></textarea>'; }
   function resultPanel(id) {
     return '<div class="t-result" id="' + id + '-panel" hidden>' +
       '<button class="copy-btn" id="' + id + '-copy" aria-label="Copy result">' + CT.icon("copy") + "</button>" +
@@ -102,7 +102,11 @@ export function renderTool(
   /* Generic: labeled fields grid */
   function fields(pairs) { return '<div class="t-fields">' + pairs.join("") + "</div>"; }
   function fWrap(label, inner, hint, wide) {
-    return '<div class="' + (wide ? "wide" : "") + '" style="' + (wide ? "grid-column:1/-1" : "") + '">' + lab(label) + inner + (hint ? '<div class="t-hint">' + hint + "</div>" : "") + "</div>";
+    var idMatch = String(inner).match(/id="([^"]+)"/);
+    var labelHtml = idMatch
+      ? '<label class="t-label" for="' + idMatch[1] + '">' + label + "</label>"
+      : lab(label);
+    return '<div class="' + (wide ? "wide" : "") + '" style="' + (wide ? "grid-column:1/-1" : "") + '">' + labelHtml + inner + (hint ? '<div class="t-hint">' + hint + "</div>" : "") + "</div>";
   }
 
   /* parse local date/datetime from input value */

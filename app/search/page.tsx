@@ -4,6 +4,9 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { searchTools } from '@/lib/data';
 import { ToolCard } from '@/components/ToolCard';
+import { EmptyState } from '@/components/EmptyState';
+import { CalibGrid } from '@/components/CalibGrid';
+import { Reveal } from '@/components/Reveal';
 import { Icon } from '@/lib/icons';
 
 function SearchContent() {
@@ -24,6 +27,8 @@ function SearchContent() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -70,31 +75,32 @@ function SearchContent() {
 
       <section className="section section-pt-0">
         <div className="container">
-          <div className="section-head-row">
-            <div className="result-count">
+          <Reveal className="section-head-row">
+            <h2 className="result-count">
               {query
                 ? `Found ${results.length} results for "${query}"`
                 : `Showing all ${results.length} tools`}
-            </div>
+            </h2>
             <Link href="/tools" className="link-arrow">
               <span>Directory view</span>
               <Icon name="arrow-right" size={15} />
             </Link>
-          </div>
+          </Reveal>
 
-          <h2 className="sr-only">Search results</h2>
-          <div className="tools-grid">
-            {results.length > 0 ? (
-              results.map((tool) => <ToolCard key={tool.slug} tool={tool} />)
-            ) : (
-              <div className="sr-empty" style={{ gridColumn: '1 / -1', padding: '60px 20px' }}>
-                <b>No tools found matching &ldquo;{query}&rdquo;</b>
-                <p style={{ marginTop: 8 }}>
-                  Try searching for a broader term like &ldquo;convert&rdquo;, &ldquo;math&rdquo;, or &ldquo;code&rdquo;.
-                </p>
-              </div>
-            )}
-          </div>
+          {results.length > 0 ? (
+            <div className="tools-grid" data-reveal-group>
+              {results.map((tool) => (
+                <ToolCard key={tool.slug} tool={tool} className="reveal-fade" />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title={`No tools found matching “${query}”`}
+              hint="Try searching for a broader term like “convert”, “math”, or “code”."
+              actionLabel="Reset search"
+              onAction={() => setQuery('')}
+            />
+          )}
         </div>
       </section>
     </>

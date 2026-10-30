@@ -4,6 +4,7 @@ import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { t } from '@/lib/translations';
 import { TOOLS } from '@/lib/data';
+import { useInView } from '@/hooks/use-in-view';
 
 interface LedRow {
   key: string;
@@ -26,6 +27,7 @@ const LEDS: LedRow[] = [
  */
 export function LiveStatus({ locale }: { locale: Locale }) {
   const [now, setNow] = useState<Date | null>(null);
+  const { ref: panelRef, inView } = useInView<HTMLElement>();
 
   useEffect(() => {
     setNow(new Date());
@@ -45,7 +47,11 @@ export function LiveStatus({ locale }: { locale: Locale }) {
     : '';
 
   return (
-    <aside className="hero-panel glass-card reveal reveal-scale" aria-label={t('hero.panel.title', locale)}>
+    <aside
+      ref={panelRef}
+      className={`hero-panel glass-card reveal-scale ${inView ? 'is-in' : ''}`}
+      aria-label={t('hero.panel.title', locale)}
+    >
       <div className="hp-head">
         <span className="hp-eyebrow">
           <span className="dot" />

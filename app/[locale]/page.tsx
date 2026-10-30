@@ -12,6 +12,7 @@ import { FAQSection } from '@/components/FAQSection';
 import { CalibGrid } from '@/components/CalibGrid';
 import { LiveStatus } from '@/components/LiveStatus';
 import { CountUp } from '@/components/CountUp';
+import { Reveal } from '@/components/Reveal';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 import {
   getLocalizedCategories,
@@ -107,11 +108,11 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
         <div className="hero-glow" aria-hidden="true" />
         <div className="container">
           <div className="hero-grid">
-            <div className="hero-main" data-reveal-group>
-              <div className="eyebrow reveal reveal-fade">
+            <div className="hero-main">
+              <Reveal className="eyebrow">
                 <span className="dot" />
                 <span>{t('hero.eyebrow', locale)}</span>
-              </div>
+              </Reveal>
 
               <h1>
                 {titleLines.map((line, i) => (
@@ -121,17 +122,19 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                 ))}
               </h1>
 
-              <p className="lead hero-sub reveal reveal-fade">{t('hero.sub', locale)}</p>
+              <Reveal as="p" className="lead hero-sub" delay={0.06}>
+                {t('hero.sub', locale)}
+              </Reveal>
 
-              <div className="reveal reveal-fade">
+              <Reveal delay={0.12}>
                 <HeroSearch />
-              </div>
+              </Reveal>
 
-              <div className="reveal reveal-fade">
+              <Reveal delay={0.16}>
                 <HomePersonalization />
-              </div>
+              </Reveal>
 
-              <div className="hero-chips reveal reveal-fade">
+              <Reveal className="hero-chips" delay={0.2}>
                 {chipSlugs.map((chip) => {
                   const tool = getLocalizedToolBySlug(chip.slug, locale);
                   if (!tool) return null;
@@ -142,13 +145,13 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                     </Link>
                   );
                 })}
-              </div>
+              </Reveal>
             </div>
 
             <LiveStatus locale={locale} />
           </div>
 
-          <div className="hero-stats reveal reveal-fade" data-reveal-group>
+          <Reveal className="hero-stats" group>
             <div className="stat">
               <b>
                 <CountUp value={67} suffix="+" />
@@ -173,7 +176,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
               </b>
               <span>{t('hero.stat4', locale)}</span>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -213,7 +216,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
 
           <div className="tools-grid" data-reveal-group>
             {popular.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal reveal-scale" />
+              <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal-fade" />
             ))}
           </div>
 
@@ -233,7 +236,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
         <div className="bg-orb orb-2" aria-hidden="true" />
         <div className="container">
           <div className="band-grid">
-            <div className="band-content reveal reveal-fade">
+            <Reveal className="band-content">
               <div className="eyebrow">
                 <span className="dot" />
                 <span>{t('band.eyebrow', locale)}</span>
@@ -258,30 +261,30 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                   <span>{t('band.chip4', locale)}</span>
                 </span>
               </div>
-            </div>
+            </Reveal>
 
             <div className="band-cards" data-reveal-group>
-              <div className="b-card reveal reveal-scale">
+              <Reveal variant="reveal-fade" className="b-card">
                 <div className="tile-icn soft">
                   <Icon name="zap" size={24} />
                 </div>
                 <h3>{t('band.f1.title', locale)}</h3>
                 <p>{t('band.f1.desc', locale)}</p>
-              </div>
-              <div className="b-card reveal reveal-scale">
+              </Reveal>
+              <Reveal variant="reveal-fade" className="b-card">
                 <div className="tile-icn soft">
                   <Icon name="lock" size={24} />
                 </div>
                 <h3>{t('band.f2.title', locale)}</h3>
                 <p>{t('band.f2.desc', locale)}</p>
-              </div>
-              <div className="b-card reveal reveal-scale">
+              </Reveal>
+              <Reveal variant="reveal-fade" className="b-card">
                 <div className="tile-icn soft">
                   <Icon name="sparkles" size={24} />
                 </div>
                 <h3>{t('band.f3.title', locale)}</h3>
                 <p>{t('band.f3.desc', locale)}</p>
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -306,7 +309,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
 
           <div className="cat-grid" data-reveal-group>
             {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} locale={locale} className="reveal reveal-scale" />
+              <CategoryCard key={category.id} category={category} locale={locale} className="reveal-fade" />
             ))}
           </div>
         </div>
@@ -318,7 +321,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
       {/* ---------- CTA SECTION ---------- */}
       <section className="section cta-section">
         <div className="container">
-          <div className="cta-box reveal reveal-scale">
+          <Reveal variant="reveal-scale" className="cta-box">
             <div className="eyebrow">
               <span className="dot" />
               <span>{t('cta.eyebrow', locale)}</span>
@@ -340,7 +343,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                 <span>{t('cta.github', locale)}</span>
               </a>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

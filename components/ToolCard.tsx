@@ -6,12 +6,19 @@ import { Tool } from '@/lib/data';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedTool, getLocalizedCategoryById } from '@/lib/translations';
+import { prefersReducedMotion } from '@/lib/motion';
+import { useInView } from '@/hooks/use-in-view';
 
 export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: Tool; locale?: Locale; className?: string }) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
+  const { ref: cardRef, inView } = useInView<HTMLAnchorElement>();
   const [isFav, setIsFav] = useState(false);
   const [pop, setPop] = useState(false);
   const pathname = usePathname();
+
+  const tiltAllowed =
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(pointer: fine)').matches &&
+    !prefersReducedMotion();
 
   const locale: Locale =
     propLocale || (pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en');
@@ -39,12 +46,27 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
   }, [tool.slug]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
-    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+
+    if (tiltAllowed) {
+      const px = x / rect.width - 0.5;
+      const py = y / rect.height - 0.5;
+      card.style.setProperty('--ry', `${px * 5}deg`);
+      card.style.setProperty('--rx', `${-py * 4}deg`);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.removeProperty('--rx');
+    card.style.removeProperty('--ry');
   };
 
   const toggleFavorite = (e: React.MouseEvent) => {
@@ -85,8 +107,9 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
     <Link
       ref={cardRef}
       href={`/${locale}/tool/${tool.slug}`}
-      className={`t-card ${tool.popular ? 'popular' : ''} ${className}`}
+      className={`t-card ${tool.popular ? 'popular' : ''} ${className} ${inView ? 'is-in' : ''}`}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={handleCardClick}
       aria-label={ariaLabel}
     >

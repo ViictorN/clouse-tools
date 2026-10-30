@@ -1,14 +1,15 @@
 'use client';
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Category } from '@/lib/data';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedCategory, getLocalizedToolsByCategory } from '@/lib/translations';
+import { useInView } from '@/hooks/use-in-view';
 
 export function CategoryCard({ category, locale: propLocale, className = '' }: { category: Category; locale?: Locale; className?: string }) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
+  const { ref: cardRef, inView } = useInView<HTMLAnchorElement>();
   const pathname = usePathname();
 
   const locale: Locale =
@@ -32,7 +33,7 @@ export function CategoryCard({ category, locale: propLocale, className = '' }: {
     <Link
       ref={cardRef}
       href={`/${locale}/category/${category.id}`}
-      className={`cat-card ${className}`}
+      className={`cat-card ${className} ${inView ? 'is-in' : ''}`}
       onMouseMove={handleMouseMove}
       aria-label={ariaLabel}
     >

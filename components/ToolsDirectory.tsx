@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { ToolCard } from '@/components/ToolCard';
+import { EmptyState } from '@/components/EmptyState';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedCategories, getLocalizedTools } from '@/lib/translations';
@@ -96,34 +97,34 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
       </div>
 
       {filteredTools.length > 0 ? (
-        <div className="tools-grid">
-          {filteredTools.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} locale={locale} />
-          ))}
-        </div>
-      ) : (
-        <div className="empty-state" style={{ padding: '60px 20px', textAlign: 'center' }}>
-          <Icon name="search" size={42} />
-          <h3 style={{ marginTop: 16 }}>
-            {locale === 'pt-br' ? 'Nenhuma ferramenta encontrada' : 'No tools matched your search'}
-          </h3>
-          <p style={{ color: 'var(--ink-2)', marginTop: 8 }}>
+        <>
+          <h2 className="result-count dir-count">
             {locale === 'pt-br'
+              ? `${filteredTools.length} de ${allTools.length} ferramentas`
+              : `${filteredTools.length} of ${allTools.length} tools`}
+          </h2>
+          <div className="tools-grid" data-reveal-group>
+            {filteredTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal-fade" />
+            ))}
+          </div>
+        </>
+      ) : (
+        <EmptyState
+          title={
+            locale === 'pt-br' ? 'Nenhuma ferramenta encontrada' : 'No tools matched your search'
+          }
+          hint={
+            locale === 'pt-br'
               ? 'Tente buscar com outros termos ou selecione outra categoria.'
-              : 'Try adjusting your search terms or browse all categories.'}
-          </p>
-          <button
-            type="button"
-            className="btn btn-primary"
-            style={{ marginTop: 18 }}
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedCat('all');
-            }}
-          >
-            {locale === 'pt-br' ? 'Ver Todas as 67 Ferramentas' : 'Reset Filters'}
-          </button>
-        </div>
+              : 'Try adjusting your search terms or browse all categories.'
+          }
+          actionLabel={locale === 'pt-br' ? 'Ver Todas as 67 Ferramentas' : 'Reset Filters'}
+          onAction={() => {
+            setSearchQuery('');
+            setSelectedCat('all');
+          }}
+        />
       )}
     </>
   );

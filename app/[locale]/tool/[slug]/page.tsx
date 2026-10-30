@@ -4,7 +4,11 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { TOOLS } from '@/lib/data';
 import { ToolRenderer } from '@/components/ToolRenderer';
-import { ToolCard } from '@/components/ToolCard';
+import { ToolStatusStrip } from '@/components/ToolStatusStrip';
+import { ToolStartButton } from '@/components/ToolStartButton';
+import { RelatedRail } from '@/components/RelatedRail';
+import { CalibGrid } from '@/components/CalibGrid';
+import { Reveal } from '@/components/Reveal';
 import { Icon } from '@/lib/icons';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 import {
@@ -112,6 +116,8 @@ export default async function LocalizedToolPage({ params }: ToolPageProps) {
       />
 
       <section className="page-hero tool-hero-pb">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href={`/${locale}`}>{isPt ? 'Início' : 'Home'}</Link>
@@ -127,23 +133,27 @@ export default async function LocalizedToolPage({ params }: ToolPageProps) {
             <span>{tool.name}</span>
           </nav>
 
-          <div className="tool-hero">
+          <Reveal className="tool-hero">
             <div className="tile-icn">
               <Icon name={tool.icon} size={34} />
             </div>
             <h1>{tool.name}</h1>
             <p className="lead">{tool.desc}</p>
-          </div>
+            <ToolStatusStrip locale={locale} />
+            <ToolStartButton locale={locale} />
+          </Reveal>
         </div>
       </section>
 
       <section className="section section-pt-0">
         <div className="container">
           <div className="tool-layout">
-            <ToolRenderer slug={tool.slug} />
+            <Reveal variant="reveal-scale">
+              <ToolRenderer slug={tool.slug} />
+            </Reveal>
 
             {/* About This Tool */}
-            <div className="about-tool">
+            <Reveal className="about-tool">
               <h2>{isPt ? `Sobre ${tool.name}` : `About ${tool.name}`}</h2>
               <p>{tool.about}</p>
               <ul>
@@ -175,18 +185,17 @@ export default async function LocalizedToolPage({ params }: ToolPageProps) {
                   </span>
                 </li>
               </ul>
-            </div>
+            </Reveal>
 
             {/* Related Tools */}
             {related.length > 0 && (
-              <div className="related">
-                <h2>{isPt ? `Mais em ${category?.name || 'Ferramentas'}` : `Related ${category?.name || 'Tools'}`}</h2>
-                <div className="tools-grid cols-3">
-                  {related.map((relTool) => (
-                    <ToolCard key={relTool.slug} tool={relTool} locale={locale} />
-                  ))}
-                </div>
-              </div>
+              <Reveal className="related">
+                <RelatedRail
+                  tools={related}
+                  title={isPt ? `Mais em ${category?.name || 'Ferramentas'}` : `Related ${category?.name || 'Tools'}`}
+                  locale={locale}
+                />
+              </Reveal>
             )}
           </div>
         </div>

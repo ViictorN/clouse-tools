@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedToolBySlug } from '@/lib/translations';
+import { Reveal } from '@/components/Reveal';
 
 interface CaseItem {
   role: string;
@@ -109,7 +110,7 @@ export function UseCasesSection({ locale: propLocale }: { locale?: Locale }) {
 
         <div className="cases-grid" data-reveal-group>
           {cases.map((c) => (
-            <div key={c.role} className="case-card reveal reveal-scale">
+            <Reveal key={c.role} variant="reveal-fade" className="case-card">
               <div className="case-top">
                 <div className="tile-icn soft">
                   <Icon name={c.icon} size={22} />
@@ -137,7 +138,7 @@ export function UseCasesSection({ locale: propLocale }: { locale?: Locale }) {
                   })}
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
