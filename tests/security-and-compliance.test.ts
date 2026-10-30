@@ -261,7 +261,7 @@ describe('Phase 7B — Fail-Closed Env, Redaction, Crypto, Authz & Validation', 
       BILLING_ENVIRONMENT: 'production',
       STRIPE_SECRET_KEY: 'sk_live_valid_prod_placeholder_key',
     });
-    assert.equal(validProd.SUPABASE_PROJECT_REF, 'luytwttrgosmsfyjlonc');
+    assert.equal(validProd.SUPABASE_PROJECT_REF, 'nsylafldndrhgkrgpiwb');
     assert.equal(validProd.hasLiveSupabase, true);
   });
 

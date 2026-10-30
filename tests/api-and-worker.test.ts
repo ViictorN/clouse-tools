@@ -78,7 +78,7 @@ describe('Phase 7D — End-to-End API Gateway, Authn/Authz/BOLA, Sandbox Worker,
       auditChain: { valid: boolean };
     };
     assert.equal(readyJson.ready, true);
-    assert.equal(readyJson.supabaseProjectRef, 'luytwttrgosmsfyjlonc');
+    assert.equal(readyJson.supabaseProjectRef, 'nsylafldndrhgkrgpiwb');
     assert.equal(readyJson.auditChain.valid, true);
 
     const openApiRes = await fetch(`${baseUrl}/api/v1/openapi.json`);
@@ -105,7 +105,7 @@ describe('Phase 7D — End-to-End API Gateway, Authn/Authz/BOLA, Sandbox Worker,
       engineeringMatrix2000: { totalChecks: number };
       securityPractices500: { totalPractices: number };
     };
-    assert.equal(summaryJson.supabaseProjectRef, 'luytwttrgosmsfyjlonc');
+    assert.equal(summaryJson.supabaseProjectRef, 'nsylafldndrhgkrgpiwb');
     assert.equal(summaryJson.toolsCatalog.totalTools, 73);
     assert.equal(summaryJson.toolsCatalog.browserClientTools, 67);
     assert.equal(summaryJson.toolsCatalog.all10PublicationGatesPassed, true);

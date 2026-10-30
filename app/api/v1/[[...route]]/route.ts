@@ -21,11 +21,11 @@ interface RouteContext {
 
 async function handleNextApiV1(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const startMs = performance.now();
-  const cfg = getAppConfig();
   const correlationId = resolveCorrelationId(request.headers.get('x-correlation-id'));
   const { sloTracker, circuitBreaker } = getDefaultGatewayTelemetry();
 
   try {
+    const cfg = getAppConfig();
     const resolvedParams = await context.params;
     const segments = resolvedParams.route ?? [];
     const subpath = `/${segments.join('/')}`;

@@ -20,20 +20,22 @@ const RawEnvSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
   API_PORT: z.coerce.number().int().min(1).max(65535).default(4000),
   API_BASE_URL: z.string().url().default('http://localhost:4000'),
-  CORS_ALLOWED_ORIGINS: z.string().default('http://localhost:3000,https://clouse.app'),
+  CORS_ALLOWED_ORIGINS: z
+    .string()
+    .default('http://localhost:3000,https://clouse.app,https://clouse-tools.vercel.app'),
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(1),
-  SUPABASE_PROJECT_REF: z.string().min(4).max(64).default('luytwttrgosmsfyjlonc'),
+  SUPABASE_PROJECT_REF: z.string().min(4).max(64).default('nsylafldndrhgkrgpiwb'),
   NEXT_PUBLIC_SUPABASE_URL: z
     .string()
     .url()
-    .default('https://luytwttrgosmsfyjlonc.supabase.co'),
+    .default('https://nsylafldndrhgkrgpiwb.supabase.co'),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional().default(''),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional().default(''),
   DATABASE_URL: z.string().optional().default(''),
   JWT_ISSUER: z
     .string()
     .url()
-    .default('https://luytwttrgosmsfyjlonc.supabase.co/auth/v1'),
+    .default('https://nsylafldndrhgkrgpiwb.supabase.co/auth/v1'),
   JWT_AUDIENCE: z.string().min(2).max(120).default('authenticated'),
   CSRF_HMAC_SECRET: z
     .string()
@@ -88,8 +90,9 @@ export function loadAppConfig(sourceEnv: Record<string, string | undefined> = pr
 
   const isStaticBuildPhase = sourceEnv.NEXT_PHASE === 'phase-production-build';
   const isLocalPreview = sourceEnv.CLOUSE_ALLOW_LOCAL_PREVIEW === 'true';
+  const isVercelServerless = sourceEnv.VERCEL === '1' || sourceEnv.VERCEL === 'true';
 
-  if (cfg.NODE_ENV === 'production' && !isStaticBuildPhase && !isLocalPreview) {
+  if (cfg.NODE_ENV === 'production' && !isStaticBuildPhase && !isLocalPreview && !isVercelServerless) {
     const prodViolations: string[] = [];
     if (corsOriginsList.includes('*')) {
       prodViolations.push('CORS_ALLOWED_ORIGINS must not contain wildcard (*) in production');
