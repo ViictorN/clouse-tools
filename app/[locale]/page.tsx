@@ -74,13 +74,13 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
 
   // Chips in hero
   const chipSlugs = [
-    { slug: 'percentage-calculator', icon: 'percentage' },
-    { slug: 'json-formatter', icon: 'braces' },
-    { slug: 'word-counter', icon: 'letter-case' },
-    { slug: 'date-difference', icon: 'calendar-event' },
-    { slug: 'unit-converter', icon: 'ruler-2' },
-    { slug: 'qr-code-generator', icon: 'qrcode' },
-    { slug: 'uuid-generator', icon: 'fingerprint' },
+    { slug: 'percentage-calculator', icon: 'percentage', label: locale === 'pt-br' ? 'Porcentagem' : 'Percentage' },
+    { slug: 'json-formatter', icon: 'braces', label: locale === 'pt-br' ? 'JSON' : 'JSON' },
+    { slug: 'word-counter', icon: 'letter-case', label: locale === 'pt-br' ? 'Contador' : 'Words' },
+    { slug: 'date-difference', icon: 'calendar-event', label: locale === 'pt-br' ? 'Datas' : 'Dates' },
+    { slug: 'unit-converter', icon: 'ruler-2', label: locale === 'pt-br' ? 'Unidades' : 'Units' },
+    { slug: 'qr-code-generator', icon: 'qrcode', label: locale === 'pt-br' ? 'QR Code' : 'QR Code' },
+    { slug: 'uuid-generator', icon: 'fingerprint', label: locale === 'pt-br' ? 'UUID v4' : 'UUID v4' },
   ];
 
   const rawTitle = t('hero.title', locale);
@@ -104,7 +104,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
     <>
       {/* ---------- HERO SECTION ---------- */}
       <section className="hero">
-        <CalibGrid />
+        {/* CalibGrid cleaned */}
         <div className="hero-glow" aria-hidden="true" />
         <div className="container">
           <div className="hero-grid">
@@ -141,7 +141,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                   return (
                     <Link key={chip.slug} href={`/${locale}/tool/${chip.slug}`} className="chip">
                       <Icon name={chip.icon} size={14} />
-                      <span>{tool.name}</span>
+                      <span>{chip.label || tool.name}</span>
                     </Link>
                   );
                 })}
@@ -179,22 +179,6 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
           </Reveal>
         </div>
       </section>
-
-      {/* ---------- MARQUEE ---------- */}
-      <div className="marquee-wrap" aria-hidden="true">
-        <div className="marquee">
-          {[0, 1].map((track) => (
-            <div className="m-track" key={track}>
-              {marqueeItems.map((item) => (
-                <div className="m-item" key={item.label}>
-                  <Icon name={item.icon} size={16} />
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* ---------- POPULAR TOOLS ---------- */}
       <section className="section" id="popular">

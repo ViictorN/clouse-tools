@@ -8,9 +8,12 @@ import { ICONS } from './icons';
 export function renderTool(
   slug: string,
   root: HTMLElement,
-  showToast: (msg: string) => void
+  showToast: (msg: string) => void,
+  locale?: string
 ): boolean {
   if (!root) return false;
+
+  const isPt = locale === 'pt-br' || (typeof window !== 'undefined' && window.location.pathname.startsWith('/pt'));
 
   const CT = {
     icon: (name: string) => ICONS[name] || ICONS['sparkles'] || '',
@@ -19,9 +22,9 @@ export function renderTool(
       if (!text) return;
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
         navigator.clipboard.writeText(String(text)).then(() => {
-          showToast('Copied to clipboard');
+          showToast(isPt ? 'Copiado para a área de transferência' : 'Copied to clipboard');
         }).catch(() => {
-          showToast('Copied to clipboard');
+          showToast(isPt ? 'Copiado para a área de transferência' : 'Copied to clipboard');
         });
       } else {
         showToast('Copied: ' + String(text).slice(0, 30));
@@ -57,9 +60,11 @@ export function renderTool(
   }
   function areaHtml(id, ph) { return '<textarea class="t-area" id="' + id + '" aria-label="' + esc(ph || "Paste your text here") + '" placeholder="' + esc(ph || "Paste your text here…") + '"></textarea>'; }
   function resultPanel(id) {
+    var copyTitle = isPt ? "Copiar resultado" : "Copy result";
+    var resLabel = isPt ? "Resultado" : "Result";
     return '<div class="t-result" id="' + id + '-panel" hidden>' +
-      '<button class="copy-btn" id="' + id + '-copy" aria-label="Copy result">' + CT.icon("copy") + "</button>" +
-      '<div class="r-label">Result</div><div class="r-main" id="' + id + '-main"></div>' +
+      '<button class="copy-btn" id="' + id + '-copy" aria-label="' + copyTitle + '" title="' + copyTitle + '">' + CT.icon("copy") + "</button>" +
+      '<div class="r-label">' + resLabel + '</div><div class="r-main" id="' + id + '-main"></div>' +
       '<div class="r-sub" id="' + id + '-sub" hidden></div><div class="r-grid" id="' + id + '-grid" hidden></div></div>';
   }
   function panelShow(id, o) {
@@ -130,12 +135,18 @@ export function renderTool(
 
   /* ================= MATH ================= */
   E["percentage-calculator"] = function (root) {
-    root.innerHTML = lab("Pick a question") +
+    var pickLabel = isPt ? "Escolha a operação" : "Pick a question";
+    var m1 = isPt ? "Quanto é X% de Y?" : "What is X% of Y?";
+    var m2 = isPt ? "X é qual % de Y?" : "X is what % of Y?";
+    var m3 = isPt ? "Variação de X para Y" : "From X to Y";
+    var xLabel = isPt ? "X (porcentagem %)" : "X (percent)";
+    var yLabel = isPt ? "Y (valor total)" : "Y (value)";
+    root.innerHTML = lab(pickLabel) +
       '<div class="seg" id="p-mode" role="tablist">' +
-        '<button class="active" data-m="1">What is X% of Y?</button><button data-m="2">X is what % of Y?</button><button data-m="3">From X to Y</button></div><br><br>' +
+        '<button class="active" data-m="1">' + m1 + '</button><button data-m="2">' + m2 + '</button><button data-m="3">' + m3 + '</button></div>' +
       fields([
-        fWrap("X (percent)", inputHtml("p-x", "number", "50", 'min="0" step="any" placeholder="e.g. 50"')),
-        fWrap("Y (value)", inputHtml("p-y", "number", "250", 'step="any" placeholder="e.g. 250"'))
+        fWrap(xLabel, inputHtml("p-x", "number", "50", 'min="0" step="any" placeholder="50"')),
+        fWrap(yLabel, inputHtml("p-y", "number", "250", 'step="any" placeholder="250"'))
       ]) + resultPanel("p");
     function calc() {
       var mode = root.querySelector("#p-mode .active").getAttribute("data-m");

@@ -1,0 +1,209 @@
+export function buildOpenApiSpec(baseUrl = 'http://localhost:4000') {
+  return {
+    openapi: '3.1.0',
+    info: {
+      title: 'CLOUSE TOOLS — Modular Backend & Security Governance API',
+      version: '1.0.0',
+      description:
+        'Versioned REST API implementing the 6-pillar modular architecture, Supabase RLS/Storage integration (luytwttrgosmsfyjlonc), isolated sandbox job queue, LGPD privacy rights, and 2,500 verifiable engineering & security controls.',
+      contact: {
+        name: 'Clouse Platform Engineering',
+        url: 'https://github.com/ViictorN/clouse-tools',
+      },
+    },
+    servers: [
+      { url: baseUrl, description: 'Standalone Express API Gateway' },
+      { url: 'http://localhost:3000', description: 'Unified Next.js App Router Gateway' },
+    ],
+    components: {
+      securitySchemes: {
+        BearerJwt: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Supabase Auth JWT verified for signature, issuer, audience, and session freshness.',
+        },
+        ApiTokenHeader: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'X-Api-Key',
+          description: 'Scoped API token (ct_live_*) stored strictly as SHA-256 hash.',
+        },
+      },
+      schemas: {
+        ProblemDetails: {
+          type: 'object',
+          required: ['type', 'title', 'status', 'code', 'detail', 'correlationId'],
+          properties: {
+            type: { type: 'string', format: 'uri' },
+            title: { type: 'string' },
+            status: { type: 'integer' },
+            code: { type: 'string' },
+            detail: { type: 'string' },
+            correlationId: { type: 'string' },
+          },
+        },
+      },
+    },
+    paths: {
+      '/api/v1/health': {
+        get: {
+          summary: 'Liveness probe (zero internal secret disclosure)',
+          tags: ['Operations'],
+          responses: { '200': { description: 'Healthy liveness response' } },
+        },
+      },
+      '/api/v1/ready': {
+        get: {
+          summary: 'Readiness, SLO metrics, circuit breakers, and audit chain integrity',
+          tags: ['Operations'],
+          responses: { '200': { description: 'Readiness status and SLO telemetry' } },
+        },
+      },
+      '/api/v1/openapi.json': {
+        get: {
+          summary: 'OpenAPI 3.1 contract document',
+          tags: ['Contracts'],
+          responses: { '200': { description: 'OpenAPI JSON document' } },
+        },
+      },
+      '/api/v1/csrf-token': {
+        get: {
+          summary: 'Issue signed anti-CSRF token bound to caller session',
+          tags: ['Security'],
+          responses: { '200': { description: 'Signed CSRF token' } },
+        },
+      },
+      '/api/v1/tools': {
+        get: {
+          summary: 'List versioned tool manifests (67 browser tools + 6 server sandbox tools)',
+          tags: ['Tools'],
+          responses: { '200': { description: 'Paginated tool manifests' } },
+        },
+      },
+      '/api/v1/tools/{slug}': {
+        get: {
+          summary: 'Inspect a single tool manifest and its 10 publication gates',
+          tags: ['Tools'],
+          responses: {
+            '200': { description: 'Tool manifest' },
+            '404': { description: 'Tool not found' },
+          },
+        },
+      },
+      '/api/v1/tools/{slug}/execute': {
+        post: {
+          summary: 'Execute a server_sync tool or dispatch a worker_async sandbox tool',
+          tags: ['Tools'],
+          responses: {
+            '200': { description: 'Synchronous execution result' },
+            '202': { description: 'Queued asynchronous job' },
+            '400': { description: 'Strict schema validation rejected input' },
+            '429': { description: 'Rate limit or daily quota exceeded' },
+          },
+        },
+      },
+      '/api/v1/uploads': {
+        post: {
+          summary: 'Upload file to isolated quarantine storage with magic-byte verification and TTL',
+          tags: ['Uploads'],
+          security: [{ BearerJwt: [] }],
+          responses: {
+            '201': { description: 'Quarantine artifact stored with UUID key and TTL' },
+            '413': { description: 'File or user storage quota exceeded' },
+            '415': { description: 'MIME signature or extension mismatch' },
+          },
+        },
+      },
+      '/api/v1/uploads/{id}/download': {
+        get: {
+          summary: 'Authorized BOLA-verified download of non-expired file artifact',
+          tags: ['Uploads'],
+          security: [{ BearerJwt: [] }],
+          responses: {
+            '200': { description: 'Authorized short-lived download' },
+            '403': { description: 'BOLA cross-user access denied' },
+            '404': { description: 'Artifact expired or not found' },
+          },
+        },
+      },
+      '/api/v1/jobs': {
+        post: {
+          summary: 'Enqueue durable idempotent processing job',
+          tags: ['Jobs'],
+          responses: { '202': { description: 'Job queued or deduplicated via Idempotency-Key' } },
+        },
+      },
+      '/api/v1/jobs/{id}': {
+        get: {
+          summary: 'Inspect job status and output (BOLA owner-verified)',
+          tags: ['Jobs'],
+          responses: { '200': { description: 'Job status' }, '403': { description: 'Access denied' } },
+        },
+      },
+      '/api/v1/compliance/summary': {
+        get: {
+          summary: 'Executive governance summary across 2,000 engineering checks and 500 security practices',
+          tags: ['Compliance'],
+          responses: { '200': { description: 'Aggregated compliance telemetry' } },
+        },
+      },
+      '/api/v1/compliance/engineering': {
+        get: {
+          summary: 'Query and filter all 2,000 engineering verifications (CT-0001..CT-2000)',
+          tags: ['Compliance'],
+          responses: { '200': { description: 'Filtered engineering verifications' } },
+        },
+      },
+      '/api/v1/compliance/security': {
+        get: {
+          summary: 'Query and filter all 500 security best practices (CT-001..CT-500)',
+          tags: ['Compliance'],
+          responses: { '200': { description: 'Filtered security practices' } },
+        },
+      },
+      '/api/v1/admin/compliance/{matrix}/{code}': {
+        patch: {
+          summary: 'Update control verification status (Admin RBAC required)',
+          tags: ['Admin'],
+          security: [{ BearerJwt: [] }],
+          responses: { '200': { description: 'Updated control' }, '403': { description: 'Admin required' } },
+        },
+      },
+      '/api/v1/lgpd/consent': {
+        post: {
+          summary: 'Record purpose-bound LGPD consent',
+          tags: ['Privacy & LGPD'],
+          security: [{ BearerJwt: [] }],
+          responses: { '201': { description: 'Consent recorded' } },
+        },
+      },
+      '/api/v1/lgpd/export': {
+        post: {
+          summary: 'Exercise LGPD Art. 18 data portability export',
+          tags: ['Privacy & LGPD'],
+          security: [{ BearerJwt: [] }],
+          responses: { '200': { description: 'Portable personal data package' } },
+        },
+      },
+      '/api/v1/lgpd/delete': {
+        post: {
+          summary: 'Exercise LGPD Art. 18 personal data & artifact erasure',
+          tags: ['Privacy & LGPD'],
+          security: [{ BearerJwt: [] }],
+          responses: { '200': { description: 'Erasure completed with audit receipt' } },
+        },
+      },
+      '/api/v1/webhooks/billing': {
+        post: {
+          summary: 'Receive HMAC-SHA256 signed billing webhook with replay & idempotency protection',
+          tags: ['Billing'],
+          responses: {
+            '200': { description: 'Verified and recorded idempotently' },
+            '401': { description: 'Invalid or replayed webhook signature' },
+          },
+        },
+      },
+    },
+  };
+}

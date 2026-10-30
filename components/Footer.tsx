@@ -58,6 +58,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href={`/${locale}/platform`}>
+                  {locale === 'pt-br' ? 'Arquitetura & Segurança' : 'Architecture & Security'}
+                </Link>
+              </li>
+              <li>
                 <Link href={`/${locale}/contact`}>
                   {locale === 'pt-br' ? 'Contato & Suporte' : 'Contact & Support'}
                 </Link>

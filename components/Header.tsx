@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
-
 import { LanguageSelector } from './LanguageSelector';
 import { Locale } from '@/lib/i18n';
 import { t } from '@/lib/translations';
@@ -23,7 +22,7 @@ export function Header({ onOpenSearch }: HeaderProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 16);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -133,6 +132,8 @@ export function Header({ onOpenSearch }: HeaderProps) {
             </nav>
 
             <div className="nav-cta">
+              <LanguageSelector currentLocale={locale} className="desktop-lang" />
+
               <button
                 type="button"
                 className="theme-toggle-btn"
@@ -140,7 +141,7 @@ export function Header({ onOpenSearch }: HeaderProps) {
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
                 title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               >
-                <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={19} />
+                <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={18} />
               </button>
 
               <button
@@ -150,11 +151,11 @@ export function Header({ onOpenSearch }: HeaderProps) {
                 aria-label={t('nav.searchPlaceholder', locale)}
                 title={t('nav.searchPlaceholder', locale)}
               >
-                <Icon name="search" size={20} />
+                <Icon name="search" size={18} />
                 <kbd>⌘K</kbd>
               </button>
 
-              <Link href={`${prefix}/tools`} className="btn btn-primary btn-sm">
+              <Link href={`${prefix}/tools`} className="btn btn-primary btn-sm nav-explore-btn">
                 <span>{t('nav.exploreTools', locale)}</span>
                 <Icon name="arrow-up-right" size={14} />
               </Link>
@@ -203,7 +204,7 @@ export function Header({ onOpenSearch }: HeaderProps) {
         </nav>
 
         <div className="m-foot">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px', width: '100%' }}>
             <LanguageSelector currentLocale={locale} />
           </div>
 

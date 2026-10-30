@@ -57,8 +57,8 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
     if (tiltAllowed) {
       const px = x / rect.width - 0.5;
       const py = y / rect.height - 0.5;
-      card.style.setProperty('--ry', `${px * 5}deg`);
-      card.style.setProperty('--rx', `${-py * 4}deg`);
+      card.style.setProperty('--ry', `${px * 4}deg`);
+      card.style.setProperty('--rx', `${-py * 3}deg`);
     }
   };
 
@@ -113,44 +113,52 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
       onClick={handleCardClick}
       aria-label={ariaLabel}
     >
-      <button
-        type="button"
-        className={`fav-btn ${isFav ? 'active' : ''} ${pop ? 'pop' : ''}`}
-        onClick={toggleFavorite}
-        aria-label={
-          isFav
-            ? locale === 'pt-br'
-              ? `Remover ${localizedTool.name} dos favoritos`
-              : `Remove ${localizedTool.name} from pinned favorites`
-            : locale === 'pt-br'
-              ? `Fixar ${localizedTool.name} nos favoritos`
-              : `Pin ${localizedTool.name} to favorites`
-        }
-        title={
-          isFav
-            ? locale === 'pt-br'
-              ? 'Remover dos favoritos'
-              : 'Remove from favorites'
-            : locale === 'pt-br'
-              ? 'Fixar nos favoritos'
-              : 'Pin to favorites'
-        }
-      >
-        <Icon name={isFav ? 'star-filled' : 'star'} size={15} />
-        <span className="burst" aria-hidden="true" />
-      </button>
+      <div className="t-card-header">
+        <div className="t-card-icon-box">
+          <Icon name={tool.icon} size={20} />
+        </div>
+        <div className="t-card-actions">
+          {tool.popular ? (
+            <span className="t-badge-popular">{locale === 'pt-br' ? 'Popular' : 'Popular'}</span>
+          ) : null}
+          <button
+            type="button"
+            className={`fav-btn ${isFav ? 'active' : ''} ${pop ? 'pop' : ''}`}
+            onClick={toggleFavorite}
+            aria-label={
+              isFav
+                ? locale === 'pt-br'
+                  ? `Remover ${localizedTool.name} dos favoritos`
+                  : `Remove ${localizedTool.name} from pinned favorites`
+                : locale === 'pt-br'
+                  ? `Fixar ${localizedTool.name} nos favoritos`
+                  : `Pin ${localizedTool.name} to favorites`
+            }
+            title={
+              isFav
+                ? locale === 'pt-br'
+                  ? 'Remover dos favoritos'
+                  : 'Remove from favorites'
+                : locale === 'pt-br'
+                  ? 'Fixar nos favoritos'
+                  : 'Pin to favorites'
+            }
+          >
+            <Icon name={isFav ? 'star-filled' : 'star'} size={15} />
+            <span className="burst" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
 
-      <div className="tile-icn soft">
-        <Icon name={tool.icon} size={26} />
+      <div className="t-card-body">
+        <h3 className="t-card-title">{localizedTool.name}</h3>
+        <p className="t-card-desc">{localizedTool.desc}</p>
       </div>
-      <div>
-        <h3>{localizedTool.name}</h3>
-      </div>
-      <p>{localizedTool.desc}</p>
+
       <div className="t-foot">
         <span className="t-cat">{categoryName}</span>
         <span className="t-go" aria-hidden="true">
-          <Icon name="arrow-right" size={16} />
+          <Icon name="arrow-right" size={15} />
         </span>
       </div>
     </Link>

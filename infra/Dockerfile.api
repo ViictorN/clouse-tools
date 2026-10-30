@@ -1,0 +1,28 @@
+# ==============================================================================
+# CLOUSE TOOLS — Hardened API Gateway Container (infra/Dockerfile.api)
+# Controls: PDF 2 Domain 02 (LTS, memory, non-root) & Domain 18 (containers)
+# ==============================================================================
+FROM node:22.14.0-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts && npm cache clean --force
+
+FROM node:22.14.0-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production \
+    NODE_OPTIONS="--max-old-space-size=512 --disallow-code-generation-from-strings" \
+    API_PORT=4000
+
+COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+COPY --chown=node:node package.json tsconfig.json ./
+COPY --chown=node:node lib ./lib
+COPY --chown=node:node packages ./packages
+COPY --chown=node:node apps/api ./apps/api
+
+USER node
+EXPOSE 4000
+
+HEALTHCHECK --interval=30s --timeout=4s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:4000/api/v1/health || exit 1
+
+CMD ["npx", "tsx", "apps/api/src/server.ts"]

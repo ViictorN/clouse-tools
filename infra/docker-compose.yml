@@ -1,0 +1,50 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.api
+    env_file:
+      - ../.env.example
+    ports:
+      - "127.0.0.1:4000:4000"
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,noexec,nosuid,nodev
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    restart: unless-stopped
+    networks:
+      - clouse_internal
+
+  worker:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.worker
+    env_file:
+      - ../.env.example
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,noexec,nosuid,nodev
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    restart: unless-stopped
+    networks:
+      - clouse_internal
+
+networks:
+  clouse_internal:
+    driver: bridge

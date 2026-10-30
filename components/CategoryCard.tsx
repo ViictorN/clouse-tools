@@ -38,16 +38,16 @@ export function CategoryCard({ category, locale: propLocale, className = '' }: {
       aria-label={ariaLabel}
     >
       <div className="cat-head">
-        <div className="tile-icn">
-          <Icon name={category.icon} size={26} />
+        <div className="cat-icon-box">
+          <Icon name={category.icon} size={22} />
         </div>
         <span className="cat-count">{badgeText}</span>
       </div>
 
-      <div>
-        <h3>{localizedCat.name}</h3>
+      <div className="cat-body">
+        <h3 className="cat-title">{localizedCat.name}</h3>
+        <p className="cat-desc">{localizedCat.desc}</p>
       </div>
-      <p>{localizedCat.desc}</p>
 
       <div className="cat-tags">
         {tools.slice(0, 4).map((tool) => (

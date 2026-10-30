@@ -1,28 +1,40 @@
-name: CI / Build Verification
+name: CI / Security, Compliance & Build Verification
+
+permissions:
+  contents: read
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, backend_database_supabase ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
-    name: Build & Validate Next.js
+  verify:
+    name: Security Gate, 2500 Compliance Checks & Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js LTS
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Deterministic dependency install (ignore install scripts)
+        run: npm ci --ignore-scripts
 
-      - name: Build Next.js site
+      - name: Supply chain vulnerability audit
+        run: npm audit --audit-level=high
+
+      - name: TypeScript strict type verification
+        run: npm run typecheck
+
+      - name: Run automated security, negative & 2,500 compliance test suite
+        run: npm test
+
+      - name: Build Next.js production bundle
         run: npm run build
