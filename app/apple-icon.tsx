@@ -12,7 +12,8 @@ export default function AppleIcon() {
       <div
         style={{
           fontSize: 110,
-          background: '#0b0b0e',
+          background:
+            'radial-gradient(circle at 50% 18%, rgba(0, 113, 227, 0.38) 0%, transparent 62%), #0b0b0e',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -22,6 +23,8 @@ export default function AppleIcon() {
           fontWeight: 800,
           borderRadius: 38,
           fontFamily: 'sans-serif',
+          letterSpacing: '-0.04em',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.28)',
         }}
       >
         C

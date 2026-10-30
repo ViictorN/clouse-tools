@@ -17,6 +17,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const [results, setResults] = useState<Tool[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -24,6 +26,32 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
 
   const localizedTools = getLocalizedTools(locale);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    restoreFocusRef.current = document.activeElement as HTMLElement | null;
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>('a[href], button, input');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    };
+    document.addEventListener('keydown', trap);
+    return () => {
+      document.removeEventListener('keydown', trap);
+      restoreFocusRef.current?.focus();
+    };
+  }, [isOpen]);
 
   const searchInList = (q: string): Tool[] => {
     const term = q.trim().toLowerCase();
@@ -127,8 +155,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       }}
       role="dialog"
       aria-modal="true"
+      aria-label={locale === 'pt-br' ? 'Busca de ferramentas' : 'Tool search'}
     >
-      <div className="search-panel">
+      <div className="search-panel" ref={panelRef}>
         <div className="search-row">
           <Icon name="search" size={22} />
           <input
@@ -143,7 +172,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           <span className="search-hint">ESC</span>
         </div>
 
-        <div className="search-results">
+        <div className="search-results" role="listbox" aria-label={placeholder} aria-live="polite">
           {results.length > 0 ? (
             results.map((tool, index) => {
               const catObj = getLocalizedCategoryById(tool.cat, locale);

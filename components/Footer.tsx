@@ -28,7 +28,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3>{t('footer.cats', locale)}</h3>
+            <h2>{t('footer.cats', locale)}</h2>
             <ul>
               {categories.map((cat) => (
                 <li key={cat.id}>
@@ -39,7 +39,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3>{t('footer.quick', locale)}</h3>
+            <h2>{t('footer.quick', locale)}</h2>
             <ul>
               {popular.map((tool) => (
                 <li key={tool.slug}>
@@ -50,7 +50,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3>{t('footer.legal', locale)}</h3>
+            <h2>{t('footer.legal', locale)}</h2>
             <ul>
               <li>
                 <Link href={`/${locale}/about`}>

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useToast } from '@/components/ToastContext';
+import { CalibGrid } from '@/components/CalibGrid';
 import { Icon } from '@/lib/icons';
 
 export default function ComponentsPage() {
@@ -13,6 +14,8 @@ export default function ComponentsPage() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -27,6 +30,12 @@ export default function ComponentsPage() {
           <p className="lead">
             The foundational primitives of Clouse Tools: tokens, buttons, inputs, surfaces, and interactive feedback.
           </p>
+          <div className="page-hero-cta">
+            <Link href="/tools" className="btn btn-primary">
+              <span>Explore 67 Tools</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -88,6 +97,7 @@ export default function ComponentsPage() {
                     max="100"
                     value={rangeVal}
                     onChange={(e) => setRangeVal(Number(e.target.value))}
+                    aria-label="Range"
                   />
                   <span className="range-val">{rangeVal}</span>
                 </div>
@@ -99,6 +109,7 @@ export default function ComponentsPage() {
                     type="checkbox"
                     checked={switchChecked}
                     onChange={(e) => setSwitchChecked(e.target.checked)}
+                    aria-label="Switch"
                   />
                   <i />
                   <span>{switchChecked ? 'Enabled' : 'Disabled'}</span>
@@ -156,10 +167,12 @@ export default function ComponentsPage() {
             <h2>Color Tokens</h2>
             <div className="token-grid">
               <div className="token"><i className="swatch-bg" /><span>bg (#f5f5f7)</span></div>
-              <div className="token"><i className="swatch-surface" /><span>surface (#fff)</span></div>
+              <div className="token"><i className="swatch-surface" /><span>surface (#ffffff)</span></div>
               <div className="token"><i className="swatch-ink" /><span>ink (#0b0b0e)</span></div>
-              <div className="token"><i className="swatch-ink-2" /><span>ink-2 (#6e6e73)</span></div>
-              <div className="token"><i className="swatch-blue" /><span>blue (#0071e3)</span></div>
+              <div className="token"><i className="swatch-ink-2" /><span>ink-2 (#5c5c62)</span></div>
+              <div className="token"><i className="swatch-ink-3" /><span>ink-3 (#6b6d70)</span></div>
+              <div className="token"><i className="swatch-blue" /><span>accent (#0071e3)</span></div>
+              <div className="token"><i className="swatch-link" /><span>link (#0066cc)</span></div>
               <div className="token"><i className="swatch-ok" /><span>ok (#30d158)</span></div>
               <div className="token"><i className="swatch-warn" /><span>warn (#ff9f0a)</span></div>
               <div className="token"><i className="swatch-err" /><span>err (#ff453a)</span></div>

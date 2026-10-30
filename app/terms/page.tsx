@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Icon } from '@/lib/icons';
+import { CalibGrid } from '@/components/CalibGrid';
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
@@ -12,6 +13,8 @@ export default function TermsPage() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -23,6 +26,12 @@ export default function TermsPage() {
             <span>Legal Notice</span>
           </div>
           <h1 className="h-d2">Terms of Use</h1>
+          <div className="page-hero-cta">
+            <Link href="/tools" className="btn btn-primary">
+              <span>Explore 67 Tools</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
           <p className="lead">The short, human-readable version.</p>
         </div>
       </section>

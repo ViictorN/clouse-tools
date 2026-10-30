@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Icon } from '@/lib/icons';
+import { CalibGrid } from '@/components/CalibGrid';
 
 export const metadata: Metadata = {
   title: 'About Clouse Tools',
@@ -13,6 +14,8 @@ export default function AboutPage() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -27,6 +30,12 @@ export default function AboutPage() {
           <p className="lead">
             Simple tools. Real productivity. Free, forever, for everyone.
           </p>
+          <div className="page-hero-cta">
+            <Link href="/tools" className="btn btn-primary">
+              <span>Explore 67 Tools</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
 

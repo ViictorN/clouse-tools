@@ -63,7 +63,7 @@ export const metadata: Metadata = {
       '67 free, private, client-side tools designed with the utmost craft. Zero tracking, zero ads, zero accounts required.',
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/icon-192.png',
     apple: '/apple-touch-icon.png',
   },
 };

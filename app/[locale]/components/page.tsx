@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useToast } from '@/components/ToastContext';
+import { CalibGrid } from '@/components/CalibGrid';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 
@@ -20,6 +21,8 @@ export default function LocalizedComponentsPage() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href={`/${locale}`}>{isPt ? 'Início' : 'Home'}</Link>
@@ -36,6 +39,12 @@ export default function LocalizedComponentsPage() {
               ? 'As primitivas fundamentais do Clouse Tools: tokens de cor, botões, inputs, superfícies em vidro e micro-interações.'
               : 'The foundational primitives of Clouse Tools: tokens, buttons, inputs, surfaces, and interactive feedback.'}
           </p>
+          <div className="page-hero-cta">
+            <Link href={`/${locale}/tools`} className="btn btn-primary">
+              <span>{isPt ? 'Explorar 67 Ferramentas' : 'Explore 67 Tools'}</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -96,13 +105,13 @@ export default function LocalizedComponentsPage() {
             <h2>{isPt ? 'Controles de Formulário' : 'Form Controls'}</h2>
             <div className="demo-grid-2">
               <div className="fg">
-                <label>{isPt ? 'Input de Texto' : 'Text Input'}</label>
-                <input type="text" placeholder={isPt ? 'Digite algo...' : 'Type something...'} />
+                <label htmlFor="demo-text">{isPt ? 'Input de Texto' : 'Text Input'}</label>
+                <input id="demo-text" type="text" placeholder={isPt ? 'Digite algo...' : 'Type something...'} />
                 <span className="hint">{isPt ? 'Dica ou texto de suporte' : 'Helper text beneath input'}</span>
               </div>
               <div className="fg">
-                <label>{isPt ? 'Menu de Seleção' : 'Select Dropdown'}</label>
-                <select defaultValue="2">
+                <label htmlFor="demo-select">{isPt ? 'Menu de Seleção' : 'Select Dropdown'}</label>
+                <select id="demo-select" defaultValue="2">
                   <option value="1">{isPt ? 'Opção 1' : 'Option 1'}</option>
                   <option value="2">{isPt ? 'Opção 2 (Padrão)' : 'Option 2 (Default)'}</option>
                   <option value="3">{isPt ? 'Opção 3' : 'Option 3'}</option>
@@ -118,6 +127,7 @@ export default function LocalizedComponentsPage() {
                 max="100"
                 value={rangeVal}
                 onChange={(e) => setRangeVal(Number(e.target.value))}
+                aria-label="Range"
               />
             </div>
 
@@ -151,6 +161,7 @@ export default function LocalizedComponentsPage() {
                   type="checkbox"
                   checked={switchChecked}
                   onChange={(e) => setSwitchChecked(e.target.checked)}
+                  aria-label="Switch"
                 />
                 <span className="switch-slider" />
                 <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>

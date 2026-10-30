@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '@/lib/icons';
+import { CalibGrid } from '@/components/CalibGrid';
+import { Reveal } from '@/components/Reveal';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -24,6 +26,8 @@ export default function ContactPage() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -38,55 +42,25 @@ export default function ContactPage() {
           <p className="lead">
             Have a suggestion, found a bug, or want a new tool added? We would love to hear from you.
           </p>
+          <div className="page-hero-cta">
+            <Link href="/tools" className="btn btn-primary">
+              <span>Explore 67 Tools</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="section section-pt-0">
-        <div className="container" style={{ maxWidth: 840 }}>
+        <div className="container contact-wrap">
           {submitted ? (
-            /* Página de Obrigado / Thank You Card */
-            <div
-              className="demo-block"
-              style={{
-                textAlign: 'center',
-                padding: '56px 32px',
-                background: 'var(--surface)',
-                borderRadius: 'var(--r-lg)',
-                boxShadow: 'var(--sh-md)',
-              }}
-            >
-              <div
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'rgba(48, 209, 88, 0.14)',
-                  color: 'var(--ok)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  margin: '0 auto 20px',
-                }}
-              >
+            <Reveal variant="reveal-scale" className="demo-block thanks-card">
+              <div className="thanks-icon">
                 <Icon name="check" size={32} />
               </div>
               <h2 className="h-d3">Obrigado pela sua mensagem!</h2>
-              <p className="lead" style={{ maxWidth: 460, margin: '12px auto 24px' }}>
-                Recebemos sua mensagem com sucesso.
-              </p>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 18px',
-                  borderRadius: 'var(--pill)',
-                  background: 'rgba(0, 113, 227, 0.08)',
-                  color: 'var(--blue)',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  marginBottom: '32px',
-                }}
-              >
+              <p className="lead">Recebemos sua mensagem com sucesso.</p>
+              <div className="thanks-chip">
                 <Icon name="clock" size={16} />
                 <span>Promessa de resposta: retornamos em até 24 horas úteis.</span>
               </div>
@@ -102,14 +76,14 @@ export default function ContactPage() {
                   <span>Enviar outra mensagem</span>
                 </button>
               </div>
-            </div>
+            </Reveal>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '32px' }}>
+            <div className="contact-grid">
               {/* Form */}
-              <div className="demo-block" style={{ margin: 0 }}>
-                <h3>Envie sua mensagem</h3>
-                <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '16px' }}>
-                  <div>
+              <Reveal className="demo-block contact-form-card">
+                <h2>Envie sua mensagem</h2>
+                <form onSubmit={handleSubmit} className="contact-form">
+                  <div className="contact-field">
                     <label className="t-label" htmlFor="c-name">
                       Seu Nome
                     </label>
@@ -118,28 +92,31 @@ export default function ContactPage() {
                       type="text"
                       className="t-input"
                       placeholder="Ex: Victor Gomes"
+                      autoComplete="name"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
                   </div>
 
-                  <div>
+                  <div className="contact-field">
                     <label className="t-label" htmlFor="c-email">
                       Seu E-mail
                     </label>
                     <input
                       id="c-email"
                       type="email"
+                      inputMode="email"
                       className="t-input"
                       placeholder="seu@email.com"
+                      autoComplete="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
                   </div>
 
-                  <div>
+                  <div className="contact-field">
                     <label className="t-label" htmlFor="c-topic">
                       Assunto
                     </label>
@@ -156,46 +133,43 @@ export default function ContactPage() {
                     </select>
                   </div>
 
-                  <div>
+                  <div className="contact-field">
                     <label className="t-label" htmlFor="c-message">
                       Mensagem
                     </label>
                     <textarea
                       id="c-message"
-                      className="t-area"
+                      className="t-area contact-textarea"
                       placeholder="Conte para nós como podemos melhorar o Clouse Tools..."
                       required
-                      style={{ minHeight: '130px' }}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     />
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginTop: 4 }}>
+                  <div className="contact-actions">
                     <button type="submit" className="btn btn-blue">
                       <Icon name="arrow-right" size={16} />
                       <span>Enviar Mensagem</span>
                     </button>
-                    <span style={{ fontSize: '12px', color: 'var(--ink-3)' }}>
-                      🔒 Resposta garantida em até 24h
-                    </span>
+                    <span className="contact-note">🔒 Resposta garantida em até 24h</span>
                   </div>
                 </form>
-              </div>
+              </Reveal>
 
               {/* Direct Channels */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div className="t-card" style={{ padding: '24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                    <div className="tile-icn soft" style={{ width: 40, height: 40 }}>
+              <div className="contact-side" data-reveal-group>
+                <Reveal className="t-card channel-card">
+                  <div className="channel-head">
+                    <div className="tile-icn soft">
                       <Icon name="code" size={20} />
                     </div>
                     <div>
-                      <h4 style={{ fontSize: '16px' }}>GitHub Issues</h4>
-                      <span style={{ fontSize: '12.5px', color: 'var(--ink-3)' }}>Comunidade Open Source</span>
+                      <h3>GitHub Issues</h3>
+                      <span className="channel-meta">Comunidade Open Source</span>
                     </div>
                   </div>
-                  <p style={{ fontSize: '13.5px', color: 'var(--ink-2)', marginBottom: '14px' }}>
+                  <p className="channel-desc">
                     Acompanhe o roadmap, abra issues ou envie pull requests diretamente no repositório.
                   </p>
                   <a
@@ -207,41 +181,38 @@ export default function ContactPage() {
                     <span>Abrir issue no GitHub</span>
                     <Icon name="arrow-up-right" size={14} />
                   </a>
-                </div>
+                </Reveal>
 
-                <div className="t-card" style={{ padding: '24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                    <div className="tile-icn soft" style={{ width: 40, height: 40 }}>
+                <Reveal className="t-card channel-card">
+                  <div className="channel-head">
+                    <div className="tile-icn soft">
                       <Icon name="sparkles" size={20} />
                     </div>
                     <div>
-                      <h4 style={{ fontSize: '16px' }}>Suporte Direto</h4>
-                      <span style={{ fontSize: '12.5px', color: 'var(--ink-3)' }}>E-mail oficial</span>
+                      <h3>Suporte Direto</h3>
+                      <span className="channel-meta">E-mail oficial</span>
                     </div>
                   </div>
-                  <p style={{ fontSize: '13.5px', color: 'var(--ink-2)', marginBottom: '14px' }}>
+                  <p className="channel-desc">
                     Envie dúvidas ou sugestões para nossa caixa de entrada oficial.
                   </p>
-                  <a
-                    href="mailto:hello@clouse.tools"
-                    className="link-arrow"
-                  >
+                  <a href="mailto:hello@clouse.tools" className="link-arrow">
                     <span>hello@clouse.tools</span>
                     <Icon name="arrow-right" size={14} />
                   </a>
-                </div>
+                </Reveal>
 
-                <div className="t-card" style={{ padding: '24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                    <div className="tile-icn soft" style={{ width: 40, height: 40, background: 'rgba(48, 209, 88, 0.12)', color: 'var(--ok)' }}>
+                <Reveal className="t-card channel-card">
+                  <div className="channel-head">
+                    <div className="tile-icn soft channel-ok">
                       <Icon name="check" size={20} />
                     </div>
                     <div>
-                      <h4 style={{ fontSize: '16px' }}>WhatsApp / Telegram</h4>
-                      <span style={{ fontSize: '12.5px', color: 'var(--ink-3)' }}>Canal de Comunicação</span>
+                      <h3>WhatsApp / Telegram</h3>
+                      <span className="channel-meta">Canal de Comunicação</span>
                     </div>
                   </div>
-                  <p style={{ fontSize: '13.5px', color: 'var(--ink-2)', marginBottom: '14px' }}>
+                  <p className="channel-desc">
                     Fale diretamente com os mantenedores do projeto para parcerias e integrações.
                   </p>
                   <a
@@ -253,7 +224,7 @@ export default function ContactPage() {
                     <span>Conversar no WhatsApp</span>
                     <Icon name="arrow-up-right" size={14} />
                   </a>
-                </div>
+                </Reveal>
               </div>
             </div>
           )}

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Icon } from '@/lib/icons';
+import { CalibGrid } from '@/components/CalibGrid';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 
 interface TermsPageProps {
@@ -54,6 +55,8 @@ export default async function LocalizedTermsPage({ params }: TermsPageProps) {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href={`/${locale}`}>{isPt ? 'Início' : 'Home'}</Link>
@@ -65,6 +68,12 @@ export default async function LocalizedTermsPage({ params }: TermsPageProps) {
             <span>{isPt ? 'Aviso Legal' : 'Legal Notice'}</span>
           </div>
           <h1 className="h-d2">{isPt ? 'Termos de Uso' : 'Terms of Use'}</h1>
+          <div className="page-hero-cta">
+            <Link href={`/${locale}/tools`} className="btn btn-primary">
+              <span>{isPt ? 'Explorar 67 Ferramentas' : 'Explore 67 Tools'}</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
           <p className="lead">
             {isPt ? 'A versão resumida, compreensível e humana.' : 'The short, human-readable version.'}
           </p>

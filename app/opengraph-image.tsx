@@ -7,6 +7,8 @@ export const size = {
 };
 export const contentType = 'image/png';
 
+/** Social card in the site's own language: OLED ground, calibration grid,
+ *  instrument status row, single blue accent. */
 export default function OpenGraphImage() {
   return new ImageResponse(
     (
@@ -16,92 +18,55 @@ export default function OpenGraphImage() {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           backgroundColor: '#0b0b0e',
-          backgroundImage: 'radial-gradient(circle at 50% 20%, rgba(0, 113, 227, 0.22) 0%, transparent 60%)',
+          backgroundImage:
+            'radial-gradient(ellipse 70% 55% at 78% -10%, rgba(0, 113, 227, 0.28) 0%, transparent 62%),' +
+            'linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),' +
+            'linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px)',
+          backgroundSize: '100% 100%, 48px 48px, 48px 48px',
           color: '#ffffff',
-          fontFamily: 'sans-serif',
-          padding: '60px',
+          fontFamily:
+            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          padding: '64px 72px',
         }}
       >
-        {/* Brand Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            marginBottom: '32px',
-          }}
-        >
+        {/* Brand row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
           <div
             style={{
-              width: '64px',
-              height: '64px',
+              width: '60px',
+              height: '60px',
               borderRadius: '16px',
               backgroundColor: '#ffffff',
               color: '#0b0b0e',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '36px',
-              fontWeight: 900,
+              fontSize: '32px',
+              fontWeight: 800,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)',
             }}
           >
             C
           </div>
           <div
             style={{
-              fontSize: '34px',
-              fontWeight: 800,
+              fontSize: '30px',
+              fontWeight: 700,
               letterSpacing: '-0.02em',
-              color: '#ffffff',
+              color: '#f5f5f7',
             }}
           >
             Clouse Tools
           </div>
-        </div>
-
-        {/* Title */}
-        <div
-          style={{
-            fontSize: '56px',
-            fontWeight: 800,
-            letterSpacing: '-0.03em',
-            textAlign: 'center',
-            maxWidth: '960px',
-            lineHeight: 1.15,
-            marginBottom: '24px',
-            color: '#f5f5f7',
-          }}
-        >
-          67 Free, Fast &amp; 100% Private Online Utilities
-        </div>
-
-        {/* Description */}
-        <div
-          style={{
-            fontSize: '24px',
-            color: '#9a9aa2',
-            textAlign: 'center',
-            maxWidth: '800px',
-            lineHeight: 1.4,
-            marginBottom: '44px',
-          }}
-        >
-          Math, Text, Date &amp; Time, Unit Converters, Developer Tools, and Design. Zero tracking, zero uploads, computed locally in your browser.
-        </div>
-
-        {/* Pill tags */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '14px',
-          }}
-        >
           <div
             style={{
-              padding: '10px 22px',
+              marginLeft: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 20px',
               borderRadius: '999px',
               backgroundColor: 'rgba(255, 255, 255, 0.08)',
               border: '1px solid rgba(255, 255, 255, 0.16)',
@@ -110,34 +75,70 @@ export default function OpenGraphImage() {
               color: '#86b9ff',
             }}
           >
-            ⚡ Zero Server Delay
+            ● 67 client-side utilities
+          </div>
+        </div>
+
+        {/* Title block */}
+        <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '880px' }}>
+          <div
+            style={{
+              fontSize: '78px',
+              fontWeight: 800,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.02,
+              color: '#f5f5f7',
+              marginBottom: '22px',
+            }}
+          >
+            Everything you need. In one place.
           </div>
           <div
             style={{
-              padding: '10px 22px',
-              borderRadius: '999px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-              fontSize: '18px',
-              fontWeight: 600,
-              color: '#30d158',
+              fontSize: '25px',
+              color: '#9a9aa2',
+              lineHeight: 1.4,
+              maxWidth: '760px',
             }}
           >
-            🔒 100% Private
+            Math, text, dates, converters, developer tools and design. Zero tracking, zero
+            uploads, computed entirely in your browser.
           </div>
-          <div
-            style={{
-              padding: '10px 22px',
-              borderRadius: '999px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-              fontSize: '18px',
-              fontWeight: 600,
-              color: '#ffffff',
-            }}
-          >
-            Next.js 16
-          </div>
+        </div>
+
+        {/* Status row */}
+        <div style={{ display: 'flex', gap: '14px' }}>
+          {[
+            { value: '67', label: 'tools ready', tone: '#f5f5f7' },
+            { value: '100%', label: 'local compute', tone: '#30d158' },
+            { value: '0', label: 'sign-ups required', tone: '#f5f5f7' },
+            { value: '0ms', label: 'server delay', tone: '#86b9ff' },
+          ].map((item) => (
+            <div
+              key={item.label}
+              style={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '10px',
+                padding: '14px 24px',
+                borderRadius: '20px',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '34px',
+                  fontWeight: 800,
+                  letterSpacing: '-0.03em',
+                  color: item.tone,
+                }}
+              >
+                {item.value}
+              </div>
+              <div style={{ fontSize: '17px', color: '#9a9aa2' }}>{item.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     ),

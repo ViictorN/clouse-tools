@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Icon } from '@/lib/icons';
+import { CalibGrid } from '@/components/CalibGrid';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 
 interface AboutPageProps {
@@ -54,6 +55,8 @@ export default async function LocalizedAboutPage({ params }: AboutPageProps) {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href={`/${locale}`}>{isPt ? 'Início' : 'Home'}</Link>
@@ -70,6 +73,12 @@ export default async function LocalizedAboutPage({ params }: AboutPageProps) {
               ? 'Ferramentas simples. Produtividade real. Grátis, para sempre, para todos.'
               : 'Simple tools. Real productivity. Free, forever, for everyone.'}
           </p>
+          <div className="page-hero-cta">
+            <Link href={`/${locale}/tools`} className="btn btn-primary">
+              <span>{isPt ? 'Explorar 67 Ferramentas' : 'Explore 67 Tools'}</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
 

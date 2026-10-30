@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
+import { CalibGrid } from '@/components/CalibGrid';
+import { Reveal } from '@/components/Reveal';
 
 export default function LocalizedContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -19,6 +21,39 @@ export default function LocalizedContactPage() {
     pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
   const isPt = locale === 'pt-br';
 
+  const copy = {
+    breadcrumb: isPt ? 'Contato & Feedback' : 'Contact & Feedback',
+    eyebrow: isPt ? 'Fale Conosco' : 'Get In Touch',
+    title: isPt ? 'Contato & Suporte' : 'Contact & Support',
+    lead: isPt
+      ? 'Tem uma sugestão de nova ferramenta, encontrou um bug ou quer colaborar? Adoraríamos ouvir você.'
+      : 'Have a suggestion, found a bug, or want a new tool added? We would love to hear from you.',
+    formTitle: isPt ? 'Envie sua mensagem' : 'Send your message',
+    name: isPt ? 'Seu Nome' : 'Your Name',
+    namePh: isPt ? 'Ex: Ana Silva' : 'e.g. Alex Morgan',
+    email: isPt ? 'Seu E-mail' : 'Email Address',
+    emailPh: isPt ? 'voce@exemplo.com' : 'you@example.com',
+    topic: isPt ? 'Assunto / Categoria' : 'Topic / Category',
+    topics: isPt
+      ? ['Sugerir Nova Ferramenta', 'Reportar Problema Técnico / Bug', 'Parceria ou Integração', 'Outro Assunto']
+      : ['Suggest a New Tool', 'Report a Bug', 'Partnership or Integration', 'Other Inquiries'],
+    message: isPt ? 'Sua Mensagem' : 'Your Message',
+    messagePh: isPt
+      ? 'Descreva sua sugestão ou o problema detalhadamente...'
+      : 'Describe your suggestion, the bug you encountered, or how we can improve...',
+    submit: isPt ? 'Enviar Mensagem' : 'Send Message',
+    thanksTitle: isPt ? 'Mensagem Recebida!' : 'Thank you for reaching out!',
+    thanksBody: isPt
+      ? 'Agradecemos o seu contato. O Clouse Tools é um projeto aberto e evolui diretamente com as contribuições e sugestões da comunidade.'
+      : 'We have received your note. Because Clouse Tools is an open community-driven project, user feedback directly shapes our roadmap.',
+    again: isPt ? 'Enviar Outra Mensagem' : 'Send Another Message',
+    browse: isPt ? 'Explorar Ferramentas' : 'Browse All Tools',
+    githubTitle: isPt ? 'Prefere o GitHub?' : 'Prefer GitHub?',
+    githubBody: isPt
+      ? 'Abra uma issue ou pull request diretamente no repositório oficial.'
+      : 'Open an issue or submit a pull request directly in our repository.',
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
@@ -30,62 +65,39 @@ export default function LocalizedContactPage() {
   return (
     <>
       <section className="page-hero">
+        <CalibGrid />
+        <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
             <Link href={`/${locale}`}>{isPt ? 'Início' : 'Home'}</Link>
             <Icon name="chevron-right" size={13} />
-            <span>{isPt ? 'Contato & Feedback' : 'Contact & Feedback'}</span>
+            <span>{copy.breadcrumb}</span>
           </nav>
           <div className="eyebrow">
             <span className="dot" />
-            <span>{isPt ? 'Fale Conosco' : 'Get In Touch'}</span>
+            <span>{copy.eyebrow}</span>
           </div>
-          <h1 className="h-d2">{isPt ? 'Contato & Suporte' : 'Contact & Support'}</h1>
-          <p className="lead">
-            {isPt
-              ? 'Tem uma sugestão de nova ferramenta, encontrou um bug ou quer colaborar? Adoraríamos ouvir você.'
-              : 'Have a suggestion, found a bug, or want a new tool added? We would love to hear from you.'}
-          </p>
+          <h1 className="h-d2">{copy.title}</h1>
+          <p className="lead">{copy.lead}</p>
+          <div className="page-hero-cta">
+            <Link href={`/${locale}/tools`} className="btn btn-primary">
+              <span>{isPt ? 'Explorar 67 Ferramentas' : 'Explore 67 Tools'}</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="section section-pt-0">
-        <div className="container" style={{ maxWidth: 840 }}>
+        <div className="container contact-wrap">
           {submitted ? (
-            <div
-              className="demo-block"
-              style={{
-                textAlign: 'center',
-                padding: '56px 32px',
-                background: 'var(--surface)',
-                borderRadius: 'var(--r-lg)',
-                boxShadow: 'var(--sh-md)',
-              }}
-            >
-              <div
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'rgba(34, 197, 94, 0.15)',
-                  color: 'var(--success)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '20px',
-                }}
-              >
+            <Reveal variant="reveal-scale" className="demo-block thanks-card">
+              <div className="thanks-icon">
                 <Icon name="check" size={32} />
               </div>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '12px' }}>
-                {isPt ? 'Mensagem Recebida!' : 'Thank you for reaching out!'}
-              </h2>
-              <p style={{ color: 'var(--ink-2)', maxWidth: '520px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-                {isPt
-                  ? 'Agradecemos o seu contato. O Clouse Tools é um projeto aberto e evolui diretamente com as contribuições e sugestões da comunidade.'
-                  : 'We have received your note. Because Clouse Tools is an open community-driven project, user feedback directly shapes our roadmap.'}
-              </p>
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <h2 className="h-d3">{copy.thanksTitle}</h2>
+              <p className="lead">{copy.thanksBody}</p>
+              <div className="thanks-actions">
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -94,157 +106,99 @@ export default function LocalizedContactPage() {
                     setFormData({ name: '', email: '', topic: 'suggest-tool', message: '' });
                   }}
                 >
-                  {isPt ? 'Enviar Outra Mensagem' : 'Send Another Message'}
+                  {copy.again}
                 </button>
                 <Link href={`/${locale}/tools`} className="btn btn-primary">
-                  <span>{isPt ? 'Explorar Ferramentas' : 'Browse All Tools'}</span>
+                  <span>{copy.browse}</span>
                   <Icon name="arrow-right" size={16} />
                 </Link>
               </div>
-            </div>
+            </Reveal>
           ) : (
-            <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
-              <div
-                style={{
-                  background: 'var(--surface)',
-                  padding: '40px 32px',
-                  borderRadius: 'var(--r-lg)',
-                  border: '1px solid var(--border)',
-                  boxShadow: 'var(--sh-sm)',
-                }}
-              >
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                        {isPt ? 'Seu Nome' : 'Your Name'}
+            <div className="contact-grid">
+              <Reveal className="demo-block contact-form-card">
+                <h2>{copy.formTitle}</h2>
+                <form onSubmit={handleSubmit} className="contact-form">
+                  <div className="contact-row">
+                    <div className="contact-field">
+                      <label className="t-label" htmlFor="c-name">
+                        {copy.name}
                       </label>
                       <input
+                        id="c-name"
                         type="text"
+                        className="t-input"
+                        placeholder={copy.namePh}
+                        autoComplete="name"
                         required
-                        placeholder={isPt ? 'Ex: Ana Silva' : 'e.g. Alex Morgan'}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '12px 14px',
-                          borderRadius: 'var(--r-md)',
-                          border: '1px solid var(--border)',
-                          background: 'var(--bg)',
-                          color: 'var(--text)',
-                        }}
                       />
                     </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                        {isPt ? 'Seu E-mail' : 'Email Address'}
+
+                    <div className="contact-field">
+                      <label className="t-label" htmlFor="c-email">
+                        {copy.email}
                       </label>
                       <input
+                        id="c-email"
                         type="email"
+                        inputMode="email"
+                        className="t-input"
+                        placeholder={copy.emailPh}
+                        autoComplete="email"
                         required
-                        placeholder={isPt ? 'voce@exemplo.com' : 'you@example.com'}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '12px 14px',
-                          borderRadius: 'var(--r-md)',
-                          border: '1px solid var(--border)',
-                          background: 'var(--bg)',
-                          color: 'var(--text)',
-                        }}
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                      {isPt ? 'Assunto / Categoria' : 'Topic / Category'}
+                  <div className="contact-field">
+                    <label className="t-label" htmlFor="c-topic">
+                      {copy.topic}
                     </label>
                     <select
+                      id="c-topic"
+                      className="t-select"
                       value={formData.topic}
                       onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '12px 14px',
-                        borderRadius: 'var(--r-md)',
-                        border: '1px solid var(--border)',
-                        background: 'var(--bg)',
-                        color: 'var(--text)',
-                      }}
                     >
-                      <option value="suggest-tool">
-                        {isPt ? 'Sugerir Nova Ferramenta' : 'Suggest a New Tool'}
-                      </option>
-                      <option value="bug">
-                        {isPt ? 'Reportar Problema Técnico / Bug' : 'Report a Bug'}
-                      </option>
-                      <option value="partnership">
-                        {isPt ? 'Parceria ou Integração' : 'Partnership or Integration'}
-                      </option>
-                      <option value="other">
-                        {isPt ? 'Outro Assunto' : 'Other Inquiries'}
-                      </option>
+                      {copy.topics.map((label, index) => (
+                        <option key={label} value={['suggest-tool', 'bug', 'partnership', 'other'][index]}>
+                          {label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                      {isPt ? 'Sua Mensagem' : 'Your Message'}
+                  <div className="contact-field">
+                    <label className="t-label" htmlFor="c-message">
+                      {copy.message}
                     </label>
                     <textarea
-                      required
+                      id="c-message"
+                      className="t-area contact-textarea"
                       rows={5}
-                      placeholder={
-                        isPt
-                          ? 'Descreva sua sugestão ou o problema detalhadamente...'
-                          : 'Describe your suggestion, the bug you encountered, or how we can improve...'
-                      }
+                      placeholder={copy.messagePh}
+                      required
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '12px 14px',
-                        borderRadius: 'var(--r-md)',
-                        border: '1px solid var(--border)',
-                        background: 'var(--bg)',
-                        color: 'var(--text)',
-                        resize: 'vertical',
-                      }}
                     />
                   </div>
 
-                  <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-                    <span>{isPt ? 'Enviar Mensagem' : 'Send Message'}</span>
-                    <Icon name="arrow-right" size={16} />
-                  </button>
+                  <div className="contact-actions">
+                    <button type="submit" className="btn btn-primary">
+                      <span>{copy.submit}</span>
+                      <Icon name="arrow-right" size={16} />
+                    </button>
+                  </div>
                 </form>
-              </div>
+              </Reveal>
 
-              {/* GitHub Card */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  background: 'var(--surface)',
-                  padding: '24px 30px',
-                  borderRadius: 'var(--r-lg)',
-                  border: '1px solid var(--line)',
-                  flexWrap: 'wrap',
-                  gap: '16px',
-                }}
-              >
-                <div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>
-                    {isPt ? 'Prefere o GitHub?' : 'Prefer GitHub?'}
-                  </h3>
-                  <p style={{ margin: '4px 0 0', color: 'var(--ink-2)', fontSize: '0.9rem' }}>
-                    {isPt
-                      ? 'Abra uma issue ou pull request diretamente no repositório oficial.'
-                      : 'Open an issue or submit a pull request directly in our repository.'}
-                  </p>
-                </div>
+              <Reveal className="t-card channel-card github-card">
+                <h2>{copy.githubTitle}</h2>
+                <p className="channel-desc">{copy.githubBody}</p>
                 <a
                   href="https://github.com/ViictorN/clouse-tools"
                   target="_blank"
@@ -255,7 +209,7 @@ export default function LocalizedContactPage() {
                   <span>github.com/ViictorN/clouse-tools</span>
                   <Icon name="arrow-up-right" size={14} />
                 </a>
-              </div>
+              </Reveal>
             </div>
           )}
         </div>
