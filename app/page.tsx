@@ -44,6 +44,11 @@ export default function RootPage() {
               transform: rotate(360deg);
             }
           }
+          @media (prefers-reduced-motion: reduce) {
+            div {
+              animation: none;
+            }
+          }
         `}</style>
       </div>
     </div>

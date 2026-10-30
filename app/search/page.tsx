@@ -42,8 +42,10 @@ function SearchContent() {
           </p>
 
           <div style={{ maxWidth: 620, margin: '28px auto 0' }}>
-            <div className="hero-search" style={{ margin: 0 }}>
-              <Icon name="search" size={22} />
+            <div className="hero-search no-go" style={{ margin: 0 }}>
+              <span className="hs-icon" aria-hidden="true">
+                <Icon name="search" size={20} />
+              </span>
               <input
                 type="search"
                 placeholder="Search tools (e.g. json, age, percentage, unit)..."
@@ -54,11 +56,11 @@ function SearchContent() {
               {query && (
                 <button
                   type="button"
+                  className="hs-clear"
                   onClick={() => setQuery('')}
-                  style={{ padding: '6px 10px', color: 'var(--ink-3)' }}
                   aria-label="Clear query"
                 >
-                  <Icon name="x" size={18} />
+                  <Icon name="x" size={16} />
                 </button>
               )}
             </div>
@@ -80,6 +82,7 @@ function SearchContent() {
             </Link>
           </div>
 
+          <h2 className="sr-only">Search results</h2>
           <div className="tools-grid">
             {results.length > 0 ? (
               results.map((tool) => <ToolCard key={tool.slug} tool={tool} />)

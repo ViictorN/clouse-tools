@@ -34,7 +34,7 @@ export default function ComponentsPage() {
         <div className="container pb-40">
           {/* Buttons */}
           <div className="demo-block">
-            <h3>Buttons</h3>
+            <h2>Buttons</h2>
             <div className="demo-row">
               <button type="button" className="btn btn-primary">Primary</button>
               <button type="button" className="btn btn-blue">Blue</button>
@@ -49,7 +49,7 @@ export default function ComponentsPage() {
 
           {/* Badges */}
           <div className="demo-block">
-            <h3>Badges</h3>
+            <h2>Badges</h2>
             <div className="demo-row">
               <span className="badge b-blue"><span className="dot" />Popular</span>
               <span className="badge b-green"><span className="dot" />Online</span>
@@ -61,7 +61,7 @@ export default function ComponentsPage() {
 
           {/* Form Inputs */}
           <div className="demo-block">
-            <h3>Inputs &amp; Controls</h3>
+            <h2>Inputs &amp; Controls</h2>
             <div className="t-fields">
               <div>
                 <label className="t-label" htmlFor="demo-text">Text field</label>
@@ -128,7 +128,7 @@ export default function ComponentsPage() {
 
           {/* Surfaces */}
           <div className="demo-block">
-            <h3>Surfaces</h3>
+            <h2>Surfaces</h2>
             <div className="demo-row">
               <div className="t-card">
                 <h3>Card — Inset Hairline</h3>
@@ -143,7 +143,7 @@ export default function ComponentsPage() {
 
           {/* Result Panel */}
           <div className="demo-block">
-            <h3>Result panel</h3>
+            <h2>Result panel</h2>
             <div className="t-result">
               <div className="r-label">Result</div>
               <div className="r-main">42</div>
@@ -153,7 +153,7 @@ export default function ComponentsPage() {
 
           {/* Color Tokens */}
           <div className="demo-block">
-            <h3>Color Tokens</h3>
+            <h2>Color Tokens</h2>
             <div className="token-grid">
               <div className="token"><i className="swatch-bg" /><span>bg (#f5f5f7)</span></div>
               <div className="token"><i className="swatch-surface" /><span>surface (#fff)</span></div>
@@ -168,7 +168,7 @@ export default function ComponentsPage() {
 
           {/* Feedback */}
           <div className="demo-block">
-            <h3>Feedback &amp; Loading States</h3>
+            <h2>Feedback &amp; Loading States</h2>
             <div className="demo-row">
               <button
                 type="button"

@@ -79,6 +79,16 @@ export function Header({ onOpenSearch }: HeaderProps) {
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setMobileMenuOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
+
   return (
     <>
       <header className={`nav ${scrolled ? 'scrolled' : ''}`}>
@@ -165,30 +175,32 @@ export function Header({ onOpenSearch }: HeaderProps) {
 
       {/* Mobile Drawer Menu */}
       <div className={`m-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        <Link href={prefix} className="m-link">
-          <span>Home</span>
-          <small>01</small>
-        </Link>
-        <Link href={`${prefix}/tools`} className="m-link">
-          <span>{t('nav.allTools', locale)}</span>
-          <small>02</small>
-        </Link>
-        <Link href={`${prefix}/category/math`} className="m-link">
-          <span>{t('nav.categories', locale)}</span>
-          <small>03</small>
-        </Link>
-        <Link href={`${prefix}/about`} className="m-link">
-          <span>{t('nav.about', locale)}</span>
-          <small>04</small>
-        </Link>
-        <Link href={`${prefix}/contact`} className="m-link">
-          <span>{t('nav.contact', locale)}</span>
-          <small>05</small>
-        </Link>
-        <Link href={`${prefix}/components`} className="m-link">
-          <span>{t('nav.designSystem', locale)}</span>
-          <small>06</small>
-        </Link>
+        <nav className="m-nav" aria-label="Mobile Navigation">
+          <Link href={prefix} className="m-link">
+            <span>Home</span>
+            <small>01</small>
+          </Link>
+          <Link href={`${prefix}/tools`} className="m-link">
+            <span>{t('nav.allTools', locale)}</span>
+            <small>02</small>
+          </Link>
+          <Link href={`${prefix}/category/math`} className="m-link">
+            <span>{t('nav.categories', locale)}</span>
+            <small>03</small>
+          </Link>
+          <Link href={`${prefix}/about`} className="m-link">
+            <span>{t('nav.about', locale)}</span>
+            <small>04</small>
+          </Link>
+          <Link href={`${prefix}/contact`} className="m-link">
+            <span>{t('nav.contact', locale)}</span>
+            <small>05</small>
+          </Link>
+          <Link href={`${prefix}/components`} className="m-link">
+            <span>{t('nav.designSystem', locale)}</span>
+            <small>06</small>
+          </Link>
+        </nav>
 
         <div className="m-foot">
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', width: '100%' }}>

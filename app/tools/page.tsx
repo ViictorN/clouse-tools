@@ -33,6 +33,7 @@ export default function ToolsPage() {
 
       <section className="section section-pt-0">
         <div className="container">
+          <h2 className="sr-only">Tools directory</h2>
           <ToolsDirectory />
         </div>
       </section>

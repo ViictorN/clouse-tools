@@ -71,8 +71,10 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
       </div>
 
       <div style={{ maxWidth: 520, margin: '0 auto 36px' }}>
-        <div className="hero-search" style={{ margin: 0 }}>
-          <Icon name="search" size={20} />
+        <div className="hero-search no-go" style={{ margin: 0 }}>
+          <span className="hs-icon" aria-hidden="true">
+            <Icon name="search" size={20} />
+          </span>
           <input
             type="text"
             placeholder={placeholder}
@@ -83,11 +85,11 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
           {searchQuery && (
             <button
               type="button"
-              className="btn btn-sm btn-subtle"
+              className="hs-clear"
               onClick={() => setSearchQuery('')}
-              style={{ padding: '4px 10px', fontSize: '0.8rem' }}
+              aria-label={locale === 'pt-br' ? 'Limpar busca' : 'Clear search'}
             >
-              {locale === 'pt-br' ? 'Limpar' : 'Clear'}
+              <Icon name="x" size={16} />
             </button>
           )}
         </div>

@@ -43,7 +43,7 @@ export default function LocalizedComponentsPage() {
         <div className="container pb-40">
           {/* Buttons */}
           <div className="demo-block">
-            <h3>{isPt ? 'Botões' : 'Buttons'}</h3>
+            <h2>{isPt ? 'Botões' : 'Buttons'}</h2>
             <div className="demo-row">
               <button type="button" className="btn btn-primary">
                 {isPt ? 'Primário' : 'Primary'}
@@ -66,7 +66,7 @@ export default function LocalizedComponentsPage() {
 
           {/* Badges */}
           <div className="demo-block">
-            <h3>Badges</h3>
+            <h2>Badges</h2>
             <div className="demo-row">
               <span className="badge b-blue">
                 <span className="dot" />
@@ -93,7 +93,7 @@ export default function LocalizedComponentsPage() {
 
           {/* Form controls */}
           <div className="demo-block">
-            <h3>{isPt ? 'Controles de Formulário' : 'Form Controls'}</h3>
+            <h2>{isPt ? 'Controles de Formulário' : 'Form Controls'}</h2>
             <div className="demo-grid-2">
               <div className="fg">
                 <label>{isPt ? 'Input de Texto' : 'Text Input'}</label>
@@ -162,7 +162,7 @@ export default function LocalizedComponentsPage() {
 
           {/* Interactive toasts */}
           <div className="demo-block">
-            <h3>{isPt ? 'Notificações Toast' : 'Toast Notifications'}</h3>
+            <h2>{isPt ? 'Notificações Toast' : 'Toast Notifications'}</h2>
             <p className="lead" style={{ marginBottom: 16 }}>
               {isPt
                 ? 'Feedback visual não intrusivo com auto-dismiss para cópias e ações rápidas.'

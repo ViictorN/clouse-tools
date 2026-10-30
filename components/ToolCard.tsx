@@ -7,7 +7,7 @@ import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedTool, getLocalizedCategoryById } from '@/lib/translations';
 
-export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Locale }) {
+export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: Tool; locale?: Locale; className?: string }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const [isFav, setIsFav] = useState(false);
   const [pop, setPop] = useState(false);
@@ -85,7 +85,7 @@ export function ToolCard({ tool, locale: propLocale }: { tool: Tool; locale?: Lo
     <Link
       ref={cardRef}
       href={`/${locale}/tool/${tool.slug}`}
-      className={`t-card ${tool.popular ? 'popular' : ''}`}
+      className={`t-card ${tool.popular ? 'popular' : ''} ${className}`}
       onMouseMove={handleMouseMove}
       onClick={handleCardClick}
       aria-label={ariaLabel}

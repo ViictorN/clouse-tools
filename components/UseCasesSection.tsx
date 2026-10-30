@@ -107,9 +107,9 @@ export function UseCasesSection({ locale: propLocale }: { locale?: Locale }) {
           </p>
         </div>
 
-        <div className="cases-grid">
+        <div className="cases-grid" data-reveal-group>
           {cases.map((c) => (
-            <div key={c.role} className="case-card">
+            <div key={c.role} className="case-card reveal reveal-scale">
               <div className="case-top">
                 <div className="tile-icn soft">
                   <Icon name={c.icon} size={22} />

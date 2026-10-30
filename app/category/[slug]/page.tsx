@@ -81,6 +81,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             </Link>
           </div>
 
+          <h2 className="sr-only">Tools in {category.name}</h2>
           <div className="tools-grid">
             {tools.map((tool) => (
               <ToolCard key={tool.slug} tool={tool} />

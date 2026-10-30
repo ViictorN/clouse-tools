@@ -7,7 +7,7 @@ import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 import { getLocalizedCategory, getLocalizedToolsByCategory } from '@/lib/translations';
 
-export function CategoryCard({ category, locale: propLocale }: { category: Category; locale?: Locale }) {
+export function CategoryCard({ category, locale: propLocale, className = '' }: { category: Category; locale?: Locale; className?: string }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const pathname = usePathname();
 
@@ -32,7 +32,7 @@ export function CategoryCard({ category, locale: propLocale }: { category: Categ
     <Link
       ref={cardRef}
       href={`/${locale}/category/${category.id}`}
-      className="cat-card"
+      className={`cat-card ${className}`}
       onMouseMove={handleMouseMove}
       aria-label={ariaLabel}
     >
@@ -49,7 +49,7 @@ export function CategoryCard({ category, locale: propLocale }: { category: Categ
       <p>{localizedCat.desc}</p>
 
       <div className="cat-tags">
-        {tools.slice(0, 3).map((tool) => (
+        {tools.slice(0, 4).map((tool) => (
           <span key={tool.slug}>{tool.name}</span>
         ))}
       </div>

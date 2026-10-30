@@ -94,14 +94,14 @@ export function HomePersonalization() {
       {pinnedTools.length > 0 && (
         <div className="shelf-wrap" aria-label={locale === 'pt-br' ? 'Ferramentas fixadas' : 'Pinned favorites shelf'}>
           <div className="shelf-head">
-            <div className="shelf-title">
+            <h2 className="shelf-title">
               <Icon name="star-filled" size={17} />
               <span>
                 {locale === 'pt-br'
                   ? `Suas Ferramentas Fixadas (${pinnedTools.length})`
                   : `Your Pinned Tools (${pinnedTools.length})`}
               </span>
-            </div>
+            </h2>
             <button
               type="button"
               className="shelf-clear"
@@ -118,7 +118,7 @@ export function HomePersonalization() {
                   <Icon name={tool.icon} size={18} />
                 </div>
                 <div className="shelf-item-meta">
-                  <h4>{tool.name}</h4>
+                  <h3>{tool.name}</h3>
                   <span>{tool.cat}</span>
                 </div>
                 <button

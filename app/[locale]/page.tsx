@@ -9,6 +9,9 @@ import { HeroSearch } from '@/components/HeroSearch';
 import { HomePersonalization } from '@/components/HomePersonalization';
 import { UseCasesSection } from '@/components/UseCasesSection';
 import { FAQSection } from '@/components/FAQSection';
+import { CalibGrid } from '@/components/CalibGrid';
+import { LiveStatus } from '@/components/LiveStatus';
+import { CountUp } from '@/components/CountUp';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 import {
   getLocalizedCategories,
@@ -79,52 +82,95 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
     { slug: 'uuid-generator', icon: 'fingerprint' },
   ];
 
+  const rawTitle = t('hero.title', locale);
+  const titleLines = rawTitle
+    .split(/,\s+/)
+    .map((line, index, all) => (index < all.length - 1 ? `${line},` : line))
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const marqueeItems = [
+    { icon: 'calculator', label: locale === 'pt-br' ? 'Calculadoras & Matemática' : 'Math & Calculators' },
+    { icon: 'letter-case', label: locale === 'pt-br' ? 'Texto & Redação' : 'Text & Prose Transformers' },
+    { icon: 'clock', label: locale === 'pt-br' ? 'Data, Hora & Fusos' : 'Date, Time & Clocks' },
+    { icon: 'ruler-2', label: locale === 'pt-br' ? 'Conversores Universais' : 'Universal Unit Converters' },
+    { icon: 'code', label: locale === 'pt-br' ? 'Ferramentas para Devs' : 'Developer Encoders & Parsers' },
+    { icon: 'palette', label: locale === 'pt-br' ? 'Design & Cores' : 'Graphic & Color Tools' },
+    { icon: 'shield-check', label: locale === 'pt-br' ? '100% no Navegador' : '100% In-Browser Computation' },
+  ] as const;
+
   return (
     <>
       {/* ---------- HERO SECTION ---------- */}
       <section className="hero">
+        <CalibGrid />
         <div className="hero-glow" aria-hidden="true" />
         <div className="container">
-          <div className="eyebrow">
-            <span className="dot" />
-            <span>{t('hero.eyebrow', locale)}</span>
+          <div className="hero-grid">
+            <div className="hero-main" data-reveal-group>
+              <div className="eyebrow reveal reveal-fade">
+                <span className="dot" />
+                <span>{t('hero.eyebrow', locale)}</span>
+              </div>
+
+              <h1>
+                {titleLines.map((line, i) => (
+                  <span className="line-mask" key={line}>
+                    <span style={{ '--d': `${0.1 + i * 0.09}s` } as React.CSSProperties}>{line}</span>
+                  </span>
+                ))}
+              </h1>
+
+              <p className="lead hero-sub reveal reveal-fade">{t('hero.sub', locale)}</p>
+
+              <div className="reveal reveal-fade">
+                <HeroSearch />
+              </div>
+
+              <div className="reveal reveal-fade">
+                <HomePersonalization />
+              </div>
+
+              <div className="hero-chips reveal reveal-fade">
+                {chipSlugs.map((chip) => {
+                  const tool = getLocalizedToolBySlug(chip.slug, locale);
+                  if (!tool) return null;
+                  return (
+                    <Link key={chip.slug} href={`/${locale}/tool/${chip.slug}`} className="chip">
+                      <Icon name={chip.icon} size={14} />
+                      <span>{tool.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            <LiveStatus locale={locale} />
           </div>
 
-          <h1>{t('hero.title', locale)}</h1>
-
-          <p className="lead hero-sub">{t('hero.sub', locale)}</p>
-
-          <HeroSearch />
-          <HomePersonalization />
-
-          <div className="hero-chips">
-            {chipSlugs.map((chip) => {
-              const tool = getLocalizedToolBySlug(chip.slug, locale);
-              if (!tool) return null;
-              return (
-                <Link key={chip.slug} href={`/${locale}/tool/${chip.slug}`} className="chip">
-                  <Icon name={chip.icon} size={14} />
-                  <span>{tool.name}</span>
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="hero-stats">
+          <div className="hero-stats reveal reveal-fade" data-reveal-group>
             <div className="stat">
-              <b>67</b>
+              <b>
+                <CountUp value={67} suffix="+" />
+              </b>
               <span>{t('hero.stat1', locale)}</span>
             </div>
             <div className="stat">
-              <b>100%</b>
+              <b>
+                <CountUp value={100} suffix="%" />
+              </b>
               <span>{t('hero.stat2', locale)}</span>
             </div>
             <div className="stat">
-              <b>0</b>
+              <b>
+                <CountUp value={0} />
+              </b>
               <span>{t('hero.stat3', locale)}</span>
             </div>
             <div className="stat">
-              <b>0ms</b>
+              <b>
+                <CountUp value={0} suffix="ms" />
+              </b>
               <span>{t('hero.stat4', locale)}</span>
             </div>
           </div>
@@ -134,36 +180,16 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
       {/* ---------- MARQUEE ---------- */}
       <div className="marquee-wrap" aria-hidden="true">
         <div className="marquee">
-          <div className="m-track">
-            <div className="m-item">
-              <Icon name="calculator" size={16} />
-              <span>{locale === 'pt-br' ? 'Calculadoras & Matemática' : 'Math & Calculators'}</span>
+          {[0, 1].map((track) => (
+            <div className="m-track" key={track}>
+              {marqueeItems.map((item) => (
+                <div className="m-item" key={item.label}>
+                  <Icon name={item.icon} size={16} />
+                  <span>{item.label}</span>
+                </div>
+              ))}
             </div>
-            <div className="m-item">
-              <Icon name="letter-case" size={16} />
-              <span>{locale === 'pt-br' ? 'Texto & Redação' : 'Text & Prose Transformers'}</span>
-            </div>
-            <div className="m-item">
-              <Icon name="clock" size={16} />
-              <span>{locale === 'pt-br' ? 'Data, Hora & Fusos' : 'Date, Time & Clocks'}</span>
-            </div>
-            <div className="m-item">
-              <Icon name="ruler-2" size={16} />
-              <span>{locale === 'pt-br' ? 'Conversores Universais' : 'Universal Unit Converters'}</span>
-            </div>
-            <div className="m-item">
-              <Icon name="code" size={16} />
-              <span>{locale === 'pt-br' ? 'Ferramentas para Devs' : 'Developer Encoders & Parsers'}</span>
-            </div>
-            <div className="m-item">
-              <Icon name="palette" size={16} />
-              <span>{locale === 'pt-br' ? 'Design & Cores' : 'Graphic & Color Tools'}</span>
-            </div>
-            <div className="m-item">
-              <Icon name="shield-check" size={16} />
-              <span>{locale === 'pt-br' ? '100% no Navegador' : '100% In-Browser Computation'}</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -185,9 +211,9 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
             </Link>
           </div>
 
-          <div className="tools-grid">
+          <div className="tools-grid" data-reveal-group>
             {popular.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} locale={locale} />
+              <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal reveal-scale" />
             ))}
           </div>
 
@@ -202,9 +228,12 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
 
       {/* ---------- PRIVACY ARCHITECTURE BAND ---------- */}
       <section className="feature-band">
+        <CalibGrid full />
+        <div className="bg-orb" aria-hidden="true" />
+        <div className="bg-orb orb-2" aria-hidden="true" />
         <div className="container">
           <div className="band-grid">
-            <div className="band-content">
+            <div className="band-content reveal reveal-fade">
               <div className="eyebrow">
                 <span className="dot" />
                 <span>{t('band.eyebrow', locale)}</span>
@@ -231,22 +260,22 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
               </div>
             </div>
 
-            <div className="band-cards">
-              <div className="b-card">
+            <div className="band-cards" data-reveal-group>
+              <div className="b-card reveal reveal-scale">
                 <div className="tile-icn soft">
                   <Icon name="zap" size={24} />
                 </div>
                 <h3>{t('band.f1.title', locale)}</h3>
                 <p>{t('band.f1.desc', locale)}</p>
               </div>
-              <div className="b-card">
+              <div className="b-card reveal reveal-scale">
                 <div className="tile-icn soft">
                   <Icon name="lock" size={24} />
                 </div>
                 <h3>{t('band.f2.title', locale)}</h3>
                 <p>{t('band.f2.desc', locale)}</p>
               </div>
-              <div className="b-card">
+              <div className="b-card reveal reveal-scale">
                 <div className="tile-icn soft">
                   <Icon name="sparkles" size={24} />
                 </div>
@@ -275,9 +304,9 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
             </p>
           </div>
 
-          <div className="cat-grid">
+          <div className="cat-grid" data-reveal-group>
             {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} locale={locale} />
+              <CategoryCard key={category.id} category={category} locale={locale} className="reveal reveal-scale" />
             ))}
           </div>
         </div>
@@ -289,7 +318,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
       {/* ---------- CTA SECTION ---------- */}
       <section className="section cta-section">
         <div className="container">
-          <div className="cta-box">
+          <div className="cta-box reveal reveal-scale">
             <div className="eyebrow">
               <span className="dot" />
               <span>{t('cta.eyebrow', locale)}</span>

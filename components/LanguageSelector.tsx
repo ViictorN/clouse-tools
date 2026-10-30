@@ -41,7 +41,7 @@ export function LanguageSelector({ currentLocale, className = '' }: LanguageSele
         <span>PT</span>
       </button>
 
-      <span className="lang-sep" aria-hidden="true">/</span>
+      <span className="lang-sep" aria-hidden="true" />
 
       <button
         type="button"
