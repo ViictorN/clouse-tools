@@ -15,16 +15,9 @@ function rememberRecent(slug: string) {
     const updated = [slug, ...recent.filter((s) => s !== slug)].slice(0, 6);
     localStorage.setItem(REMEMBER_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent('clouse-recent-updated', { detail: updated }));
-  } catch {
-    // storage may be unavailable; history is a convenience, not a contract
-  }
+  } catch {}
 }
 
-/**
- * Hero command line. Type to search: live matches drop down beneath the field
- * with full keyboard control (up/down/enter/esc). Enter with no selection runs
- * a full search; an empty submit opens the global command palette.
- */
 export function HeroSearch() {
   const [val, setVal] = useState('');
   const [focused, setFocused] = useState(false);
@@ -34,6 +27,8 @@ export function HeroSearch() {
 
   const locale: Locale =
     pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
+  const isPt = locale === 'pt-br';
+  const prefix = isPt ? '/pt-br' : '/en';
 
   const allTools = useMemo(() => getLocalizedTools(locale), [locale]);
   const term = val.trim().toLowerCase();
@@ -86,20 +81,27 @@ export function HeroSearch() {
     }
   };
 
-  const placeholder = t('hero.searchPlaceholder', locale);
-  const buttonText = t('hero.searchBtn', locale);
+  const placeholder = isPt ? 'O que você gostaria de fazer?' : 'What would you like to do?';
+
+  const tryPills = [
+    { label: isPt ? 'Porcentagem' : 'Percentages', slug: 'percentage-calculator' },
+    { label: isPt ? 'Contador' : 'Word count', slug: 'word-counter' },
+    { label: 'JSON', slug: 'json-formatter' },
+  ];
 
   return (
-    <div className="hero-search-wrap">
+    <div className="hero-search-wrapper">
+      {/* 100% Pill-shaped search bar matching master design spec */}
       <form
-        className="hero-search"
+        className="hero-pill-search"
         onSubmit={handleSubmit}
         role="search"
         autoComplete="off"
       >
-        <span className="hs-icon" aria-hidden="true">
+        <span className="hs-pill-icon" aria-hidden="true">
           <Icon name="search" size={20} />
         </span>
+
         <input
           type="search"
           placeholder={placeholder}
@@ -109,7 +111,7 @@ export function HeroSearch() {
             setActive(0);
           }}
           onFocus={() => setFocused(true)}
-          onBlur={() => window.setTimeout(() => setFocused(false), 140)}
+          onBlur={() => window.setTimeout(() => setFocused(false), 160)}
           onKeyDown={handleKeyDown}
           aria-label={placeholder}
           role="combobox"
@@ -117,11 +119,19 @@ export function HeroSearch() {
           aria-controls="hero-suggest"
           aria-autocomplete="list"
         />
-        <button type="submit" className="btn btn-primary hs-go">
-          <span>{buttonText}</span>
+
+        {/* Circular solid black submit button with white arrow */}
+        <button
+          type="submit"
+          className="hs-pill-submit"
+          aria-label={isPt ? 'Buscar' : 'Search'}
+          title={isPt ? 'Buscar' : 'Search'}
+        >
+          <span className="hs-pill-arrow" aria-hidden="true">→</span>
         </button>
       </form>
 
+      {/* Auto-suggest dropdown */}
       {open ? (
         <div className="hero-suggest" id="hero-suggest" role="listbox" aria-label={t('hero.suggest.label', locale)}>
           {matches.length > 0 ? (
@@ -149,22 +159,49 @@ export function HeroSearch() {
                       <span className="sr-title">{tool.name}</span>
                       <span className="sr-desc">{tool.desc}</span>
                     </span>
-                    <span className="sr-cat">{cat?.name || tool.cat}</span>
+                    {cat && <span className="sr-cat">{cat.name}</span>}
                   </Link>
                 );
               })}
-              <span className="hs-foot">
-                <kbd>↵</kbd> <span>{t('hero.suggest.enter', locale)}</span>
-              </span>
             </>
           ) : (
-            <span className="hs-empty">
-              <Icon name="search" size={16} />
-              {t('hero.suggest.empty', locale)}
-            </span>
+            <div className="hs-empty">{t('hero.suggest.empty', locale)}</div>
           )}
         </div>
       ) : null}
+
+      {/* TRY Pills Row */}
+      <div className="hero-try-row">
+        <span className="hero-try-label">TRY:</span>
+        <div className="hero-try-chips">
+          {tryPills.map((pill) => (
+            <Link
+              key={pill.slug}
+              href={`${prefix}/tool/${pill.slug}`}
+              className="hero-try-pill"
+            >
+              <span>{pill.label}</span>
+              <span className="pill-arrow" aria-hidden="true">→</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Trust Badges Row */}
+      <div className="hero-trust-row">
+        <span className="trust-item">
+          <span className="check" aria-hidden="true">✓</span>
+          <span>{isPt ? 'Sem cadastro' : 'No sign-up'}</span>
+        </span>
+        <span className="trust-item">
+          <span className="check" aria-hidden="true">✓</span>
+          <span>{isPt ? '100% gratuito' : 'Free to use'}</span>
+        </span>
+        <span className="trust-item">
+          <span className="check" aria-hidden="true">✓</span>
+          <span>{isPt ? 'Para todos' : 'Made for everyone'}</span>
+        </span>
+      </div>
     </div>
   );
 }

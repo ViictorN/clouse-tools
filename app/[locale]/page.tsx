@@ -2,22 +2,17 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ToolCard } from '@/components/ToolCard';
 import { CategoryCard } from '@/components/CategoryCard';
 import { Icon } from '@/lib/icons';
 import { HeroSearch } from '@/components/HeroSearch';
-import { HomePersonalization } from '@/components/HomePersonalization';
+import { HeroPerspectiveCard } from '@/components/HeroPerspectiveCard';
 import { UseCasesSection } from '@/components/UseCasesSection';
 import { FAQSection } from '@/components/FAQSection';
-import { CalibGrid } from '@/components/CalibGrid';
-import { LiveStatus } from '@/components/LiveStatus';
-import { CountUp } from '@/components/CountUp';
 import { Reveal } from '@/components/Reveal';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 import {
   getLocalizedCategories,
   getLocalizedPopularTools,
-  getLocalizedToolBySlug,
   t,
 } from '@/lib/translations';
 
@@ -36,11 +31,11 @@ export async function generateMetadata({ params }: LocalePageProps): Promise<Met
   const isPt = locale === 'pt-br';
 
   const title = isPt
-    ? 'Clouse Tools — 67 Ferramentas Online Gratuitas, Rápidas e Privativas'
-    : 'Clouse Tools — 67 Free, Fast, Private Online Tools';
+    ? 'Clouse Tools — Tudo o que você precisa. Em um só lugar.'
+    : 'Clouse Tools — Everything you need. One place.';
 
   const description = isPt
-    ? '67 utilitários online 100% no seu navegador. Zero rastreamento, zero anúncios, zero necessidade de cadastro. Cálculos ultrarrápidos em seu computador ou celular.'
+    ? '67 ferramentas online rápidas, privativas e gratuitas. Zero cadastro, zero anúncios e zero rastreamento. Cálculos instantâneos no seu navegador.'
     : '67 free, private, client-side tools designed with the utmost craft. Zero tracking, zero telemetry, and 100% computed in your browser.';
 
   return {
@@ -69,229 +64,81 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
   }
 
   const locale = rawLocale as Locale;
+  const isPt = locale === 'pt-br';
+  const prefix = isPt ? '/pt-br' : '/en';
+
   const categories = getLocalizedCategories(locale);
-  const popular = getLocalizedPopularTools(locale, 8);
-
-  // Chips in hero
-  const chipSlugs = [
-    { slug: 'percentage-calculator', icon: 'percentage', label: locale === 'pt-br' ? 'Porcentagem' : 'Percentage' },
-    { slug: 'json-formatter', icon: 'braces', label: locale === 'pt-br' ? 'JSON' : 'JSON' },
-    { slug: 'word-counter', icon: 'letter-case', label: locale === 'pt-br' ? 'Contador' : 'Words' },
-    { slug: 'date-difference', icon: 'calendar-event', label: locale === 'pt-br' ? 'Datas' : 'Dates' },
-    { slug: 'unit-converter', icon: 'ruler-2', label: locale === 'pt-br' ? 'Unidades' : 'Units' },
-    { slug: 'qr-code-generator', icon: 'qrcode', label: locale === 'pt-br' ? 'QR Code' : 'QR Code' },
-    { slug: 'uuid-generator', icon: 'fingerprint', label: locale === 'pt-br' ? 'UUID v4' : 'UUID v4' },
-  ];
-
-  const rawTitle = t('hero.title', locale);
-  const titleLines = rawTitle
-    .split(/,\s+/)
-    .map((line, index, all) => (index < all.length - 1 ? `${line},` : line))
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const marqueeItems = [
-    { icon: 'calculator', label: locale === 'pt-br' ? 'Calculadoras & Matemática' : 'Math & Calculators' },
-    { icon: 'letter-case', label: locale === 'pt-br' ? 'Texto & Redação' : 'Text & Prose Transformers' },
-    { icon: 'clock', label: locale === 'pt-br' ? 'Data, Hora & Fusos' : 'Date, Time & Clocks' },
-    { icon: 'ruler-2', label: locale === 'pt-br' ? 'Conversores Universais' : 'Universal Unit Converters' },
-    { icon: 'code', label: locale === 'pt-br' ? 'Ferramentas para Devs' : 'Developer Encoders & Parsers' },
-    { icon: 'palette', label: locale === 'pt-br' ? 'Design & Cores' : 'Graphic & Color Tools' },
-    { icon: 'shield-check', label: locale === 'pt-br' ? '100% no Navegador' : '100% In-Browser Computation' },
-  ] as const;
 
   return (
     <>
-      {/* ---------- HERO SECTION ---------- */}
-      <section className="hero">
-        {/* CalibGrid cleaned */}
-        <div className="hero-glow" aria-hidden="true" />
+      {/* ============================================================
+          1. HERO SECTION (EDITORIAL APPLE AESTHETIC)
+          ============================================================ */}
+      <section className="hero-editorial">
         <div className="container">
-          <div className="hero-grid">
-            <div className="hero-main">
-              <Reveal className="eyebrow">
-                <span className="dot" />
-                <span>{t('hero.eyebrow', locale)}</span>
+          <div className="hero-editorial-grid">
+            {/* Left Content Column */}
+            <div className="hero-editorial-left">
+              <Reveal className="hero-editorial-eyebrow">
+                <span className="eyebrow-bullet">•</span>
+                <span>
+                  {isPt
+                    ? 'SEU KIT DE FERRAMENTAS DO DIA A DIA, REIMAGINADO'
+                    : 'YOUR EVERYDAY TOOLKIT, REIMAGINED'}
+                </span>
               </Reveal>
 
-              <h1>
-                {titleLines.map((line, i) => (
-                  <span className="line-mask" key={line}>
-                    <span style={{ '--d': `${0.1 + i * 0.09}s` } as React.CSSProperties}>{line}</span>
-                  </span>
-                ))}
+              <h1 className="hero-editorial-heading">
+                <span className="heading-line-sans">
+                  {isPt ? 'Tudo o que você precisa.' : 'Everything you need.'}
+                </span>
+                <span className="heading-line-serif">
+                  {isPt ? 'Em um só lugar.' : 'One place.'}
+                </span>
               </h1>
 
-              <Reveal as="p" className="lead hero-sub" delay={0.06}>
-                {t('hero.sub', locale)}
+              <Reveal as="p" className="hero-editorial-sub" delay={0.06}>
+                {isPt ? (
+                  <>
+                    Ferramentas online poderosas. Maravilhosamente simples.
+                    <br />
+                    Menos tempo tentando entender. Mais tempo fazendo acontecer.
+                  </>
+                ) : (
+                  <>
+                    Powerful online tools. Beautifully simple.
+                    <br />
+                    Less time figuring it out. More time getting it done.
+                  </>
+                )}
               </Reveal>
 
               <Reveal delay={0.12}>
                 <HeroSearch />
               </Reveal>
-
-              <Reveal delay={0.16}>
-                <HomePersonalization />
-              </Reveal>
-
-              <Reveal className="hero-chips" delay={0.2}>
-                {chipSlugs.map((chip) => {
-                  const tool = getLocalizedToolBySlug(chip.slug, locale);
-                  if (!tool) return null;
-                  return (
-                    <Link key={chip.slug} href={`/${locale}/tool/${chip.slug}`} className="chip">
-                      <Icon name={chip.icon} size={14} />
-                      <span>{chip.label || tool.name}</span>
-                    </Link>
-                  );
-                })}
-              </Reveal>
             </div>
 
-            <LiveStatus locale={locale} />
-          </div>
-
-          <Reveal className="hero-stats" group>
-            <div className="stat">
-              <b>
-                <CountUp value={67} suffix="+" />
-              </b>
-              <span>{t('hero.stat1', locale)}</span>
-            </div>
-            <div className="stat">
-              <b>
-                <CountUp value={100} suffix="%" />
-              </b>
-              <span>{t('hero.stat2', locale)}</span>
-            </div>
-            <div className="stat">
-              <b>
-                <CountUp value={0} />
-              </b>
-              <span>{t('hero.stat3', locale)}</span>
-            </div>
-            <div className="stat">
-              <b>
-                <CountUp value={0} suffix="ms" />
-              </b>
-              <span>{t('hero.stat4', locale)}</span>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- POPULAR TOOLS ---------- */}
-      <section className="section" id="popular">
-        <div className="container">
-          <div className="section-head split">
-            <div>
-              <div className="eyebrow">
-                <span className="dot" />
-                <span>{t('popular.eyebrow', locale)}</span>
-              </div>
-              <h2 className="h-d2">{t('popular.title', locale)}</h2>
-              <p className="lead">{t('popular.desc', locale)}</p>
-            </div>
-            <Link href={`/${locale}/tools`} className="btn btn-secondary desktop-only">
-              <span>{t('popular.viewAll', locale)}</span>
-              <Icon name="arrow-right" size={16} />
-            </Link>
-          </div>
-
-          <div className="tools-grid" data-reveal-group>
-            {popular.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal-fade" />
-            ))}
-          </div>
-
-          <div className="mobile-only mt-24 text-center">
-            <Link href={`/${locale}/tools`} className="btn btn-secondary full-w">
-              <span>{t('popular.viewAll', locale)}</span>
-              <Icon name="arrow-right" size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- PRIVACY ARCHITECTURE BAND ---------- */}
-      <section className="feature-band">
-        <CalibGrid full />
-        <div className="bg-orb" aria-hidden="true" />
-        <div className="bg-orb orb-2" aria-hidden="true" />
-        <div className="container">
-          <div className="band-grid">
-            <Reveal className="band-content">
-              <div className="eyebrow">
-                <span className="dot" />
-                <span>{t('band.eyebrow', locale)}</span>
-              </div>
-              <h2>{t('band.title', locale)}</h2>
-              <p className="lead">{t('band.lead', locale)}</p>
-              <div className="band-chips">
-                <span className="chip-glass">
-                  <Icon name="bolt" size={14} />
-                  <span>{t('band.chip1', locale)}</span>
-                </span>
-                <span className="chip-glass">
-                  <Icon name="eye-off" size={14} />
-                  <span>{t('band.chip2', locale)}</span>
-                </span>
-                <span className="chip-glass">
-                  <Icon name="cpu" size={14} />
-                  <span>{t('band.chip3', locale)}</span>
-                </span>
-                <span className="chip-glass">
-                  <Icon name="copy" size={14} />
-                  <span>{t('band.chip4', locale)}</span>
-                </span>
-              </div>
-            </Reveal>
-
-            <div className="band-cards" data-reveal-group>
-              <Reveal variant="reveal-fade" className="b-card">
-                <div className="tile-icn soft">
-                  <Icon name="zap" size={24} />
-                </div>
-                <h3>{t('band.f1.title', locale)}</h3>
-                <p>{t('band.f1.desc', locale)}</p>
-              </Reveal>
-              <Reveal variant="reveal-fade" className="b-card">
-                <div className="tile-icn soft">
-                  <Icon name="lock" size={24} />
-                </div>
-                <h3>{t('band.f2.title', locale)}</h3>
-                <p>{t('band.f2.desc', locale)}</p>
-              </Reveal>
-              <Reveal variant="reveal-fade" className="b-card">
-                <div className="tile-icn soft">
-                  <Icon name="sparkles" size={24} />
-                </div>
-                <h3>{t('band.f3.title', locale)}</h3>
-                <p>{t('band.f3.desc', locale)}</p>
-              </Reveal>
+            {/* Right Visual Column (Floating 3D Perspective Card on Dark Slate) */}
+            <div className="hero-editorial-right">
+              <HeroPerspectiveCard locale={locale} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---------- USE CASES SECTION ---------- */}
-      <UseCasesSection locale={locale} />
-
-      {/* ---------- CATEGORIES ---------- */}
-      <section className="section" id="categories">
+      {/* ============================================================
+          2. CATEGORIES SECTION ("A place for every task. 01 — 06")
+          ============================================================ */}
+      <section className="section-categories-strip" id="categories">
         <div className="container">
-          <div className="section-head center">
-            <div className="eyebrow">
-              <span className="dot" />
-              <span>{t('cat.eyebrow', locale)}</span>
-            </div>
-            <h2 className="h-d2">{t('cat.title', locale)}</h2>
-            <p className="lead" style={{ maxWidth: 620, margin: '0 auto' }}>
-              {t('cat.lead', locale)}
-            </p>
+          <div className="categories-strip-header">
+            <h2 className="categories-strip-title">
+              {isPt ? 'Um lugar para cada tarefa.' : 'A place for every task.'}
+            </h2>
+            <span className="categories-strip-count">01 — 06</span>
           </div>
 
-          <div className="cat-grid" data-reveal-group>
+          <div className="categories-strip-grid" data-reveal-group>
             {categories.map((category) => (
               <CategoryCard key={category.id} category={category} locale={locale} className="reveal-fade" />
             ))}
@@ -299,37 +146,222 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
         </div>
       </section>
 
-      {/* ---------- FAQ SECTION ---------- */}
-      <FAQSection locale={locale} />
-
-      {/* ---------- CTA SECTION ---------- */}
-      <section className="section cta-section">
+      {/* ============================================================
+          3. FEATURED ESSENTIALS ("Small tools. Big possibilities.")
+          ============================================================ */}
+      <section className="section-essentials" id="popular">
         <div className="container">
-          <Reveal variant="reveal-scale" className="cta-box">
-            <div className="eyebrow">
-              <span className="dot" />
-              <span>{t('cta.eyebrow', locale)}</span>
+          <div className="essentials-header">
+            <div>
+              <div className="eyebrow-clean">
+                {isPt ? 'OS ESSENCIAIS DO DIA A DIA' : 'THE EVERYDAY ESSENTIALS'}
+              </div>
+              <h2 className="essentials-title">
+                {isPt ? 'Pequenas ferramentas. Grandes possibilidades.' : 'Small tools. Big possibilities.'}
+              </h2>
+              <p className="essentials-sub">
+                {isPt
+                  ? 'Algumas das favoritas para tornar o seu dia um pouco mais simples.'
+                  : 'A few favorites to make your day a little easier.'}
+              </p>
             </div>
-            <h2>{t('cta.title', locale)}</h2>
-            <p className="lead">{t('cta.lead', locale)}</p>
-            <div className="cta-actions">
-              <Link href={`/${locale}/tools`} className="btn btn-primary btn-lg">
-                <span>{t('cta.explore', locale)}</span>
-                <Icon name="arrow-right" size={18} />
+
+            <div className="essentials-actions">
+              <Link href={`${prefix}/tools`} className="essentials-view-all">
+                <span>{isPt ? 'Ver todas as ferramentas' : 'View all tools'}</span>
+                <span className="arr" aria-hidden="true">→</span>
               </Link>
-              <a
-                href="https://github.com/ViictorN/clouse-tools"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-secondary btn-lg"
-              >
-                <Icon name="code" size={18} />
-                <span>{t('cta.github', locale)}</span>
-              </a>
+              <div className="essentials-nav-arrows" aria-hidden="true">
+                <button type="button" className="carousel-arrow" aria-label="Previous">‹</button>
+                <button type="button" className="carousel-arrow" aria-label="Next">›</button>
+              </div>
             </div>
-          </Reveal>
+          </div>
+
+          {/* 3 Signature Cards: 1 Inverted Black + 2 Crisp White */}
+          <div className="essentials-grid">
+            {/* Card 1: Inverted Black Card */}
+            <Link
+              href={`${prefix}/tool/percentage-calculator`}
+              className="essential-card card-inverted"
+            >
+              <div className="essential-card-top">
+                <span className="essential-big-icon">%</span>
+                <span className="essential-badge badge-dark">
+                  {isPt ? 'Pronto para uso' : 'Ready to use'}
+                </span>
+              </div>
+              <div className="essential-card-content">
+                <h3 className="essential-card-title">
+                  {isPt ? 'Calculadora de Porcentagem' : 'Percentage Calculator'}
+                </h3>
+                <p className="essential-card-desc">
+                  {isPt
+                    ? 'Porcentagens, aumentos e tudo entre eles.'
+                    : 'Percentages, increases and everything in between.'}
+                </p>
+              </div>
+              <div className="essential-card-bottom">
+                <span className="essential-link">
+                  <span>{isPt ? 'Abrir ferramenta' : 'Open tool'}</span>
+                  <span className="arr" aria-hidden="true">→</span>
+                </span>
+              </div>
+            </Link>
+
+            {/* Card 2: Crisp White Card (Word Counter) */}
+            <Link
+              href={`${prefix}/tool/word-counter`}
+              className="essential-card card-white"
+            >
+              <div className="essential-card-top">
+                <span className="essential-icon-box">
+                  <Icon name="letter-case" size={24} />
+                </span>
+                <span className="essential-badge badge-light">
+                  {isPt ? 'Pronto para uso' : 'Ready to use'}
+                </span>
+              </div>
+              <div className="essential-card-content">
+                <h3 className="essential-card-title">
+                  {isPt ? 'Contador de Palavras' : 'Word Counter'}
+                </h3>
+                <p className="essential-card-desc">
+                  {isPt
+                    ? 'Uma perspectiva clara sobre cada palavra que você escreve.'
+                    : 'A little perspective on every word you write.'}
+                </p>
+              </div>
+              <div className="essential-card-bottom">
+                <span className="essential-link">
+                  <span>{isPt ? 'Abrir ferramenta' : 'Open tool'}</span>
+                  <span className="arr" aria-hidden="true">→</span>
+                </span>
+              </div>
+            </Link>
+
+            {/* Card 3: Crisp White Card (Image Resizer) */}
+            <Link
+              href={`${prefix}/tool/aspect-ratio-calculator`}
+              className="essential-card card-white"
+            >
+              <div className="essential-card-top">
+                <span className="essential-icon-box">
+                  <Icon name="image" size={24} />
+                </span>
+                <span className="essential-badge badge-light">
+                  {isPt ? 'Pronto para uso' : 'Ready to use'}
+                </span>
+              </div>
+              <div className="essential-card-content">
+                <h3 className="essential-card-title">
+                  {isPt ? 'Calculadora de Aspect Ratio' : 'Aspect Ratio & Resizer'}
+                </h3>
+                <p className="essential-card-desc">
+                  {isPt
+                    ? 'As dimensões exatas para a sua próxima grande ideia.'
+                    : 'The right dimensions for your next big idea.'}
+                </p>
+              </div>
+              <div className="essential-card-bottom">
+                <span className="essential-link">
+                  <span>{isPt ? 'Ver detalhes' : 'View details'}</span>
+                  <span className="arr" aria-hidden="true">→</span>
+                </span>
+              </div>
+            </Link>
+          </div>
         </div>
       </section>
+
+      {/* ============================================================
+          4. MINIMAL ADVERTISEMENT SLOT
+          ============================================================ */}
+      <section className="section-ad-slot">
+        <div className="container">
+          <div className="ad-minimal-box">
+            <span className="ad-label">ADVERTISEMENT</span>
+            <span className="ad-sub">
+              {isPt
+                ? 'Um pequeno espaço para manter ferramentas gratuitas.'
+                : 'A little space to keep good tools free.'}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          5. BLACK FEATURE BANNER ("ALL TOOLS. ONE PLATFORM.")
+          ============================================================ */}
+      <section className="section-black-banner">
+        <div className="container">
+          <div className="black-banner-container">
+            {/* Ambient Background Wave */}
+            <div className="black-banner-ribbon" aria-hidden="true">
+              <svg viewBox="0 0 600 320" fill="none" xmlns="http://www.w3.org/2000/svg" className="banner-ribbon-svg">
+                <path
+                  d="M 50,160 C 150,60 300,260 450,160 C 520,110 580,180 620,160"
+                  stroke="rgba(255,255,255,0.12)"
+                  strokeWidth="1.8"
+                />
+                <path
+                  d="M 80,190 C 180,90 330,290 480,190 C 550,140 610,210 650,190"
+                  stroke="rgba(255,255,255,0.06)"
+                  strokeWidth="1.2"
+                />
+                <ellipse cx="480" cy="160" rx="90" ry="45" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+                <ellipse cx="380" cy="160" rx="90" ry="45" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+              </svg>
+            </div>
+
+            <div className="black-banner-grid">
+              <div className="black-banner-left">
+                <span className="black-banner-eyebrow">
+                  {isPt ? 'TODAS AS FERRAMENTAS. UMA PLATAFORMA.' : 'ALL TOOLS. ONE PLATFORM.'}
+                </span>
+                <h2 className="black-banner-title">
+                  <span>{isPt ? 'Menos tarefas repetitivas.' : 'Less busywork.'}</span>
+                  <br />
+                  <span>{isPt ? 'Mais possibilidade.' : 'More possibility.'}</span>
+                </h2>
+                <p className="black-banner-sub">
+                  {isPt
+                    ? 'Para as pequenas tarefas entre as suas grandes ideias.'
+                    : 'For the little tasks between your big ideas.'}
+                </p>
+                <div className="black-banner-cta">
+                  <Link href={`${prefix}/tools`} className="banner-pill-btn">
+                    <span>{isPt ? 'Explorar o kit de ferramentas' : 'Explore the toolkit'}</span>
+                    <span className="arr" aria-hidden="true">→</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="black-banner-right" aria-hidden="true">
+                <div className="banner-stat-block">
+                  <div className="stat-infinity-row">
+                    <span className="infinity-symbol">∞</span>
+                    <span className="stat-number">67</span>
+                  </div>
+                  <span className="stat-caption">
+                    {isPt ? 'ferramentas úteis. zero cadastros.' : 'useful tools. zero sign-ups.'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          6. USE CASES SECTION (EXPANDED WORKFLOW SCENARIOS)
+          ============================================================ */}
+      <UseCasesSection locale={locale} />
+
+      {/* ============================================================
+          7. FAQ SECTION
+          ============================================================ */}
+      <FAQSection locale={locale} />
     </>
   );
 }

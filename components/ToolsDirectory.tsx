@@ -1,22 +1,33 @@
 'use client';
 import React, { useState, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { ToolCard } from '@/components/ToolCard';
-import { EmptyState } from '@/components/EmptyState';
+import { Tool, Category } from '@/lib/data';
+import { ToolCard } from './ToolCard';
 import { Icon } from '@/lib/icons';
+import { EmptyState } from './EmptyState';
 import { Locale } from '@/lib/i18n';
-import { getLocalizedCategories, getLocalizedTools } from '@/lib/translations';
+import { getLocalizedTools, getLocalizedCategories } from '@/lib/translations';
 
-export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: string }) {
+interface ToolsDirectoryProps {
+  initialTools?: Tool[];
+  initialCategory?: string;
+  locale?: Locale;
+}
+
+export function ToolsDirectory({
+  initialCategory = 'all',
+  locale: propLocale,
+}: ToolsDirectoryProps) {
+  const pathname = usePathname();
+  const locale: Locale =
+    propLocale || (pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en');
+  const isPt = locale === 'pt-br';
+
   const [selectedCat, setSelectedCat] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
-  const pathname = usePathname();
 
-  const locale: Locale =
-    pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
-
-  const categories = useMemo(() => getLocalizedCategories(locale), [locale]);
   const allTools = useMemo(() => getLocalizedTools(locale), [locale]);
+  const categories = useMemo(() => getLocalizedCategories(locale), [locale]);
 
   const filteredTools = useMemo(() => {
     let list = allTools;
@@ -39,11 +50,10 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
     return list;
   }, [allTools, selectedCat, searchQuery]);
 
-  const allLabel = locale === 'pt-br' ? `Todas (${allTools.length})` : `All (${allTools.length})`;
-  const placeholder =
-    locale === 'pt-br'
-      ? 'Filtrar ferramentas por nome, tag ou categoria...'
-      : 'Filter tools by name, tag or category...';
+  const allLabel = isPt ? `Todas (${allTools.length})` : `All (${allTools.length})`;
+  const placeholder = isPt
+    ? 'Filtrar ferramentas por nome, tag ou categoria...'
+    : 'Filter tools by name, tag or category...';
 
   return (
     <>
@@ -71,10 +81,10 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
         ))}
       </div>
 
-      <div style={{ maxWidth: 520, margin: '0 auto 36px' }}>
-        <div className="hero-search no-go" style={{ margin: 0 }}>
+      <div style={{ maxWidth: 540, margin: '0 auto 36px', width: '100%' }}>
+        <div className="directory-filter-pill-wrap">
           <span className="hs-icon" aria-hidden="true">
-            <Icon name="search" size={20} />
+            <Icon name="search" size={18} />
           </span>
           <input
             type="text"
@@ -82,13 +92,14 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label={placeholder}
+            className="directory-filter-input"
           />
           {searchQuery && (
             <button
               type="button"
               className="hs-clear"
               onClick={() => setSearchQuery('')}
-              aria-label={locale === 'pt-br' ? 'Limpar busca' : 'Clear search'}
+              aria-label={isPt ? 'Limpar busca' : 'Clear search'}
             >
               <Icon name="x" size={16} />
             </button>
@@ -97,32 +108,23 @@ export function ToolsDirectory({ initialCategory = 'all' }: { initialCategory?: 
       </div>
 
       {filteredTools.length > 0 ? (
-        <>
-          <h2 className="result-count dir-count">
-            {locale === 'pt-br'
-              ? `${filteredTools.length} de ${allTools.length} ferramentas`
-              : `${filteredTools.length} of ${allTools.length} tools`}
-          </h2>
-          <div className="tools-grid" data-reveal-group>
-            {filteredTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} locale={locale} className="reveal-fade" />
-            ))}
-          </div>
-        </>
+        <div className="tools-grid">
+          {filteredTools.map((tool) => (
+            <ToolCard key={tool.slug} tool={tool} locale={locale} />
+          ))}
+        </div>
       ) : (
         <EmptyState
-          title={
-            locale === 'pt-br' ? 'Nenhuma ferramenta encontrada' : 'No tools matched your search'
-          }
+          title={isPt ? 'Nenhuma ferramenta encontrada' : 'No tools found'}
           hint={
-            locale === 'pt-br'
-              ? 'Tente buscar com outros termos ou selecione outra categoria.'
-              : 'Try adjusting your search terms or browse all categories.'
+            isPt
+              ? `Nenhum resultado corresponde a "${searchQuery}". Tente outro termo ou limpe os filtros.`
+              : `No tools match "${searchQuery}". Try a different query or reset filters.`
           }
-          actionLabel={locale === 'pt-br' ? 'Ver Todas as 67 Ferramentas' : 'Reset Filters'}
+          actionLabel={isPt ? 'Limpar filtros' : 'Reset filters'}
           onAction={() => {
-            setSearchQuery('');
             setSelectedCat('all');
+            setSearchQuery('');
           }}
         />
       )}

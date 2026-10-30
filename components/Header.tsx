@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
-import { LanguageSelector } from './LanguageSelector';
 import { Locale } from '@/lib/i18n';
 import { t } from '@/lib/translations';
 
@@ -17,12 +16,12 @@ export function Header({ onOpenSearch }: HeaderProps) {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const pathname = usePathname();
 
-  const locale: Locale = pathname.startsWith('/pt-br') || pathname.startsWith('/pt') ? 'pt-br' : 'en';
+  const locale: Locale = pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en';
   const prefix = locale === 'pt-br' ? '/pt-br' : '/en';
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 16);
+      setScrolled(window.scrollY > 12);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -39,9 +38,6 @@ export function Header({ onOpenSearch }: HeaderProps) {
         if (stored) {
           setTheme(stored);
           document.documentElement.setAttribute('data-theme', stored);
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          setTheme('dark');
-          document.documentElement.setAttribute('data-theme', 'dark');
         }
       }
     } catch {}
@@ -88,52 +84,73 @@ export function Header({ onOpenSearch }: HeaderProps) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [mobileMenuOpen]);
 
+  const isHome = pathname === prefix || pathname === `${prefix}/` || pathname === '/';
+  const isCategories = pathname.includes('/category');
+  const isTools = pathname.includes('/tools');
+
   return (
     <>
       <header className={`nav ${scrolled ? 'scrolled' : ''}`}>
         <div className="container" style={{ width: '100%' }}>
           <div className="nav-inner">
-            <Link href={prefix} className="nav-logo" aria-label="Clouse Tools Home">
-              <span className="logo-mark">C</span>
-              <span>Clouse Tools</span>
+            <Link href={prefix} className="nav-logo" aria-label="CLOUSE TOOLS Home">
+              <span className="logo-mark" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M17 3.5C14.5 1.5 11 1.8 8.8 4L4 8.8C1.8 11 1.5 14.5 3.5 17C5.5 19.5 9 19.2 11.2 17L16 12.2C18.2 10 18.5 6.5 16.5 4"
+                    stroke="#ffffff"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M14.5 14.5L19.5 19.5"
+                    stroke="#ffffff"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="9" cy="9" r="1.5" fill="#ffffff" />
+                </svg>
+              </span>
+              <span className="logo-text">CLOUSE TOOLS</span>
             </Link>
 
             <nav className="nav-links" aria-label="Main Navigation">
               <Link
-                href={`${prefix}/tools`}
-                className={pathname.endsWith('/tools') ? 'active' : ''}
+                href={prefix}
+                className={isHome ? 'active' : ''}
               >
-                {t('nav.allTools', locale)}
+                <span>{locale === 'pt-br' ? 'Início' : 'Home'}</span>
+                {isHome && <span className="active-dot" />}
               </Link>
               <Link
                 href={`${prefix}/category/math`}
-                className={pathname.includes('/category') ? 'active' : ''}
+                className={isCategories ? 'active' : ''}
               >
-                {t('nav.categories', locale)}
+                <span>{t('nav.categories', locale)}</span>
               </Link>
               <Link
-                href={`${prefix}/about`}
-                className={pathname.endsWith('/about') ? 'active' : ''}
+                href={`${prefix}/tools`}
+                className={`nav-link-arrow ${isTools ? 'active' : ''}`}
               >
-                {t('nav.about', locale)}
-              </Link>
-              <Link
-                href={`${prefix}/contact`}
-                className={pathname.endsWith('/contact') ? 'active' : ''}
-              >
-                {t('nav.contact', locale)}
-              </Link>
-              <Link
-                href={`${prefix}/components`}
-                className={pathname.endsWith('/components') ? 'active' : ''}
-              >
-                {t('nav.designSystem', locale)}
+                <span>{t('nav.allTools', locale)}</span>
+                <span className="arr" aria-hidden="true">→</span>
               </Link>
             </nav>
 
             <div className="nav-cta">
-              <LanguageSelector currentLocale={locale} className="desktop-lang" />
+              {/* Search button with circular glass/pill styling */}
+              <button
+                type="button"
+                className="nav-search-btn circular"
+                onClick={onOpenSearch}
+                aria-label={t('nav.searchPlaceholder', locale)}
+                title={t('nav.searchPlaceholder', locale)}
+              >
+                <Icon name="search" size={17} />
+              </button>
 
+              {/* Theme toggle button */}
               <button
                 type="button"
                 className="theme-toggle-btn"
@@ -141,25 +158,16 @@ export function Header({ onOpenSearch }: HeaderProps) {
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
                 title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               >
-                <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={18} />
+                <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={17} />
               </button>
 
-              <button
-                type="button"
-                className="nav-search-btn"
-                onClick={onOpenSearch}
-                aria-label={t('nav.searchPlaceholder', locale)}
-                title={t('nav.searchPlaceholder', locale)}
-              >
-                <Icon name="search" size={18} />
-                <kbd>⌘K</kbd>
-              </button>
-
+              {/* Primary CTA button matching master spec */}
               <Link href={`${prefix}/tools`} className="btn btn-primary btn-sm nav-explore-btn">
-                <span>{t('nav.exploreTools', locale)}</span>
-                <Icon name="arrow-up-right" size={14} />
+                <span>{locale === 'pt-br' ? 'Explorar 67 Ferramentas' : 'Explore 67 Tools'}</span>
+                <span className="arr" aria-hidden="true">→</span>
               </Link>
 
+              {/* Mobile Burger */}
               <button
                 type="button"
                 className={`burger ${mobileMenuOpen ? 'menu-open' : ''}`}
@@ -178,7 +186,7 @@ export function Header({ onOpenSearch }: HeaderProps) {
       <div className={`m-menu ${mobileMenuOpen ? 'open' : ''}`}>
         <nav className="m-nav" aria-label="Mobile Navigation">
           <Link href={prefix} className="m-link">
-            <span>Home</span>
+            <span>{locale === 'pt-br' ? 'Início' : 'Home'}</span>
             <small>01</small>
           </Link>
           <Link href={`${prefix}/tools`} className="m-link">
@@ -204,22 +212,18 @@ export function Header({ onOpenSearch }: HeaderProps) {
         </nav>
 
         <div className="m-foot">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px', width: '100%' }}>
-            <LanguageSelector currentLocale={locale} />
-          </div>
-
           <button
             type="button"
             className="btn btn-ghost full-width"
             onClick={toggleTheme}
-            style={{ marginBottom: '8px' }}
+            style={{ marginBottom: '10px' }}
           >
             <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={16} />
             <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
           </button>
           <button
             type="button"
-            className="btn btn-blue full-width"
+            className="btn btn-primary full-width"
             onClick={() => {
               setMobileMenuOpen(false);
               onOpenSearch();
