@@ -13,6 +13,7 @@ import { CountUp } from '@/components/CountUp';
 import { TextLineReveal } from '@/components/motion/TextLineReveal';
 import { HomeScrollChoreography } from '@/components/motion/HomeScrollChoreography';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 import {
   getLocalizedCategories,
   getLocalizedPopularTools,
@@ -48,13 +49,13 @@ export async function generateMetadata({ params }: LocalePageProps): Promise<Met
       title,
       description,
       locale: isPt ? 'pt_BR' : 'en_US',
-      url: `https://clouse.app/${locale}`,
+      url: `${SITE_URL}/${locale}`,
     },
     alternates: {
-      canonical: `https://clouse.app/${locale}`,
+      canonical: `${SITE_URL}/${locale}`,
       languages: {
-        'pt-BR': 'https://clouse.app/pt-br',
-        'en-US': 'https://clouse.app/en',
+        'pt-BR': `${SITE_URL}/pt-br`,
+        'en-US': `${SITE_URL}/en`,
       },
     },
   };

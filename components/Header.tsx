@@ -212,6 +212,28 @@ export function Header({ onOpenSearch }: HeaderProps) {
         </nav>
 
         <div className="m-foot">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', padding: '0 4px' }}>
+            <span style={{ fontSize: '13px', color: 'var(--ink-3)', fontWeight: 500 }}>
+              {locale === 'pt-br' ? 'Idioma' : 'Language'}
+            </span>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <Link
+                href="/pt-br"
+                className={`btn btn-sm ${locale === 'pt-br' ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ padding: '4px 10px', fontSize: '12px' }}
+              >
+                PT-BR
+              </Link>
+              <Link
+                href="/en"
+                className={`btn btn-sm ${locale === 'en' ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ padding: '4px 10px', fontSize: '12px' }}
+              >
+                EN
+              </Link>
+            </div>
+          </div>
+
           <button
             type="button"
             className="btn btn-ghost full-width"
@@ -219,7 +241,13 @@ export function Header({ onOpenSearch }: HeaderProps) {
             style={{ marginBottom: '10px' }}
           >
             <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={16} />
-            <span>Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+            <span>
+              {locale === 'pt-br'
+                ? theme === 'dark'
+                  ? 'Mudar para Modo Claro'
+                  : 'Mudar para Modo Escuro'
+                : `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            </span>
           </button>
           <button
             type="button"

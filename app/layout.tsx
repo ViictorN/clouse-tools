@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Inter_Tight, JetBrains_Mono, Newsreader } from 'next/font/google';
 import './globals.css';
 import { ClientLayout } from '@/components/ClientLayout';
+import { SITE_URL } from '@/lib/site';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -29,7 +30,7 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://clouse.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Clouse Tools — 67 Free, Fast, Private Online Tools',
     template: '%s · Clouse Tools',
@@ -57,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://clouse.app',
+    url: SITE_URL,
     title: 'Clouse Tools — 67 Free, Fast, Private Online Tools',
     description:
       '67 free, private, client-side tools designed with the utmost craft. Zero tracking, zero ads, zero accounts required.',

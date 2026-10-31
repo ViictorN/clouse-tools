@@ -11,6 +11,7 @@ import { CalibGrid } from '@/components/CalibGrid';
 import { Reveal } from '@/components/Reveal';
 import { Icon } from '@/lib/icons';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 import {
   getLocalizedToolBySlug,
   getLocalizedCategoryById,
@@ -62,13 +63,13 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
       description: tool.desc,
       type: 'website',
       locale: isPt ? 'pt_BR' : 'en_US',
-      url: `https://clouse.app/${locale}/tool/${tool.slug}`,
+      url: `${SITE_URL}/${locale}/tool/${tool.slug}`,
     },
     alternates: {
-      canonical: `https://clouse.app/${locale}/tool/${tool.slug}`,
+      canonical: `${SITE_URL}/${locale}/tool/${tool.slug}`,
       languages: {
-        'pt-BR': `https://clouse.app/pt-br/tool/${tool.slug}`,
-        'en-US': `https://clouse.app/en/tool/${tool.slug}`,
+        'pt-BR': `${SITE_URL}/pt-br/tool/${tool.slug}`,
+        'en-US': `${SITE_URL}/en/tool/${tool.slug}`,
       },
     },
   };

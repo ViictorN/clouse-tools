@@ -8,6 +8,7 @@ import { CalibGrid } from '@/components/CalibGrid';
 import { CountUp } from '@/components/CountUp';
 import { Icon } from '@/lib/icons';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 
 interface ToolsPageProps {
   params: Promise<{ locale: string }>;
@@ -34,13 +35,13 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
       title,
       description,
       locale: isPt ? 'pt_BR' : 'en_US',
-      url: `https://clouse.app/${locale}/tools`,
+      url: `${SITE_URL}/${locale}/tools`,
     },
     alternates: {
-      canonical: `https://clouse.app/${locale}/tools`,
+      canonical: `${SITE_URL}/${locale}/tools`,
       languages: {
-        'pt-BR': 'https://clouse.app/pt-br/tools',
-        'en-US': 'https://clouse.app/en/tools',
+        'pt-BR': `${SITE_URL}/pt-br/tools`,
+        'en-US': `${SITE_URL}/en/tools`,
       },
     },
   };

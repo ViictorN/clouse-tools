@@ -98,7 +98,7 @@ export function MobileActionDock() {
       </button>
 
       <Link href={`/${locale}/tools`} className="mobile-dock-btn pill-btn" aria-label={toolsLabel}>
-        <Icon name="dice-5" size={17} />
+        <Icon name="box" size={17} />
         <span>{toolsLabel}</span>
       </Link>
 

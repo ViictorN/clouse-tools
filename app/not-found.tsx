@@ -17,21 +17,25 @@ export default function NotFound() {
 
       <div className="eyebrow">
         <span className="dot" />
-        <span>Error 404</span>
+        <span>Erro 404 · Page Not Found</span>
       </div>
-      <h1 className="h-display">Signal lost.</h1>
+      <h1 className="h-display">Página não encontrada.</h1>
       <p className="lead nf-lead">
-        The tool or page you requested could not be found. It may have been moved, renamed, or never existed.
-        Every one of the 67 instruments is still one search away.
+        A página ou ferramenta que você procurou não existe ou mudou de endereço.
+        Todos os 67 utilitários continuam disponíveis e operantes a uma busca de distância.
       </p>
       <div className="cta-actions">
-        <Link href="/" className="btn btn-primary">
-          <Icon name="world" size={18} />
-          <span>Return Home</span>
+        <Link href="/pt-br" className="btn btn-primary">
+          <Icon name="arrow-right" size={16} />
+          <span>Início (PT-BR)</span>
         </Link>
-        <Link href="/tools" className="btn btn-ghost">
-          <Icon name="search" size={18} />
-          <span>Browse All 67 Tools</span>
+        <Link href="/en" className="btn btn-secondary">
+          <Icon name="world" size={16} />
+          <span>Home (EN)</span>
+        </Link>
+        <Link href="/pt-br/tools" className="btn btn-ghost">
+          <Icon name="search" size={16} />
+          <span>Explorar 67 Ferramentas</span>
         </Link>
       </div>
     </section>

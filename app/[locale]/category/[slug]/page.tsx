@@ -7,6 +7,7 @@ import { ToolCard } from '@/components/ToolCard';
 import { CategoryCard } from '@/components/CategoryCard';
 import { Icon } from '@/lib/icons';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 import {
   getLocalizedCategoryById,
   getLocalizedCategories,
@@ -54,13 +55,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       title: `${cat.name} · Clouse Tools`,
       description: cat.blurb,
       locale: isPt ? 'pt_BR' : 'en_US',
-      url: `https://clouse.app/${locale}/category/${cat.id}`,
+      url: `${SITE_URL}/${locale}/category/${cat.id}`,
     },
     alternates: {
-      canonical: `https://clouse.app/${locale}/category/${cat.id}`,
+      canonical: `${SITE_URL}/${locale}/category/${cat.id}`,
       languages: {
-        'pt-BR': `https://clouse.app/pt-br/category/${cat.id}`,
-        'en-US': `https://clouse.app/en/category/${cat.id}`,
+        'pt-BR': `${SITE_URL}/pt-br/category/${cat.id}`,
+        'en-US': `${SITE_URL}/en/category/${cat.id}`,
       },
     },
   };

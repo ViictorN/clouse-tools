@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 import { CalibGrid } from '@/components/CalibGrid';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 
 interface AboutPageProps {
   params: Promise<{ locale: string }>;
@@ -31,13 +32,13 @@ export async function generateMetadata({ params }: AboutPageProps): Promise<Meta
       title,
       description,
       locale: isPt ? 'pt_BR' : 'en_US',
-      url: `https://clouse.app/${locale}/about`,
+      url: `${SITE_URL}/${locale}/about`,
     },
     alternates: {
-      canonical: `https://clouse.app/${locale}/about`,
+      canonical: `${SITE_URL}/${locale}/about`,
       languages: {
-        'pt-BR': 'https://clouse.app/pt-br/about',
-        'en-US': 'https://clouse.app/en/about',
+        'pt-BR': `${SITE_URL}/pt-br/about`,
+        'en-US': `${SITE_URL}/en/about`,
       },
     },
   };

@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { LOCALES, isValidLocale, type Locale } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 import { getPlatformDataStore } from '@clouse/data';
 import { getUnifiedToolCatalog } from '@clouse/tool-sdk';
 import { PlatformGovernanceClient } from '@/components/PlatformGovernanceClient';
@@ -33,13 +34,13 @@ export async function generateMetadata({ params }: PlatformPageProps): Promise<M
       title,
       description,
       locale: isPt ? 'pt_BR' : 'en_US',
-      url: `https://clouse.app/${locale}/platform`,
+      url: `${SITE_URL}/${locale}/platform`,
     },
     alternates: {
-      canonical: `https://clouse.app/${locale}/platform`,
+      canonical: `${SITE_URL}/${locale}/platform`,
       languages: {
-        'pt-BR': 'https://clouse.app/pt-br/platform',
-        'en-US': 'https://clouse.app/en/platform',
+        'pt-BR': `${SITE_URL}/pt-br/platform`,
+        'en-US': `${SITE_URL}/en/platform`,
       },
     },
   };
