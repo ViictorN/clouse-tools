@@ -3,7 +3,7 @@ import { TOOLS, CATEGORIES } from '@/lib/data';
 import { LOCALES } from '@/lib/i18n';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://clouse.app';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://clouse-tools.vercel.app';
   const now = new Date();
 
   const entries: MetadataRoute.Sitemap = [];

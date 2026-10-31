@@ -68,9 +68,140 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
   const prefix = isPt ? '/pt-br' : '/en';
 
   const categories = getLocalizedCategories(locale);
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://clouse-tools.vercel.app';
+
+  const jsonLdWebSite = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Clouse Tools',
+    url: `${siteUrl}/${locale}`,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${siteUrl}/${locale}/search?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  const jsonLdSoftwareApp = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Clouse Tools',
+    applicationCategory: 'UtilityApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description: isPt
+      ? 'Suíte de 67 utilitários online gratuitos, privativos e executados 100% no navegador.'
+      : 'Suite of 67 free, private, client-side online tools computed 100% in the browser.',
+  };
+
+  const jsonLdFaq = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: isPt
+      ? [
+          {
+            '@type': 'Question',
+            name: 'Meus arquivos, senhas e dados confidenciais estão seguros?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Sim, com segurança absoluta. Cada ferramenta é executada 100% localmente no seu dispositivo através de Web APIs nativas e Web Crypto. Nenhuma senha, token JWT, número ou arquivo é enviado para servidores externos.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'O Clouse Tools é totalmente gratuito? Há limites ou planos pagos?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'O Clouse Tools é 100% gratuito, sem planos pagos, sem necessidade de cadastro e sem limitações diárias. Todos os 67 utilitários estão disponíveis para uso ilimitado.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Posso usar as ferramentas sem conexão ativa com a internet?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Sim! Uma vez que a página é carregada no seu navegador, todo o código de computação é estático e executado diretamente pelo processador do seu computador ou celular, sem requisições de rede.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Qual o nível de precisão dos cálculos e conversões?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Todas as fórmulas utilizam constantes e padrões internacionais certificados (ISO-8601 para datas, constantes NIST para unidades de medida, RFC 4122 para UUIDs e FIPS 180-4 para hashes criptográficos SHA-256).',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Como posso sugerir uma nova ferramenta ou reportar um problema?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'O projeto é de código aberto e mantido no GitHub. Você pode abrir uma issue, propor melhorias ou submeter pull requests diretamente em github.com/ViictorN/clouse-tools, ou usar nossa página de Contato.',
+            },
+          },
+        ]
+      : [
+          {
+            '@type': 'Question',
+            name: 'Are my files, passwords, and data safe when using Clouse Tools?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Absolutely. Every tool executes 100% locally on your device within your browser window using HTML5 Canvas and native Web Crypto APIs. No files, passwords, tokens, or numbers are ever uploaded or transmitted to any server.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Is Clouse Tools completely free? Are there any hidden limits or premium tiers?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Clouse Tools is 100% free with zero paywalls, zero account registrations, and zero premium tiers. All 67 utilities are fully accessible without restriction.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Can I use these tools offline without an active internet connection?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes! Because the platform is built with client-side Next.js static generation, once a page is loaded in your browser, the computation logic executes locally on your CPU with zero external API calls.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'How accurate are the conversion and mathematical calculations?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'All algorithms are grounded in official international standards (including ISO-8601 for calendar calculations, NIST unit constants, RFC 4122 for UUIDs, and FIPS 180-4 for SHA cryptographic hashes) ensuring precise, dependable results.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'How can I report a bug or request a new utility to be added?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Clouse Tools is an open-source project hosted on GitHub. You can open an issue, propose a new tool idea, or submit a pull request directly at github.com/ViictorN/clouse-tools, or send a message via our Contact page.',
+            },
+          },
+        ],
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftwareApp) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+      />
       {/* ============================================================
           1. HERO SECTION (EDITORIAL APPLE AESTHETIC)
           ============================================================ */}

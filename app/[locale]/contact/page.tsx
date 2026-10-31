@@ -48,10 +48,22 @@ export default function LocalizedContactPage() {
       : 'We have received your note. Because Clouse Tools is an open community-driven project, user feedback directly shapes our roadmap.',
     again: isPt ? 'Enviar Outra Mensagem' : 'Send Another Message',
     browse: isPt ? 'Explorar Ferramentas' : 'Browse All Tools',
-    githubTitle: isPt ? 'Prefere o GitHub?' : 'Prefer GitHub?',
+    githubTitle: isPt ? 'GitHub Issues' : 'GitHub Issues',
+    githubMeta: isPt ? 'Comunidade Open Source' : 'Open Source Community',
     githubBody: isPt
-      ? 'Abra uma issue ou pull request diretamente no repositório oficial.'
-      : 'Open an issue or submit a pull request directly in our repository.',
+      ? 'Acompanhe o roadmap, abra issues ou envie pull requests diretamente no repositório.'
+      : 'Track roadmap, submit issues, or open pull requests in our repository.',
+    emailTitle: isPt ? 'Suporte Direto' : 'Direct Email',
+    emailMeta: isPt ? 'Canal Oficial' : 'Official Inbox',
+    emailBody: isPt
+      ? 'Envie dúvidas técnicas ou propostas para nossa caixa de entrada.'
+      : 'Send technical questions or partnership proposals directly to us.',
+    whatsappTitle: isPt ? 'WhatsApp & Chat' : 'WhatsApp & Chat',
+    whatsappMeta: isPt ? 'Comunicação Rápida' : 'Direct Instant Chat',
+    whatsappBody: isPt
+      ? 'Fale diretamente com os mantenedores do projeto para dúvidas e parcerias.'
+      : 'Chat directly with project maintainers for instant questions and feedback.',
+    whatsappCta: isPt ? 'Conversar no WhatsApp' : 'Chat on WhatsApp',
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -187,7 +199,16 @@ export default function LocalizedContactPage() {
                     />
                   </div>
 
+                  {/* Bot protection honeypot */}
+                  <div style={{ display: 'none' }} aria-hidden="true">
+                    <input type="text" name="website_url_hp" tabIndex={-1} autoComplete="off" />
+                  </div>
+
                   <div className="contact-actions">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--ink-3)', marginBottom: '16px' }}>
+                      <Icon name="clock" size={15} />
+                      <span>{isPt ? 'Promessa de resposta: respondemos em até 24 horas úteis.' : 'Response SLA: we respond to inquiries within 24 business hours.'}</span>
+                    </div>
                     <button type="submit" className="btn btn-primary">
                       <span>{copy.submit}</span>
                       <Icon name="arrow-right" size={16} />
@@ -196,20 +217,68 @@ export default function LocalizedContactPage() {
                 </form>
               </Reveal>
 
-              <Reveal className="t-card channel-card github-card">
-                <h2>{copy.githubTitle}</h2>
-                <p className="channel-desc">{copy.githubBody}</p>
-                <a
-                  href="https://github.com/ViictorN/clouse-tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-secondary"
-                >
-                  <Icon name="code" size={16} />
-                  <span>github.com/ViictorN/clouse-tools</span>
-                  <Icon name="arrow-up-right" size={14} />
-                </a>
-              </Reveal>
+              <div className="contact-side" data-reveal-group>
+                <Reveal className="t-card channel-card">
+                  <div className="channel-head">
+                    <div className="tile-icn soft">
+                      <Icon name="code" size={20} />
+                    </div>
+                    <div>
+                      <h3>{copy.githubTitle}</h3>
+                      <span className="channel-meta">{copy.githubMeta}</span>
+                    </div>
+                  </div>
+                  <p className="channel-desc">{copy.githubBody}</p>
+                  <a
+                    href="https://github.com/ViictorN/clouse-tools/issues"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-arrow"
+                  >
+                    <span>github.com/ViictorN/clouse-tools</span>
+                    <Icon name="arrow-up-right" size={14} />
+                  </a>
+                </Reveal>
+
+                <Reveal className="t-card channel-card">
+                  <div className="channel-head">
+                    <div className="tile-icn soft">
+                      <Icon name="mail" size={20} />
+                    </div>
+                    <div>
+                      <h3>{copy.emailTitle}</h3>
+                      <span className="channel-meta">{copy.emailMeta}</span>
+                    </div>
+                  </div>
+                  <p className="channel-desc">{copy.emailBody}</p>
+                  <a href="mailto:hello@clouse.tools" className="link-arrow">
+                    <span>hello@clouse.tools</span>
+                    <Icon name="arrow-right" size={14} />
+                  </a>
+                </Reveal>
+
+                <Reveal className="t-card channel-card">
+                  <div className="channel-head">
+                    <div className="tile-icn soft channel-ok">
+                      <Icon name="brand-whatsapp" size={20} />
+                    </div>
+                    <div>
+                      <h3>{copy.whatsappTitle}</h3>
+                      <span className="channel-meta">{copy.whatsappMeta}</span>
+                    </div>
+                  </div>
+                  <p className="channel-desc">{copy.whatsappBody}</p>
+                  <a
+                    href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20gostaria%20de%20conversar%20sobre%20o%20Clouse%20Tools"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-arrow"
+                  >
+                    <span>{copy.whatsappCta}</span>
+                    <Icon name="arrow-up-right" size={14} />
+                  </a>
+                </Reveal>
+              </div>
             </div>
           )}
         </div>
