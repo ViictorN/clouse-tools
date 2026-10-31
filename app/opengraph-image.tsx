@@ -8,7 +8,7 @@ export const size = {
 export const contentType = 'image/png';
 
 /** Social card in the site's own language: OLED ground, calibration grid,
- *  instrument status row, single blue accent. */
+ *  instrument status row, single blue accent, vector squircle brand mark. */
 export default function OpenGraphImage() {
   return new ImageResponse(
     (
@@ -38,17 +38,36 @@ export default function OpenGraphImage() {
               width: '60px',
               height: '60px',
               borderRadius: '16px',
-              backgroundColor: '#ffffff',
-              color: '#0b0b0e',
+              backgroundColor: '#0b0b0e',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '32px',
-              fontWeight: 800,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)',
             }}
           >
-            C
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17 3.5C14.5 1.5 11 1.8 8.8 4L4 8.8C1.8 11 1.5 14.5 3.5 17C5.5 19.5 9 19.2 11.2 17L16 12.2C18.2 10 18.5 6.5 16.5 4"
+                stroke="#ffffff"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14.5 14.5L19.5 19.5"
+                stroke="#ffffff"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+              <circle cx="9" cy="9" r="1.5" fill="#ffffff" />
+            </svg>
           </div>
           <div
             style={{
@@ -58,7 +77,7 @@ export default function OpenGraphImage() {
               color: '#f5f5f7',
             }}
           >
-            Clouse Tools
+            CLOUSE TOOLS
           </div>
           <div
             style={{
@@ -102,7 +121,7 @@ export default function OpenGraphImage() {
             }}
           >
             Math, text, dates, converters, developer tools and design. Zero tracking, zero
-            uploads, computed entirely in your browser.
+            telemetry, computed 100% inside your browser.
           </div>
         </div>
 

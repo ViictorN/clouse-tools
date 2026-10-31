@@ -10,6 +10,7 @@ import { RelatedRail } from '@/components/RelatedRail';
 import { CalibGrid } from '@/components/CalibGrid';
 import { Reveal } from '@/components/Reveal';
 import { Icon } from '@/lib/icons';
+import { getCanonicalUrl } from '@/lib/site';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -35,7 +36,15 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     title: `${tool.name} — Free Online Tool`,
     description: `${tool.desc} Free, instant, and 100% private. Computed directly in your browser with zero latency.`,
     keywords: tool.kw.split(',').map((k) => k.trim()),
+    alternates: {
+      canonical: getCanonicalUrl('/en/tool/' + tool.slug),
+      languages: {
+        'en-US': getCanonicalUrl('/en/tool/' + tool.slug),
+        'pt-BR': getCanonicalUrl('/pt-br/tool/' + tool.slug),
+      },
+    },
     openGraph: {
+      url: getCanonicalUrl('/en/tool/' + tool.slug),
       title: `${tool.name} · Clouse Tools`,
       description: tool.desc,
       type: 'website',

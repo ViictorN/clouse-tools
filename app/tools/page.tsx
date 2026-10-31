@@ -6,11 +6,19 @@ import { PaletteCtaButton } from '@/components/PaletteCtaButton';
 import { CalibGrid } from '@/components/CalibGrid';
 import { CountUp } from '@/components/CountUp';
 import { Icon } from '@/lib/icons';
+import { getCanonicalUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'All 67 Tools — Directory',
   description:
     'Browse all 67 free, fast, private online tools for mathematics, text editing, date calculation, unit conversion, developer formatting, and graphic design.',
+  alternates: {
+    canonical: getCanonicalUrl('/en/tools'),
+    languages: {
+      'en-US': getCanonicalUrl('/en/tools'),
+      'pt-BR': getCanonicalUrl('/pt-br/tools'),
+    },
+  },
 };
 
 export default function ToolsPage() {
@@ -31,65 +39,66 @@ export default function ToolsPage() {
         <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <Link href="/en">Home</Link>
             <Icon name="chevron-right" size={13} />
             <span>Tools</span>
           </nav>
           <div className="eyebrow">
             <span className="dot" />
-            <span>Complete Directory</span>
+            <span>Complete Suite</span>
           </div>
-          <h1 className="h-d2">All 67 Online Tools</h1>
+          <h1 className="h-d2">
+            Every tool you need. <span className="grad-blue">Instantly ready.</span>
+          </h1>
           <p className="lead">
-            Every utility in Clouse Tools is built to run entirely inside your browser. No server calls, no telemetry, instant feedback.
+            Explore 67 finely crafted, zero-friction utilities. Everything runs locally in your
+            browser with instant feedback and total data privacy.
           </p>
+
           <div className="page-hero-cta">
-            <PaletteCtaButton />
+            <PaletteCtaButton locale="en" />
           </div>
 
-          <div className="hero-stats" data-reveal-group>
-            <div className="stat">
-              <b>
+          <div className="stat-ticker" aria-label="Directory statistics">
+            <div className="stat-cell">
+              <span className="stat-num">
                 <CountUp value={67} />
-              </b>
-              <span>Tools</span>
+              </span>
+              <span className="stat-lbl">Active Tools</span>
             </div>
-            <div className="stat">
-              <b>
+            <div className="stat-cell">
+              <span className="stat-num">
                 <CountUp value={6} />
-              </b>
-              <span>Categories</span>
+              </span>
+              <span className="stat-lbl">Categories</span>
             </div>
-            <div className="stat">
-              <b>
-                <CountUp value={0} />
-              </b>
-              <span>Sign-ups required</span>
+            <div className="stat-cell">
+              <span className="stat-num">100%</span>
+              <span className="stat-lbl">Client-Side</span>
+            </div>
+            <div className="stat-cell">
+              <span className="stat-num">0 ms</span>
+              <span className="stat-lbl">Server Delay</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---------- MARQUEE ---------- */}
-      <div className="marquee-wrap" aria-hidden="true">
-        <div className="marquee">
-          {[0, 1].map((track) => (
-            <div className="m-track" key={track}>
-              {marqueeItems.map((item) => (
-                <div className="m-item" key={item.label}>
-                  <Icon name={item.icon} size={16} />
-                  <span>{item.label}</span>
-                </div>
-              ))}
+      {/* Marquee ticker */}
+      <section className="marquee-bar" aria-label="Capability Highlights">
+        <div className="marquee-track">
+          {[...marqueeItems, ...marqueeItems].map((item, idx) => (
+            <div key={idx} className="marquee-item">
+              <Icon name={item.icon} size={15} />
+              <span>{item.label}</span>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       <section className="section section-pt-0">
         <div className="container">
-          <h2 className="sr-only">Tools directory</h2>
-          <ToolsDirectory />
+          <ToolsDirectory locale="en" />
         </div>
       </section>
     </>

@@ -6,6 +6,7 @@ import { CATEGORIES, getCategory, toolsByCategory } from '@/lib/data';
 import { ToolCard } from '@/components/ToolCard';
 import { CalibGrid } from '@/components/CalibGrid';
 import { Icon } from '@/lib/icons';
+import { getCanonicalUrl } from '@/lib/site';
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
@@ -30,7 +31,15 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   return {
     title: `${cat.name} — Free Online Utilities`,
     description: `${cat.desc} ${cat.blurb}`,
+    alternates: {
+      canonical: getCanonicalUrl('/en/category/' + cat.id),
+      languages: {
+        'en-US': getCanonicalUrl('/en/category/' + cat.id),
+        'pt-BR': getCanonicalUrl('/pt-br/category/' + cat.id),
+      },
+    },
     openGraph: {
+      url: getCanonicalUrl('/en/category/' + cat.id),
       title: `${cat.name} · Clouse Tools`,
       description: cat.blurb,
     },

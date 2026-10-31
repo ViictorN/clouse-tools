@@ -3,11 +3,19 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Icon } from '@/lib/icons';
 import { CalibGrid } from '@/components/CalibGrid';
+import { getCanonicalUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'About Clouse Tools',
   description:
     'The story behind Clouse Tools: 67 free, private, client-side tools designed for everyday productivity without compromise.',
+  alternates: {
+    canonical: getCanonicalUrl('/en/about'),
+    languages: {
+      'en-US': getCanonicalUrl('/en/about'),
+      'pt-BR': getCanonicalUrl('/pt-br/about'),
+    },
+  },
 };
 
 export default function AboutPage() {
@@ -18,7 +26,7 @@ export default function AboutPage() {
         <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <Link href="/en">Home</Link>
             <Icon name="chevron-right" size={13} />
             <span>About</span>
           </nav>
@@ -31,7 +39,7 @@ export default function AboutPage() {
             Simple tools. Real productivity. Free, forever, for everyone.
           </p>
           <div className="page-hero-cta">
-            <Link href="/tools" className="btn btn-primary">
+            <Link href="/en/tools" className="btn btn-primary">
               <span>Explore 67 Tools</span>
               <Icon name="arrow-right" size={17} />
             </Link>
@@ -49,45 +57,27 @@ export default function AboutPage() {
             <strong>Our fundamental promise:</strong> every tool runs 100% inside your browser. Your text, dates, passwords, tokens, and images are processed locally on your device and never uploaded to any remote server.
           </div>
 
-          <h2>Why we built it</h2>
+          <h2>Why We Built It</h2>
           <p>
-            Most &ldquo;free online tools&rdquo; are weighed down with ads, cookie banners, mandatory registrations, and silently uploaded user files. We built the complete antithesis: a clean, lightning-fast toolbox with the everyday utilities people actually need — percentages, dates, text manipulation, units, image formatting, and essential developer helpers.
+            The modern web is filled with utility sites wrapped in intrusive ads, multi-step popups, mandatory email captures, and slow page loads. We wanted the opposite: an Apple-calibrated, high-contrast, distraction-free environment that treats your time and privacy with total respect.
           </p>
 
-          <h2>Core Engineering Principles</h2>
-          <ul>
-            <li>
-              <strong>Instant by default:</strong> Results update live as you type with zero calculation round-trips.
-            </li>
-            <li>
-              <strong>Keyboard-first ergonomics:</strong> Press <code className="mono">Ctrl + K</code> or <code className="mono">/</code> anywhere to trigger the global command palette.
-            </li>
-            <li>
-              <strong>Private by design:</strong> Media is handled via HTML5 Canvas in-memory; random numbers and cryptographic hashes utilize the native Web Crypto API.
-            </li>
-            <li>
-              <strong>Accessible:</strong> Semantic HTML, high contrast tokens, keyboard focus rings, and reduced-motion compliance.
-            </li>
-          </ul>
-
-          <h2>What is inside</h2>
+          <h2>Six Essential Categories</h2>
           <p>
-            Six curated categories cover every routine task: <strong>Math</strong> (percentages, averages, loans, BMI, base converter), <strong>Text</strong> (word counts, slug generation, diffing, case switching), <strong>Date &amp; Time</strong> (differences, ages, countdowns, time zones), <strong>Unit Converters</strong> (length, weight, temperature, data storage, speed), <strong>Developer</strong> (Base64, JSON formatter, regex tester, SHA-256, JWT decoder), and <strong>Design</strong> (image resizing, CSS gradients, QR codes, color palettes).
+            Whether you are calculating compound interest, formatting minified JSON, generating cryptographically secure UUIDs, converting culinary units, or calculating age intervals to the exact second, Clouse Tools has a purpose-built utility ready in under 50 milliseconds.
           </p>
 
-          <h2>Open Source &amp; Feedback</h2>
+          <h2>Privacy By Design (Zero Telemetry)</h2>
           <p>
-            Found an issue or want to contribute a tool? The toolbox is fully open-source and welcoming contributions on GitHub at{' '}
-            <a
-              href="https://github.com/ViictorN/clouse-tools"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-arrow"
-            >
-              github.com/ViictorN/clouse-tools
-              <Icon name="arrow-up-right" size={14} />
-            </a>.
+            We do not track you. We do not store your clipboard, we do not log your calculations, and we do not use third-party analytics scripts. The code you execute is delivered directly to your device via edge CDN and runs client-side inside a secure, sandboxed browser environment.
           </p>
+
+          <div style={{ marginTop: '2.5rem' }}>
+            <Link href="/en/tools" className="btn btn-primary">
+              <span>Start Using Clouse Tools</span>
+              <Icon name="arrow-right" size={17} />
+            </Link>
+          </div>
         </div>
       </section>
     </>

@@ -3,11 +3,19 @@ import type { Metadata } from 'next';
 import { getPlatformDataStore } from '@clouse/data';
 import { getUnifiedToolCatalog } from '@clouse/tool-sdk';
 import { PlatformGovernanceClient } from '@/components/PlatformGovernanceClient';
+import { getCanonicalUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Cloud Architecture & Security — Clouse Tools',
   description:
     'Unified catalog of 73 tools, 6 isolated server engines, Supabase database with row access control, and 2,500 verified controls.',
+  alternates: {
+    canonical: getCanonicalUrl('/en/platform'),
+    languages: {
+      'en-US': getCanonicalUrl('/en/platform'),
+      'pt-BR': getCanonicalUrl('/pt-br/platform'),
+    },
+  },
 };
 
 export default function PlatformPage() {

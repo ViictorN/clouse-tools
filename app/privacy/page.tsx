@@ -3,10 +3,18 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Icon } from '@/lib/icons';
 import { CalibGrid } from '@/components/CalibGrid';
+import { getCanonicalUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Privacy policy for Clouse Tools: 100% client-side computation with zero data collection.',
+  alternates: {
+    canonical: getCanonicalUrl('/en/privacy'),
+    languages: {
+      'en-US': getCanonicalUrl('/en/privacy'),
+      'pt-BR': getCanonicalUrl('/pt-br/privacy'),
+    },
+  },
 };
 
 export default function PrivacyPage() {
@@ -17,56 +25,49 @@ export default function PrivacyPage() {
         <div className="bg-orb" aria-hidden="true" />
         <div className="container">
           <nav className="crumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <Link href="/en">Home</Link>
             <Icon name="chevron-right" size={13} />
             <span>Privacy</span>
           </nav>
           <div className="eyebrow">
             <span className="dot" />
-            <span>Privacy & Security</span>
+            <span>Legal & Privacy</span>
           </div>
           <h1 className="h-d2">Privacy Policy</h1>
-          <div className="page-hero-cta">
-            <Link href="/tools" className="btn btn-primary">
-              <span>Explore 67 Tools</span>
-              <Icon name="arrow-right" size={17} />
-            </Link>
-          </div>
-          <p className="lead">The shortest, clearest privacy policy you will read today.</p>
+          <p className="lead">
+            Last updated: October 2026. Zero telemetry. Zero cookies. 100% local computation.
+          </p>
         </div>
       </section>
 
       <section className="section section-pt-0">
         <div className="container prose">
+          <h2>1. The Short Version</h2>
+          <p>
+            We do not collect your personal data, we do not store your inputs, and we do not track your browsing behavior. All computations in Clouse Tools happen directly inside your browser on your device.
+          </p>
+
           <div className="card-note">
-            <strong>TL;DR:</strong> We do not collect your data. We cannot see your data. Your files, text, numbers, and generated results are processed entirely in your browser and never leave your device.
+            <strong>Key takeaway:</strong> When you paste JSON, enter passwords, calculate percentages, or convert units, that information stays in your device&apos;s memory. Nothing is transmitted to our servers or third parties.
           </div>
 
-          <h2>What happens when you use a tool</h2>
-          <p>
-            Every calculation — from percentage math to JSON formatting and image compression — runs as local JavaScript in your browser window. When you resize an image or extract a color palette, the file is read in-memory and rendered to an HTML5 canvas element. <strong>No file upload ever occurs.</strong>
-          </p>
-
-          <h2>What we do not have</h2>
+          <h2>2. Data We Do NOT Collect</h2>
+          <p>Clouse Tools operates on a strict zero-telemetry policy:</p>
           <ul>
-            <li>No user accounts, profiles, or sign-up forms — so we store no names, emails, or credentials.</li>
-            <li>No invasive trackers, advertising networks, or user fingerprinting scripts.</li>
-            <li>No database storing your inputs or outputs — there is no backend server receiving your requests.</li>
-            <li>No tracking cookies set on your browser.</li>
+            <li>No analytical cookies or tracking pixels.</li>
+            <li>No personal identification or account requirement.</li>
+            <li>No clipboard logging or input telemetry.</li>
+            <li>No remote storage of user inputs or computed results.</li>
           </ul>
 
-          <h2>Self-Hosted &amp; Private</h2>
+          <h2>3. Local Storage & Preferences</h2>
           <p>
-            In our Next.js architecture, fonts and static assets are bundled directly with the application rather than requested through external third-party tracking CDNs, guaranteeing maximum speed and privacy.
+            Certain tools (such as recent tool history or your preferred color theme) store minimal state inside your browser&apos;s local storage. This data never leaves your browser and can be cleared at any time via your browser settings.
           </p>
 
-          <h2>Total User Control</h2>
+          <h2>4. Contact Us</h2>
           <p>
-            Because execution is purely client-side, closing the browser tab completely clears your active calculation state. There is simply nothing on any remote server to leak, breach, or sell.
-          </p>
-
-          <p>
-            Questions? Contact: <strong>hello@clouse.tools</strong>
+            If you have questions about our privacy practices, contact us via our official contact channel.
           </p>
         </div>
       </section>

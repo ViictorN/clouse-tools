@@ -10,7 +10,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function iconMarkup(size) {
   const radius = Math.round(size * 0.22);
-  const fontSize = Math.round(size * 0.62);
+  const svgSize = Math.round(size * 0.58);
   return createElement(
     'div',
     {
@@ -22,16 +22,40 @@ function iconMarkup(size) {
         justifyContent: 'center',
         background:
           'radial-gradient(circle at 50% 18%, rgba(0, 113, 227, 0.35) 0%, transparent 62%), #0b0b0e',
-        color: 'white',
-        fontFamily: 'sans-serif',
-        fontWeight: 800,
-        fontSize,
-        letterSpacing: '-0.04em',
         borderRadius: radius,
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.28)',
+        border: `${Math.max(1, Math.round(size * 0.012))}px solid rgba(255, 255, 255, 0.22)`,
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)',
       },
     },
-    'C',
+    createElement(
+      'svg',
+      {
+        width: svgSize,
+        height: svgSize,
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        xmlns: 'http://www.w3.org/2000/svg',
+      },
+      createElement('path', {
+        d: 'M17 3.5C14.5 1.5 11 1.8 8.8 4L4 8.8C1.8 11 1.5 14.5 3.5 17C5.5 19.5 9 19.2 11.2 17L16 12.2C18.2 10 18.5 6.5 16.5 4',
+        stroke: '#ffffff',
+        strokeWidth: 2.2,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+      }),
+      createElement('path', {
+        d: 'M14.5 14.5L19.5 19.5',
+        stroke: '#ffffff',
+        strokeWidth: 2.2,
+        strokeLinecap: 'round',
+      }),
+      createElement('circle', {
+        cx: 9,
+        cy: 9,
+        r: 1.5,
+        fill: '#ffffff',
+      }),
+    ),
   );
 }
 

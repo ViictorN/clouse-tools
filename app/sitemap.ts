@@ -1,9 +1,10 @@
 import type { MetadataRoute } from 'next';
 import { TOOLS, CATEGORIES } from '@/lib/data';
 import { LOCALES } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://clouse-tools.vercel.app';
+  const baseUrl = SITE_URL;
   const now = new Date();
 
   const entries: MetadataRoute.Sitemap = [];
