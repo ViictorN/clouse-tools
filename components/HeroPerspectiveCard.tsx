@@ -1,7 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
+import gsap from 'gsap';
 import { Locale } from '@/lib/i18n';
+import { GSAP_EASE, prefersReducedMotion } from '@/lib/motion';
 
 interface HeroPerspectiveCardProps {
   locale: Locale;
@@ -10,7 +12,9 @@ interface HeroPerspectiveCardProps {
 export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
   const isPt = locale === 'pt-br';
   const prefix = isPt ? '/pt-br' : '/en';
-  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
 
   const tools = [
     { icon: '%', label: isPt ? 'Calcular' : 'Calculate', slug: 'percentage-calculator' },
@@ -21,14 +25,87 @@ export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
     { icon: '✦', label: isPt ? 'Design' : 'Design', slug: 'color-palette-generator' },
   ];
 
+  useEffect(() => {
+    if (prefersReducedMotion() || !containerRef.current || !cardRef.current) return;
+    const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+    if (!isFinePointer) return;
+
+    const container = containerRef.current;
+    const card = cardRef.current;
+    const pill = pillRef.current;
+
+    // Default resting transform values
+    const rest = {
+      rotY: -8,
+      rotX: 6,
+      rotZ: -2,
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+      gsap.to(card, {
+        rotateY: rest.rotY + x * 10,
+        rotateX: rest.rotX - y * 8,
+        rotateZ: rest.rotZ + x * 2,
+        y: -y * 8,
+        duration: 0.6,
+        ease: GSAP_EASE.smooth,
+        overwrite: 'auto',
+      });
+
+      if (pill) {
+        gsap.to(pill, {
+          x: x * 14,
+          y: y * 12,
+          duration: 0.8,
+          ease: GSAP_EASE.smooth,
+          overwrite: 'auto',
+        });
+      }
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(card, {
+        rotateY: rest.rotY,
+        rotateX: rest.rotX,
+        rotateZ: rest.rotZ,
+        y: 0,
+        duration: 0.9,
+        ease: GSAP_EASE.editorial,
+        overwrite: 'auto',
+      });
+
+      if (pill) {
+        gsap.to(pill, {
+          x: 0,
+          y: 0,
+          duration: 0.9,
+          ease: GSAP_EASE.editorial,
+          overwrite: 'auto',
+        });
+      }
+    };
+
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
   return (
-    <div className="hero-perspective-container" aria-hidden="true">
+    <div ref={containerRef} className="hero-perspective-container" aria-hidden="true">
       {/* Decorative dark rounded frame with top subtitle */}
       <div className="hpc-frame-header">
         <span className="hpc-frame-badge">THE EVERYDAY COLLECTION / 001</span>
       </div>
 
-      {/* Ribbon wave backdrop glow */}
+      {/* Ribbon wave backdrop */}
       <div className="hpc-wave-bg">
         <svg viewBox="0 0 400 400" className="hpc-wave-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -47,11 +124,7 @@ export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
       </div>
 
       {/* Floating 3D Perspective Card */}
-      <div
-        className={`hpc-card-3d ${hovered ? 'hovered' : ''}`}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
+      <div ref={cardRef} className="hpc-card-3d">
         <div className="hpc-card-header">
           <div className="hpc-card-logo">
             <span className="hpc-logo-icon">C</span>
@@ -88,8 +161,8 @@ export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
           ))}
         </div>
 
-        {/* Floating Glass Pill Badge */}
-        <div className="hpc-floating-pill">
+        {/* Floating Glass Pill Badge with Parallax Offset */}
+        <div ref={pillRef} className="hpc-floating-pill">
           <span className="hpc-sparkle">✦</span>
           <span>{isPt ? 'Menos atrito. Mais fluidez.' : 'Less friction. More flow.'}</span>
         </div>

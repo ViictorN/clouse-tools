@@ -9,6 +9,9 @@ import { HeroPerspectiveCard } from '@/components/HeroPerspectiveCard';
 import { UseCasesSection } from '@/components/UseCasesSection';
 import { FAQSection } from '@/components/FAQSection';
 import { Reveal } from '@/components/Reveal';
+import { CountUp } from '@/components/CountUp';
+import { TextLineReveal } from '@/components/motion/TextLineReveal';
+import { HomeScrollChoreography } from '@/components/motion/HomeScrollChoreography';
 import { Locale, isValidLocale, LOCALES } from '@/lib/i18n';
 import {
   getLocalizedCategories,
@@ -202,6 +205,7 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
+      <HomeScrollChoreography />
       {/* ============================================================
           1. HERO SECTION (EDITORIAL APPLE AESTHETIC)
           ============================================================ */}
@@ -220,12 +224,16 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
               </Reveal>
 
               <h1 className="hero-editorial-heading">
-                <span className="heading-line-sans">
-                  {isPt ? 'Tudo o que você precisa.' : 'Everything you need.'}
-                </span>
-                <span className="heading-line-serif">
-                  {isPt ? 'Em um só lugar.' : 'One place.'}
-                </span>
+                <TextLineReveal
+                  lines={[
+                    isPt ? 'Tudo o que você precisa.' : 'Everything you need.',
+                    isPt ? 'Em um só lugar.' : 'One place.',
+                  ]}
+                  lineClassNames={['heading-line-sans', 'heading-line-serif']}
+                  as="div"
+                  delay={0.06}
+                  stagger={0.08}
+                />
               </h1>
 
               <Reveal as="p" className="hero-editorial-sub" delay={0.06}>
@@ -472,7 +480,9 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                 <div className="banner-stat-block">
                   <div className="stat-infinity-row">
                     <span className="infinity-symbol">∞</span>
-                    <span className="stat-number">67</span>
+                    <span className="stat-number">
+                      <CountUp value={67} duration={1200} />
+                    </span>
                   </div>
                   <span className="stat-caption">
                     {isPt ? 'ferramentas úteis. zero cadastros.' : 'useful tools. zero sign-ups.'}

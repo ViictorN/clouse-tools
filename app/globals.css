@@ -1371,6 +1371,19 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
   background: rgba(0, 113, 227, 0.12);
   color: var(--blue);
 }
+.faq-answer-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s var(--ease), opacity 0.35s ease;
+  opacity: 0;
+}
+.faq-answer-wrapper.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.faq-answer-inner {
+  overflow: hidden;
+}
 .faq-answer {
   padding: 0 28px 22px;
   color: var(--ink-2);
@@ -1378,13 +1391,8 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
   line-height: 1.65;
   border-top: 1px solid var(--line);
   padding-top: 18px;
-  animation: faqFadeIn 0.35s var(--ease-out);
 }
 .faq-answer p { max-width: 68ch; }
-@keyframes faqFadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: none; }
-}
 
 [data-theme="dark"] .faq-item {
   background: #121216;
@@ -2223,6 +2231,86 @@ html.lenis, html.lenis body { height: auto; }
   transform: scale(0.97);
 }
 .t-card:active { transform: scale(0.985); }
+
+/* Editorial masked typography styles */
+.editorial-line-container {
+  display: flex;
+  flex-direction: column;
+}
+.editorial-line-mask {
+  display: block;
+  overflow: hidden;
+  line-height: 1.15;
+}
+.editorial-line-inner {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Micro-interaction: contextual icon nudge */
+.arr {
+  display: inline-block;
+  transition: transform 0.28s var(--ease);
+}
+.btn:hover .arr,
+.banner-pill-btn:hover .arr,
+.essentials-view-all:hover .arr,
+.essential-link:hover .arr,
+.nav-link-arrow:hover .arr,
+.link-arrow:hover .arr {
+  transform: translateX(4px);
+}
+
+/* Directional link underlines */
+.essentials-view-all {
+  position: relative;
+}
+.essentials-view-all::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.35s var(--ease);
+}
+.essentials-view-all:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Category cards hover lift & chevron nudge */
+.cat-card-row {
+  transition: transform 0.35s var(--ease), border-color 0.25s ease, box-shadow 0.35s var(--ease);
+}
+.cat-card-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.06);
+}
+.cat-card-row:hover .cat-row-chevron {
+  transform: translateX(3px);
+  color: var(--ink);
+}
+.cat-row-chevron {
+  transition: transform 0.28s var(--ease), color 0.2s ease;
+}
+
+/* Essential cards elevation */
+.essential-card {
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.3s ease;
+}
+.essential-card:hover {
+  transform: translateY(-4px);
+}
+.essential-card.card-inverted:hover {
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.essential-card.card-white:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
 
 /* Theme crossfade via View Transitions (guarded in JS). */
 ::view-transition-old(root), ::view-transition-new(root) {

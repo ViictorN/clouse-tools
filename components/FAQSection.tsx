@@ -118,11 +118,13 @@ export function FAQSection({ locale: propLocale }: { locale?: Locale }) {
                     <Icon name="chevron-down" size={18} />
                   </div>
                 </button>
-                {isOpen && (
-                  <div className="faq-answer">
-                    <p>{faq.a}</p>
+                <div className={`faq-answer-wrapper ${isOpen ? 'open' : ''}`} aria-hidden={!isOpen}>
+                  <div className="faq-answer-inner">
+                    <div className="faq-answer">
+                      <p>{faq.a}</p>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
