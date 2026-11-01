@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
 
@@ -9,63 +8,64 @@ interface FAQItem {
   a: string;
 }
 
-const FAQS_EN: FAQItem[] = [
-  {
-    q: 'Are my files, passwords, and data safe when using Clouse Tools?',
-    a: 'Absolutely. Every tool executes 100% locally on your device within your browser window using HTML5 Canvas and native Web Crypto APIs. No files, passwords, tokens, or numbers are ever uploaded or transmitted to any server.',
-  },
-  {
-    q: 'Is Clouse Tools completely free? Are there any hidden limits or premium tiers?',
-    a: 'Clouse Tools is 100% free with zero paywalls, zero account registrations, and zero premium tiers. All 67 utilities are fully accessible without restriction.',
-  },
-  {
-    q: 'Can I use these tools offline without an active internet connection?',
-    a: 'Yes! Because the platform is built with client-side Next.js static generation, once a page is loaded in your browser, the computation logic executes locally on your CPU with zero external API calls.',
-  },
-  {
-    q: 'How accurate are the conversion and mathematical calculations?',
-    a: 'All algorithms are grounded in official international standards (including ISO-8601 for calendar calculations, NIST unit constants, RFC 4122 for UUIDs, and FIPS 180-4 for SHA cryptographic hashes) ensuring precise, dependable results.',
-  },
-  {
-    q: 'How can I report a bug or request a new utility to be added?',
-    a: 'Clouse Tools is an open-source project hosted on GitHub. You can open an issue, propose a new tool idea, or submit a pull request directly at github.com/ViictorN/clouse-tools, or send a message via our Contact page.',
-  },
-];
+interface FAQSectionProps {
+  locale?: Locale;
+}
 
 const FAQS_PT: FAQItem[] = [
   {
-    q: 'Meus arquivos, senhas e dados confidenciais estão seguros?',
-    a: 'Sim, com segurança absoluta. Cada ferramenta é executada 100% localmente no seu dispositivo através de Web APIs nativas e Web Crypto. Nenhuma senha, token JWT, número ou arquivo é enviado para servidores externos.',
+    q: 'As ferramentas são realmente gratuitas e sem limites?',
+    a: 'Sim, 100% gratuitas. Não existem planos pagos, limites de uso diário ou bloqueios de recursos. Todas as 67 ferramentas operam de forma irrestrita.',
   },
   {
-    q: 'O Clouse Tools é totalmente gratuito? Há limites ou planos pagos?',
-    a: 'O Clouse Tools é 100% gratuito, sem planos pagos, sem necessidade de cadastro e sem limitações diárias. Todos os 67 utilitários estão disponíveis para uso ilimitado.',
+    q: 'Meus dados são enviados para algum servidor?',
+    a: 'Não. Todos os cálculos, conversões, manipulações de texto e gerações de arquivos rodam 100% dentro do seu próprio navegador. Nenhum dado digitado ou arquivo carregado sai do seu dispositivo.',
   },
   {
-    q: 'Posso usar as ferramentas sem conexão ativa com a internet?',
-    a: 'Sim! Uma vez que a página é carregada no seu navegador, todo o código de computação é estático e executado diretamente pelo processador do seu computador ou celular, sem requisições de rede.',
+    q: 'Preciso criar uma conta ou fazer login para usar?',
+    a: 'Nenhum cadastro é necessário. Você abre a página da ferramenta desejada e já pode utilizá-la instantaneamente.',
   },
   {
-    q: 'Qual o nível de precisão dos cálculos e conversões?',
-    a: 'Todas as fórmulas utilizam constantes e padrões internacionais certificados (ISO-8601 para datas, constantes NIST para unidades de medida, RFC 4122 para UUIDs e FIPS 180-4 para hashes criptográficos SHA-256).',
+    q: 'O site funciona no celular e em outros navegadores?',
+    a: 'Sim. O Clouse Tools foi desenhado mobile-first e é compatível com Chrome, Safari, Firefox, Edge e qualquer navegador moderno em iOS, Android, macOS e Windows.',
   },
   {
-    q: 'Como posso sugerir uma nova ferramenta ou reportar um problema?',
-    a: 'O projeto é de código aberto e mantido no GitHub. Você pode abrir uma issue, propor melhorias ou submeter pull requests diretamente em github.com/ViictorN/clouse-tools, ou usar nossa página de Contato.',
+    q: 'Posso usar as ferramentas em modo offline?',
+    a: 'Sim. Graças à arquitetura client-side em Service Workers e cache local, após carregar uma ferramenta você pode continuar utilizando-a mesmo sem conexão com a internet.',
   },
 ];
 
-export function FAQSection({ locale: propLocale }: { locale?: Locale }) {
+const FAQS_EN: FAQItem[] = [
+  {
+    q: 'Are these tools truly free with no limits?',
+    a: 'Yes, 100% free. There are no paid tiers, no daily calculation quotas, and no feature gates. All 67 tools are fully accessible without restriction.',
+  },
+  {
+    q: 'Is my data transmitted to any remote server?',
+    a: 'Never. All calculations, conversions, text modifications, and file parsers run 100% locally inside your browser sandbox. Nothing you type or upload ever leaves your machine.',
+  },
+  {
+    q: 'Do I need an account or sign-up to use Clouse Tools?',
+    a: 'Zero sign-ups required. Open any tool and use it immediately without email capture or friction.',
+  },
+  {
+    q: 'Does it work seamlessly on mobile and across modern browsers?',
+    a: 'Yes. Clouse Tools is built mobile-first and is strictly tested on Chrome, Safari, Firefox, Edge, iOS, Android, macOS, and Windows.',
+  },
+  {
+    q: 'Can I use these utilities offline?',
+    a: 'Yes. Because all 67 tools execute client-side, once cached in your browser you can run calculations and format code even without an active internet connection.',
+  },
+];
+
+export function FAQSection({ locale = 'en' }: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const pathname = usePathname();
-
-  const locale: Locale =
-    propLocale || (pathname?.startsWith('/pt-br') || pathname?.startsWith('/pt') ? 'pt-br' : 'en');
-
   const faqs = locale === 'pt-br' ? FAQS_PT : FAQS_EN;
+  const heading = locale === 'pt-br' ? 'Perguntas Frequentes' : 'Frequently Asked Questions';
+  const eyebrow = locale === 'pt-br' ? 'Tire suas dúvidas' : 'Common questions';
 
   const toggle = (idx: number) => {
-    setOpenIndex(openIndex === idx ? null : idx);
+    setOpenIndex((prev) => (prev === idx ? null : idx));
   };
 
   const faqSchema = {
@@ -80,12 +80,6 @@ export function FAQSection({ locale: propLocale }: { locale?: Locale }) {
       },
     })),
   };
-
-  const eyebrow = locale === 'pt-br' ? 'Dúvidas Frequentes' : 'Frequently Asked Questions';
-  const heading =
-    locale === 'pt-br'
-      ? 'Respostas diretas sobre segurança e funcionamento.'
-      : 'Everything you need to know about our privacy and architecture.';
 
   return (
     <section className="section" id="faq">
@@ -108,17 +102,25 @@ export function FAQSection({ locale: propLocale }: { locale?: Locale }) {
             return (
               <div key={idx} className={`faq-item ${isOpen ? 'open' : ''}`}>
                 <button
+                  id={`faq-btn-${idx}`}
                   type="button"
                   className="faq-question"
                   onClick={() => toggle(idx)}
                   aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${idx}`}
                 >
                   <span>{faq.q}</span>
                   <div className={`faq-chevron ${isOpen ? 'rotated' : ''}`}>
                     <Icon name="chevron-down" size={18} />
                   </div>
                 </button>
-                <div className={`faq-answer-wrapper ${isOpen ? 'open' : ''}`} aria-hidden={!isOpen}>
+                <div
+                  id={`faq-panel-${idx}`}
+                  role="region"
+                  aria-labelledby={`faq-btn-${idx}`}
+                  className={`faq-answer-wrapper ${isOpen ? 'open' : ''}`}
+                  aria-hidden={!isOpen}
+                >
                   <div className="faq-answer-inner">
                     <div className="faq-answer">
                       <p>{faq.a}</p>

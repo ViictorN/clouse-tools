@@ -312,8 +312,8 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                 <span className="arr" aria-hidden="true">→</span>
               </Link>
               <div className="essentials-nav-arrows" aria-hidden="true">
-                <button type="button" className="carousel-arrow" aria-label="Previous">‹</button>
-                <button type="button" className="carousel-arrow" aria-label="Next">›</button>
+                <span className="carousel-arrow">‹</span>
+                <span className="carousel-arrow">›</span>
               </div>
             </div>
           </div>
@@ -477,10 +477,10 @@ export default async function LocalizedHomePage({ params }: LocalePageProps) {
                 </div>
               </div>
 
-              <div className="black-banner-right" aria-hidden="true">
+              <div className="black-banner-right" aria-label={isPt ? "Estatísticas: 67 ferramentas úteis, zero cadastros" : "Statistics: 67 useful tools, zero sign-ups"}>
                 <div className="banner-stat-block">
                   <div className="stat-infinity-row">
-                    <span className="infinity-symbol">∞</span>
+                    <span className="infinity-symbol" aria-hidden="true">∞</span>
                     <span className="stat-number">
                       <CountUp value={67} duration={1200} />
                     </span>

@@ -10,7 +10,7 @@ import { prefersReducedMotion } from '@/lib/motion';
 import { useInView } from '@/hooks/use-in-view';
 
 export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: Tool; locale?: Locale; className?: string }) {
-  const { ref: cardRef, inView } = useInView<HTMLAnchorElement>();
+  const { ref: cardRef, inView } = useInView<HTMLDivElement>();
   const [isFav, setIsFav] = useState(false);
   const [pop, setPop] = useState(false);
   const pathname = usePathname();
@@ -45,7 +45,7 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
     return () => window.removeEventListener('clouse-favorites-updated', handleFavChange);
   }, [tool.slug]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -104,15 +104,19 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
       : `Open ${localizedTool.name}`;
 
   return (
-    <Link
+    <div
       ref={cardRef}
-      href={`/${locale}/tool/${tool.slug}`}
       className={`t-card ${tool.popular ? 'popular' : ''} ${className} ${inView ? 'is-in' : ''}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={handleCardClick}
-      aria-label={ariaLabel}
     >
+      <Link
+        href={`/${locale}/tool/${tool.slug}`}
+        className="t-card-cover"
+        onClick={handleCardClick}
+        aria-label={ariaLabel}
+      />
+
       <div className="t-card-header">
         <div className="t-card-icon-box">
           <Icon name={tool.icon} size={20} />
@@ -125,6 +129,7 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
             type="button"
             className={`fav-btn ${isFav ? 'active' : ''} ${pop ? 'pop' : ''}`}
             onClick={toggleFavorite}
+            aria-pressed={isFav}
             aria-label={
               isFav
                 ? locale === 'pt-br'
@@ -161,6 +166,6 @@ export function ToolCard({ tool, locale: propLocale, className = '' }: { tool: T
           <Icon name="arrow-right" size={15} />
         </span>
       </div>
-    </Link>
+    </div>
   );
 }

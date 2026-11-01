@@ -168,11 +168,15 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label={placeholder}
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="palette-results"
+            aria-activedescendant={results[selectedIndex] ? `palette-item-${selectedIndex}` : undefined}
           />
           <span className="search-hint">ESC</span>
         </div>
 
-        <div className="search-results" role="listbox" aria-label={placeholder} aria-live="polite">
+        <div id="palette-results" className="search-results" role="listbox" aria-label={placeholder} aria-live="polite">
           {results.length > 0 ? (
             results.map((tool, index) => {
               const catObj = getLocalizedCategoryById(tool.cat, locale);
@@ -180,6 +184,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
               return (
                 <Link
                   key={tool.slug}
+                  id={`palette-item-${index}`}
+                  role="option"
+                  aria-selected={index === selectedIndex}
                   href={`/${locale}/tool/${tool.slug}`}
                   className={`sr-item ${index === selectedIndex ? 'active' : ''}`}
                   onClick={() => handleItemClick(tool.slug)}

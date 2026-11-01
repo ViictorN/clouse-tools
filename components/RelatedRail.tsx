@@ -1,21 +1,22 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Icon } from '@/lib/icons';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Tool } from '@/lib/data';
+import { ToolCard } from '@/components/ToolCard';
+import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
-import { ToolCard } from './ToolCard';
+import { prefersReducedMotion } from '@/lib/motion';
 
 interface RelatedRailProps {
-  tools: Tool[];
   title: string;
+  tools: Tool[];
   locale?: Locale;
 }
 
 /**
- * Related tools as a snap rail with keyboard-accessible arrows. The rail is
- * still scrollable by trackpad, touch and keyboard (focusable container).
+ * Editorial horizontal strip on tool pages. Shows sibling tools in the
+ * same category. Keyboard-scrollable, honors prefers-reduced-motion.
  */
-export function RelatedRail({ tools, title, locale = 'en' }: RelatedRailProps) {
+export function RelatedRail({ title, tools, locale = 'en' }: RelatedRailProps) {
   const railRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -23,8 +24,8 @@ export function RelatedRail({ tools, title, locale = 'en' }: RelatedRailProps) {
   const syncEdges = useCallback(() => {
     const el = railRef.current;
     if (!el) return;
-    setAtStart(el.scrollLeft <= 2);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
+    setAtStart(el.scrollLeft <= 4);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollHeight - 4 || el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
   }, []);
 
   useEffect(() => {
@@ -42,7 +43,8 @@ export function RelatedRail({ tools, title, locale = 'en' }: RelatedRailProps) {
   const nudge = (dir: 1 | -1) => {
     const el = railRef.current;
     if (!el) return;
-    el.scrollBy({ left: dir * Math.min(720, el.clientWidth * 0.8), behavior: 'smooth' });
+    const reduced = prefersReducedMotion();
+    el.scrollBy({ left: dir * Math.min(720, el.clientWidth * 0.8), behavior: reduced ? 'auto' : 'smooth' });
   };
 
   return (
@@ -70,9 +72,11 @@ export function RelatedRail({ tools, title, locale = 'en' }: RelatedRailProps) {
           </button>
         </div>
       </div>
-      <div className="rail-track" ref={railRef} tabIndex={0} role="region" aria-label={title}>
-        {tools.map((tool) => (
-          <ToolCard key={tool.slug} tool={tool} locale={locale} />
+      <div className="rail-track" ref={railRef} tabIndex={0} aria-label={title}>
+        {tools.map((t) => (
+          <div key={t.slug} className="rail-card">
+            <ToolCard tool={t} locale={locale} />
+          </div>
         ))}
       </div>
     </div>

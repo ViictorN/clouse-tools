@@ -34,6 +34,7 @@ export function LanguageSelector({ currentLocale, className = '' }: LanguageSele
         type="button"
         className={`lang-btn ${activeLocale === 'pt-br' ? 'active' : ''}`}
         onClick={() => handleSelect('pt-br')}
+        aria-pressed={activeLocale === 'pt-br'}
         aria-label="Mudar para Português do Brasil"
         title="Português (BR)"
       >
@@ -47,6 +48,7 @@ export function LanguageSelector({ currentLocale, className = '' }: LanguageSele
         type="button"
         className={`lang-btn ${activeLocale === 'en' ? 'active' : ''}`}
         onClick={() => handleSelect('en')}
+        aria-pressed={activeLocale === 'en'}
         aria-label="Switch to English"
         title="English (US)"
       >

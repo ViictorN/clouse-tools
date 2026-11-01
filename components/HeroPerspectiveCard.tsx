@@ -1,95 +1,62 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
-import Link from 'next/link';
-import gsap from 'gsap';
 import { Locale } from '@/lib/i18n';
-import { GSAP_EASE, prefersReducedMotion } from '@/lib/motion';
+import { prefersReducedMotion } from '@/lib/motion';
 
 interface HeroPerspectiveCardProps {
-  locale: Locale;
+  locale?: Locale;
 }
 
-export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
-  const isPt = locale === 'pt-br';
-  const prefix = isPt ? '/pt-br' : '/en';
+export function HeroPerspectiveCard({ locale = 'en' }: HeroPerspectiveCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLDivElement>(null);
 
+  const isPt = locale === 'pt-br';
+
   const tools = [
-    { icon: '%', label: isPt ? 'Calcular' : 'Calculate', slug: 'percentage-calculator' },
-    { icon: '⇄', label: isPt ? 'Converter' : 'Convert', slug: 'unit-converter' },
-    { icon: 'A', label: isPt ? 'Texto' : 'Text', slug: 'word-counter' },
-    { icon: '📅', label: isPt ? 'Datas' : 'Pick', slug: 'date-difference' },
-    { icon: '{ }', label: isPt ? 'Dev' : 'Develop', slug: 'json-formatter' },
-    { icon: '✦', label: isPt ? 'Design' : 'Design', slug: 'color-palette-generator' },
+    { icon: '%', label: isPt ? 'Cálculo' : 'Calculate' },
+    { icon: '⇄', label: isPt ? 'Converter' : 'Convert' },
+    { icon: 'A', label: isPt ? 'Texto' : 'Text' },
+    { icon: '◷', label: isPt ? 'Datas' : 'Dates' },
+    { icon: '{ }', label: isPt ? 'DevOps' : 'Develop' },
+    { icon: '✦', label: isPt ? 'Design' : 'Design' },
   ];
 
   useEffect(() => {
-    if (prefersReducedMotion() || !containerRef.current || !cardRef.current) return;
-    const isFinePointer = window.matchMedia('(pointer: fine)').matches;
-    if (!isFinePointer) return;
-
     const container = containerRef.current;
     const card = cardRef.current;
     const pill = pillRef.current;
+    if (!container || !card || !pill) return;
 
-    // Default resting transform values
-    const rest = {
-      rotY: -8,
-      rotX: 6,
-      rotZ: -2,
-    };
+    if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches) {
+      return;
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-      gsap.to(card, {
-        rotateY: rest.rotY + x * 10,
-        rotateX: rest.rotX - y * 8,
-        rotateZ: rest.rotZ + x * 2,
-        y: -y * 8,
-        duration: 0.6,
-        ease: GSAP_EASE.smooth,
-        overwrite: 'auto',
-      });
+      const normX = (x / rect.width) * 2 - 1;
+      const normY = (y / rect.height) * 2 - 1;
 
-      if (pill) {
-        gsap.to(pill, {
-          x: x * 14,
-          y: y * 12,
-          duration: 0.8,
-          ease: GSAP_EASE.smooth,
-          overwrite: 'auto',
-        });
-      }
+      // Realistic 3D Tilt: clamped and subtle
+      const rotateY = normX * 9 + 4; // base subtle perspective
+      const rotateX = -normY * 7 - 3;
+      const pillOffsetX = normX * 14;
+      const pillOffsetY = normY * 10;
+
+      card.style.transform = `perspective(1100px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+      pill.style.transform = `translate3d(${pillOffsetX}px, ${pillOffsetY}px, 32px)`;
     };
 
     const handleMouseLeave = () => {
-      gsap.to(card, {
-        rotateY: rest.rotY,
-        rotateX: rest.rotX,
-        rotateZ: rest.rotZ,
-        y: 0,
-        duration: 0.9,
-        ease: GSAP_EASE.editorial,
-        overwrite: 'auto',
-      });
-
-      if (pill) {
-        gsap.to(pill, {
-          x: 0,
-          y: 0,
-          duration: 0.9,
-          ease: GSAP_EASE.editorial,
-          overwrite: 'auto',
-        });
-      }
+      card.style.transform = 'perspective(1100px) rotateX(-2deg) rotateY(5deg) translateZ(0)';
+      pill.style.transform = 'translate3d(0, 0, 24px)';
     };
 
-    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mousemove', handleMouseMove, { passive: true });
     container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
@@ -127,7 +94,24 @@ export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
       <div ref={cardRef} className="hpc-card-3d">
         <div className="hpc-card-header">
           <div className="hpc-card-logo">
-            <span className="hpc-logo-icon">C</span>
+            <span className="hpc-logo-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M17 3.5C14.5 1.5 11 1.8 8.8 4L4 8.8C1.8 11 1.5 14.5 3.5 17C5.5 19.5 9 19.2 11.2 17L16 12.2C18.2 10 18.5 6.5 16.5 4"
+                  stroke="#ffffff"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14.5 14.5L19.5 19.5"
+                  stroke="#ffffff"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                />
+                <circle cx="9" cy="9" r="1.5" fill="#ffffff" />
+              </svg>
+            </span>
             <span className="hpc-logo-title">CLOUSE TOOLS</span>
           </div>
           <div className="hpc-card-dots">
@@ -149,15 +133,13 @@ export function HeroPerspectiveCard({ locale }: HeroPerspectiveCardProps) {
 
         <div className="hpc-card-grid">
           {tools.map((item) => (
-            <Link
+            <div
               key={item.label}
-              href={`${prefix}/tool/${item.slug}`}
               className="hpc-tool-tile"
-              tabIndex={-1}
             >
               <span className="hpc-tile-icon">{item.icon}</span>
               <span className="hpc-tile-name">{item.label}</span>
-            </Link>
+            </div>
           ))}
         </div>
 

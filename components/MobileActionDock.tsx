@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/lib/icons';
 import { Locale } from '@/lib/i18n';
+import { prefersReducedMotion } from '@/lib/motion';
 
 export function MobileActionDock() {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -33,34 +34,26 @@ export function MobileActionDock() {
       }
       lastY = y;
     };
+
     window.addEventListener('scroll', checkScroll, { passive: true });
-    checkScroll();
-
-    try {
-      const current = document.documentElement.getAttribute('data-theme') as 'light' | 'dark';
-      if (current) {
-        setTheme(current);
-      }
-    } catch {}
-
-    const handleThemeEvent = (e: Event) => {
-      const customEvent = e as CustomEvent<string>;
-      if (customEvent.detail === 'dark' || customEvent.detail === 'light') {
-        setTheme(customEvent.detail);
-      }
-    };
-    window.addEventListener('clouse-theme-change', handleThemeEvent);
-
-    return () => {
-      window.removeEventListener('scroll', checkScroll);
-      window.removeEventListener('clouse-theme-change', handleThemeEvent);
-    };
+    return () => window.removeEventListener('scroll', checkScroll);
   }, []);
 
   useEffect(() => {
-    const onLangChange = () => setDockVisible(false);
-    window.addEventListener('clouse-locale-change', onLangChange);
-    return () => window.removeEventListener('clouse-locale-change', onLangChange);
+    try {
+      const saved = localStorage.getItem('clouse-theme');
+      if (saved === 'dark' || saved === 'light') {
+        setTheme(saved);
+      } else if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+      }
+    } catch {}
+
+    const handleThemeChange = (e: CustomEvent<'light' | 'dark'>) => {
+      setTheme(e.detail);
+    };
+    window.addEventListener('clouse-theme-change' as any, handleThemeChange);
+    return () => window.removeEventListener('clouse-theme-change' as any, handleThemeChange);
   }, []);
 
   const toggleTheme = () => {
@@ -78,7 +71,8 @@ export function MobileActionDock() {
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const reduced = prefersReducedMotion();
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
   };
 
   const searchLabel = locale === 'pt-br' ? 'Buscar...' : 'Search...';
@@ -102,24 +96,23 @@ export function MobileActionDock() {
         <span>{toolsLabel}</span>
       </Link>
 
-
       <button
         type="button"
         className="mobile-dock-btn icon-only"
         onClick={toggleTheme}
-        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+        aria-label={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
       >
-        <Icon name={theme === 'dark' ? 'sun-high' : 'moon'} size={17} />
+        <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
       </button>
 
       {showScrollTop && (
         <button
           type="button"
-          className="mobile-dock-btn icon-only"
+          className="mobile-dock-btn icon-only scroll-top-btn"
           onClick={scrollToTop}
-          aria-label="Scroll to top"
+          aria-label={locale === 'pt-br' ? 'Voltar ao topo' : 'Scroll to top'}
         >
-          <Icon name="arrow-up-right" size={17} />
+          <Icon name="arrow-up" size={18} />
         </button>
       )}
     </div>
